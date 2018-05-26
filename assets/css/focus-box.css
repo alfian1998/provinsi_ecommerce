@@ -1,0 +1,234 @@
+/*--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+--*/
+.focus-grid a {
+    text-decoration:none;
+}
+.focus-grid {
+    margin-top: 30px;
+}
+.focus-grid h4{
+    text-align:left;
+    font-size: 2.5em;
+    font-weight: 400;
+    color: #323232;
+}
+.focus-grid h4 span {
+  display: block;
+  font-size: 0.5em;
+  margin: 10px 0;
+  transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+}
+.focus-grid p {
+  margin: 20px 0 0px 0;
+    font-size: 1.2em;
+    color: #797979;
+    font-weight: 300;
+    line-height: 1.9em;
+}
+.focus-border{
+border:1px solid #e7eaed;
+border-radius: 5px;
+}
+.focus-layout{
+    background:#fff;
+    transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+    border-radius: 5px;
+}
+.focus-layout{
+    margin: 1px;
+    padding: 20px 0;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    text-align: center;
+}
+.focus-layout:hover {
+    background-color: #5a88ca;
+    transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+}
+.focus-layout h4{
+    margin: 0 0 0 0;
+    color:#4C4C4C;
+    font-size: 18px;
+    text-align:center;
+    height: 35px;
+    margin-top: 20px;
+}
+.focus-layout:hover h4.clrchg {
+    color: #fff;
+}
+.focus-grids {
+    margin-top: 5em;
+}
+.focus-image{
+  text-align: center;
+  transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+}
+.focus-image i {
+    font-size: 40px;
+    color: #fff;
+    background: #dd0908;
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    line-height: 95px;
+    transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+}
+.focus-layout:hover div.focus-image i{
+    background:#FBFBFB;
+    color:#000;
+    transition:0.5s all;
+    -webkit-transition:0.5s all;
+    -moz-transition:0.5s all;
+    -o-transition:0.5s all;
+    -ms-transition:0.5s all;
+}
+.focus-image i.fa-laptop {
+    background:#ff9e29;
+}
+.focus-image i.fa-car {
+    background:#3fb7d2;
+}
+.focus-image i.fa-motorcycle {
+    background:#15c01c;
+}
+.focus-image i.fa-wheelchair {
+    background:#7e3b07;
+}
+.focus-image i.fa-paw {
+    background:#1963ce;
+}
+.focus-image i.fa-book {
+    background:#c119ce;
+}
+.focus-image i.fa-asterisk {
+    background:#7fbad8;
+}
+.focus-image i.fa-gamepad {
+    background:#1ca39d;
+}
+.focus-image i.fa-shield {
+    background:#f49ecf;
+}
+.focus-image i.fa-at {
+    background:#070c1f;
+}
+.focus-image i.fa-home {
+    background:#df8012;
+}
+.focus-layout:hover div.focus-image i.mobile{
+}
+i.laptop {
+}
+.focus-layout:hover div.focus-image i.laptop{
+}
+i.car {
+}
+.focus-layout:hover div.focus-image i.car{
+}
+i.bike {
+}
+.focus-layout:hover div.focus-image i.bike{
+}
+i.furniture {
+}
+.focus-layout:hover div.focus-image i.furniture{
+}
+i.pets {
+}
+.focus-layout:hover div.focus-image i.pets{
+}
+i.books {
+}
+.focus-layout:hover div.focus-image i.books{
+}
+i.fashion {
+}
+.focus-layout:hover div.focus-image i.fashion{
+}
+i.kids {
+}
+.focus-layout:hover div.focus-image i.kids{
+}
+i.services {
+}
+.focus-layout:hover div.focus-image i.services{
+}
+i.job {
+}
+.focus-layout:hover div.focus-image i.job{
+}
+i.real-estate {
+}
+.focus-layout:hover div.focus-image i.real-estate{
+}
+/*-- //focus --*/
+@media (max-width: 1080px){
+    .focus-grid {
+        padding: 0 10px;
+    }
+    .focus-layout {
+        margin: 3px;
+        padding: 20px 0px 20px 0;
+    }
+}
+@media (max-width: 991px){
+    .focus-grid {
+        width: 25%;
+        float: left;
+    }
+}
+@media (max-width: 640px){
+    .focus-layout h4 {
+        font-size: 17px;
+        height: 35px;
+    }
+}
+@media (max-width: 480px){
+    .focus-image i {
+        font-size: 35px;
+        width: 75px;
+        height: 75px;
+        line-height: 75px;
+    }
+    .focus-grid {
+        width: 33.333%;
+    }
+    .focus-layout {
+        padding: 16px 0px 16px 0;
+    }
+}
+@media (max-width: 414px){
+    .focus-grid {
+        width: 50%;
+    }
+    .focus-layout {
+        padding: 16px 5px 16px 5px;
+    }
+}

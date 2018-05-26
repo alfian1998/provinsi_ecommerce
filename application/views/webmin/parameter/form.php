@@ -1,0 +1,138 @@
+<script type="text/javascript">
+$(function() {
+    $('#parameter_group').bind('change',function(e) {
+        e.preventDefault();
+        var i = $(this).val();
+        parameter_nm(i);
+    });
+    function parameter_nm(i,k) {
+        $.get('<?=site_url("webmin_parameter/ajax/parameter_nm")?>?parameter_group='+i+'&parameter_nm='+k,null,function(data) {
+            $('#box_parameter').html(data.html);
+        },'json');
+    }
+    $('#parameter_id').bind('change',function(e) {
+        e.preventDefault();
+        var  i = $(this).val();
+        var pg = $('#parameter_group').val();
+        var pf = $('#parameter_nm').val();
+        $.get('<?=site_url("webmin_parameter/ajax/validate_id")?>?parameter_group='+pg+'&parameter_nm='+pf+'&parameter_id='+i,null,function(data) {
+            if(data.result == 'false') {
+                alert('Maaf, Parameter ID ini sudah digunakan !');
+                $('#parameter_id').focus().val('');
+            }
+        },'json');
+    });
+});
+</script>
+<div class="background-img background-bottom">
+<div class="container">
+	<div class="row">
+		<div class="row">
+            <div class="col-md-12">
+            <div class="block block-breadcrumbs">
+                <ul>
+                    <li class="home">
+                        <a href="<?=site_url('webmin/location/')?>"><i class="fa fa-home" style="font-size: 18px;"></i></a>
+                        <span></span>
+                    </li>
+                    <li><a href="#">Master Data</a><span></span></li>
+                    <li><a href="<?=site_url('webmin/location/parameter')?>">Parameter</a><span></span></li>
+                    <?php if (@$main['parameter_group'] != ''): ?>
+                        <li>Edit Data Parameter</li>
+                    <?php else: ?>
+                        <li>Tambah Data Parameter</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            </div>
+            <div class="col-sm-3 col-md-2">
+                <!-- Block vertical-menu -->
+                <div class="block block-vertical-menu">
+                    <div class="vertical-head">
+                        <h5 class="vertical-title">Master Data <span class="pull-right"><i class="fa fa-bars"></i></span></h5>
+                    </div>
+                    <div class="vertical-menu-content">
+                        <ul class="vertical-menu-list">
+                            <li >
+                                <a href="<?=site_url('webmin/location/config')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Profil Web</a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('webmin/location/parameter')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-6.png"><b>Parameter</b></a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('webmin/location/region')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Wilayah</a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('webmin/location/category')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Kategori</a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('webmin/location/bank')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Setting Bank</a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('webmin/location/slideshow')?>" class="background-font"><i class="icon-category fa fa-chevron-right" style="margin-left: 21px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Slide Show</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- ./Block vertical-menu -->
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-10">
+                <!-- content -->
+                <div class="panel-content">
+                    <div class="panel panel-primary">
+                        <?php if(@$main['parameter_group'] !=''): ?>
+                            <div class="panel-heading"><b>Edit Data Parameter</b></div>
+                        <?php else: ?>
+                            <div class="panel-heading"><b>Tambah Data Parameter</b></div>
+                        <?php endif; ?>
+                        <div class="panel-body">
+                            <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
+                            <table width="100%" class="table-no-border">
+                                <tr>
+                                    <td width="18%"><div class="span10">Parameter Group</div></td>
+                                    <td width="82%">
+                                        <div class="span4">
+                                            <select class="form-control select-chosen" name="parameter_group" id="parameter_group" required="">
+                                                <option value="">-- Pilih Parameter Group --</option>
+                                                <?php foreach ($parameter_group as $data): ?>
+                                                    <option value="<?=$data['parameter_group']?>" <?php if(@$data['parameter_group'] == @$main['parameter_group']) echo 'selected'?>><?=$data['parameter_group']?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">Parameter Nama</div></td>
+                                    <td width="82%">
+                                        <div id="box_parameter">
+                                        <div class="span4">
+                                            <select class="form-control select-chosen" name="parameter_nm" id="parameter_nm" required="">
+                                                <option value="">-- Pilih Parameter Nama --</option>
+                                                <?php if(@$main['parameter_nm'] != ''): ?>
+                                                    <option value="<?=@$main['parameter_nm']?>" <?php if(@$main['parameter_nm'] != '') echo 'selected' ?>><?=@$main['parameter_nm']?></option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">Parameter Value</div></td>
+                                    <td width="82%">
+                                        <div class="span4">
+                                            <input type="text" name="parameter_val" class="form-control" value="<?=@$main['parameter_val']?>" required="">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <button class="btn btn-primary" type="submit">Simpan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /content -->
+            </div>
+		</div>
+	</div>
+</div>
+</div>
