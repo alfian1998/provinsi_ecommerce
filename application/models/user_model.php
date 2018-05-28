@@ -267,9 +267,10 @@ class User_model extends CI_Model {
     }
 
     function get_user_administrator($user_id=null) {
-        $sql = "SELECT a.*
-                FROM app_user a
-                WHERE user_id=?";
+        $sql = "SELECT a.*, b.* 
+                FROM app_user a 
+                LEFT JOIN app_usergroup b ON a.user_group=b.usergroup_id  
+                WHERE a.user_id=?";
         $query = $this->db->query($sql, $user_id);
         $result = $query->row_array();
         //

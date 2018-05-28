@@ -2207,7 +2207,7 @@
       margin-right: 10px;
       background: url("../images/checkbox.png") no-repeat;
       padding: 0;
-      border: none;
+      border: 1px solid blue;
       margin-bottom: -2px;
 }
 .check-box-list input[type="checkbox"]:checked + label span.button{
