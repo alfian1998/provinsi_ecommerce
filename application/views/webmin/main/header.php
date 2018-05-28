@@ -23,9 +23,9 @@
     <script type="text/javascript" src="<?=base_url()?>assets/lib/jquery/jquery-1.11.2.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>assets/js/autonumeric.js"></script>
     <!--  -->
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="<?=base_url()?>assets/js/highcharts.js"></script>
+    <script src="<?=base_url()?>assets/js/exporting.js"></script>
+    <script src="<?=base_url()?>assets/js/export-data.js"></script>
     <!--  -->
     <script type="text/javascript">
     $(document).ready(function(){
@@ -96,38 +96,103 @@
             <!-- ./main header -->
         </div>
 
-<!-- Modal -->
+<script type="text/javascript">
+    $(function() {
+
+        $('#username').bind('change',function(e) {
+            e.preventDefault();
+            var i = $(this).val();
+            var success_username = document.getElementById("check-success-username");
+            var danger_username = document.getElementById("check-danger-username");
+            //
+            $.get('<?=site_url("webmin/ajax/validate_username")?>?username='+i,null,function(data) {
+                if(data.result == 'false') {
+                    $('#box-alert-already-username').fadeIn('slow');
+                    document.getElementById('username').style.borderColor = "red";
+                    $('#username').focus().val('');
+                    success_username.className = "";
+                    danger_username.className += "fa fa-times form-control-feedback check-danger-username";
+                }else{
+                    document.getElementById('username').style.borderColor = "green";
+                    $('#box-alert-already-username').fadeOut('fast');
+                    success_username.className += "glyphicon glyphicon-ok form-control-feedback check-success-username";
+                    danger_username.className = "";
+                }
+            },'json');
+        });
+
+    });
+</script>
 <div class="modal fade" id="setting-account" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+      
+      <form action="<?=site_url("webmin/update_administrator/")?><?=$config['profile']['user_id']?>" method="POST" enctype="multipart/form-data">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Setting Data Akun</h4>
+        <h4 class="modal-title" id="myModalLabel">Setting Konfigurasi Akun</h4>
       </div>
       <div class="modal-body">
 
-        <div class="form-group">
-            <label>Foto Profil</label>
-            <?php if(@$config['profile']['user_photo'] == ''):?>
-            <span class="box_customer_img">
-                <div class="span12" style="margin-bottom: 10px;">
-                    <img class="img-thumbnail img-edit-product" src="<?=base_url()?>assets/images/icon/no-customer-img.jpg">
-                    <a class="btn btn-sm btn-primary btn-edit-product-img" href="<?=base_url()?>assets/images/customer/<?=@$config['profile']['user_photo']?>" target="_blank"><i class="fa fa-eye"></i> Lihat Gambar</a><br>
-                    <a href="javascript:void(0)" class="remove_image btn btn-sm btn-danger btn-edit-product-img" data-id="<?=@$config['profile']['customer_id']?>"><i class="fa fa-times"></i> Hapus Gambar</a>
-                </div>
-            </span>
-            <?php else: ?>
-                <div class="span12" style="margin-bottom: 10px;">
-                    <img class="img-thumbnail" style="width: 100px;" src="<?=base_url()?>assets/images/icon/no-customer-img.jpg">
-                </div>
-            <?php endif;?>
-        </div>
+        <input type="hidden" name="user_group" value="<?=$config['profile']['user_group']?>">
+        <input type="hidden" name="c_password_hidden" value="<?=$config['profile']['user_password']?>">
+        <table class="table">
+            <tr>
+                <td width="30%" style="vertical-align: inherit;"><div class="span10"><b>Username</b></div></td>
+                <td width="80%">
+                    <div class="span12">
+                        <input type="text" id="username" name="user_name" class="span7 form-control" value="<?=$config['profile']['user_name']?>">
+                        <div id="box-alert-already-username">Username ini sudah digunakan</div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%" style="vertical-align: inherit;"><div class="span10"><b>Password</b></div></td>
+                <td width="80%">
+                    <div class="span12">
+                        <input type="text" name="user_password" class="span7 form-control">
+                        <span class="alert-product">(Kosongi jika tidak ingin merubah password)</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%" style="vertical-align: inherit;"><div class="span10"><b>Nama Pengguna</b></div></td>
+                <td width="80%">
+                    <div class="span12">
+                        <input type="text" name="user_realname" class="span9 form-control" value="<?=$config['profile']['user_realname']?>">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%"><div class="span10"><b>Foto</b></div></td>
+                <td width="80%">
+                    <div class="span12">
+                        <?php if ($config['profile']['user_photo'] !=''): ?>
+                        <img src="<?=base_url()?>assets/images/administrator/<?=$config['profile']['user_photo']?>" class="img-thumbnail" style="width: 110px;">
+                        <?php else: ?>
+                        <img src="<?=base_url()?>assets/images/icon/no-customer-img.jpg" class="img-thumbnail" style="width: 110px;">
+                        <?php endif; ?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="30%" style="vertical-align: inherit;"><div class="span10"><b>Ganti Foto</b></div></td>
+                <td width="80%">
+                    <div class="span12">
+                        <input type="file" name="user_photo" class="span9 form-control">
+                        <span class="alert-product">(Kosongi jika tidak ingin merubah foto)</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger bold" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
-        <button type="button" class="btn btn-primary bold"><i class="fa fa-send"></i> Simpan</button>
+        <button type="submit" class="btn btn-primary bold"><i class="fa fa-send"></i> Simpan</button>
       </div>
+      </form>
+
     </div>
   </div>
 </div>

@@ -55,12 +55,28 @@ function validateForm() {
                 <!-- Block vertical-menu -->
                 <div class="block block-vertical-menu">
                     <div class="vertical-head">
+                        <h5 class="vertical-title">Status Deposit <!-- <span class="pull-right"><i class="fa fa-bars"></i></span> --></h5>
+                    </div>
+                    <div class="vertical-menu-content">
+                        <ul class="vertical-menu-list">
+                            <li >
+                                <a href="<?=site_url('web/location/send')?>" class="background-font"><i class="icon-category fa fa-send"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Sudah Dikirim</a>
+                            </li>
+                            <li >
+                                <a href="<?=site_url('web/location/not_send')?>" class="background-font"><i class="icon-category fa fa-arrow-left"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Belum Dikirim</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="block block-vertical-menu">
+                    <div class="vertical-head">
                         <h5 class="vertical-title">Menu <!-- <span class="pull-right"><i class="fa fa-bars"></i></span> --></h5>
                     </div>
                     <div class="vertical-menu-content">
                         <ul class="vertical-menu-list">
                             <li >
-                                <a href="<?=site_url('web/location/notification')?>" class="background-font"><i class="icon-category fa fa-bell"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-8.png">Notifikasi</a>
+                                <a href="<?=site_url('web/location/notification')?>" class="background-font"><i class="icon-category fa fa-dollar" style="margin-left: 22px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-8.png">Data Pembeli</a>
                             </li>
                             <li>
                                 <a href="<?=site_url('web/location/selling')?>" class="background-font"><i class="icon-category fa fa-folder" style="margin-left: 19px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-6.png">Jualan Saya</a>

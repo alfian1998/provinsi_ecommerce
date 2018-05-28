@@ -4001,7 +4001,35 @@ span.check-data-empty {
 	font-weight: bold;
 	display: none;
 }
+#box-alert-already-usergroup_nm {
+	margin-top: -3px; 
+	font-size: 13px; 
+	color: red;
+	font-weight: bold;
+	display: none;
+}
 #box-alert-already-bank_owner {
+	margin-top: -3px; 
+	font-size: 13px; 
+	color: red;
+	font-weight: bold;
+	display: none;
+}
+#box-alert-already-user_name {
+	margin-top: -3px; 
+	font-size: 13px; 
+	color: red;
+	font-weight: bold;
+	display: none;
+}
+#box-alert-already-user_realname {
+	margin-top: -3px; 
+	font-size: 13px; 
+	color: red;
+	font-weight: bold;
+	display: none;
+}
+#box-alert-already-customer_username {
 	margin-top: -3px; 
 	font-size: 13px; 
 	color: red;

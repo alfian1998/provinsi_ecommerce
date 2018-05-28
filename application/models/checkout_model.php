@@ -373,7 +373,7 @@ class Checkout_Model extends CI_Model {
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
                 WHERE 1 AND a.bayar_st IS NOT NULL AND b.customer_id='$customer_id'
                 GROUP BY a.billing_id 
-                ORDER BY a.billing_id DESC 
+                ORDER BY a.billing_id DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC  
                     $sql_paging";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -415,7 +415,7 @@ class Checkout_Model extends CI_Model {
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
                 WHERE 1 AND b.bayar_customer_st='1' AND b.customer_id='$customer_id'
                 GROUP BY a.billing_id 
-                ORDER BY b.bayar_customer_date DESC 
+                ORDER BY b.bayar_customer_date DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC  
                     $sql_paging";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -457,7 +457,7 @@ class Checkout_Model extends CI_Model {
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
                 WHERE 1 AND b.bayar_customer_st='2' AND b.customer_id='$customer_id'
                 GROUP BY a.billing_id 
-                ORDER BY a.billing_date DESC 
+                ORDER BY a.billing_date DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC  
                     $sql_paging";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -582,7 +582,7 @@ class Checkout_Model extends CI_Model {
                 FROM checkout a 
                 LEFT JOIN product b ON a.product_id=b.product_id
                 WHERE 1 AND a.billing_id=? $sql_customer_id 
-                ORDER BY a.billing_id DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC ";
+                ORDER BY a.billing_id DESC";
         $query = $this->db->query($sql, $billing_id);
         $result = $query->result_array();
         // 

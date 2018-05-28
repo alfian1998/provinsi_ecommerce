@@ -149,4 +149,32 @@ class Customer_model extends CI_Model {
         return outp_result($outp);
     }
 
+    function process_file($src_file_name = null, $src_file_location = null, $doc_id = null) {
+        $config = $this->config_model->get_config();
+        // data
+        $customer = $this->get_customer($doc_id);
+        // directory file
+        $path_dir = "assets/images/". $src_file_location."/";
+        $date = date('dmy');
+        //
+        $result             = @$customer[$src_file_location];
+        $file_tmp_name      = @$_FILES[$src_file_name]['tmp_name'];
+        $file_size          = @$_FILES[$src_file_name]['size'];
+        $clean_file_name    = clean_url(get_file_name(@$_FILES[$src_file_name]['name']));
+        //
+        $image_no = md5(md5(@$customer['category_id']));
+        //
+        if($file_tmp_name != '') {
+            if($doc_id == '') {
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name']);
+            } else {                
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name'], @$customer[$src_file_name]);
+            }   
+            //
+            $result = $file_name;
+        }
+        //
+        return $result;
+    }
+
 }

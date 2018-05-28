@@ -7,6 +7,7 @@ class Webmin extends CI_Controller{
 		//
 		// $this->config_model->validate_login_administrator();
 		$this->load->model('checkout_model');
+		$this->load->model('user_model');
 	}
 
 	function ajax($id = null) {
@@ -37,6 +38,17 @@ class Webmin extends CI_Controller{
 			} else {
 				redirect('');
 			}	
+		}else if($id == 'validate_username') {
+			$username = $this->input->get('username');
+			$user_id = $this->session->userdata('ses_user_id');
+			$validate = $this->user_model->validate_username_administrator($username, $user_id);
+			//
+			$result = "true";
+			if($validate == true) $result = "false";
+			//
+			echo json_encode(array(
+				'result' => $result
+			));
 		}
 	}
 
@@ -238,6 +250,11 @@ class Webmin extends CI_Controller{
 		redirect('webmin/dashboard');
 	}
 
+	function update_administrator($user_id) {
+		$this->user_model->update_administrator($user_id);
+		redirect('webmin/dashboard');
+	}
+
 	function logout() {
 		//$this->config_model->set_logoff();
 		//
@@ -279,11 +296,11 @@ class Webmin extends CI_Controller{
 
 	function location($act=null,$id=null) {
 		//
-		unset_session('ses_txt_search,ses_parameter_group,ses_txt_search_provinsi,ses_txt_search_kabupaten,ses_txt_search_kecamatan,ses_txt_search_kelurahan,ses_category_parent');
+		unset_session('ses_txt_search,ses_parameter_group,ses_txt_search_provinsi,ses_txt_search_kabupaten,ses_txt_search_kecamatan,ses_txt_search_kelurahan,ses_category_parent,ses_usergroup,ses_status');
 		//
 		if ($act !='') {
 			if($id != '') {
-				redirect('webmin_'.$act.'/index/'.$id);	
+				redirect('webmin_'.$act.'/'.$id);	
 			} else {
 				redirect('webmin_'.$act);
 			}	

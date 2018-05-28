@@ -13,12 +13,14 @@
                         <div id="navbar" class="navbar-collapse collapse">
                             <ul class="nav navbar-nav">
                                 <li class="<?php echo activate_menu('webmin'); ?>"><a href="<?=site_url('webmin')?>">Home</a></li>
-                                <li class="dropdown <?php echo activate_menu('webmin_config'); ?><?php echo activate_menu('webmin_parameter'); ?><?php echo activate_menu('webmin_region'); ?><?php echo activate_menu('webmin_category'); ?><?php echo activate_menu('webmin_bank'); ?><?php echo activate_menu('webmin_slideshow'); ?>">
+                                <li class="dropdown <?php echo activate_menu('webmin_config'); ?><?php echo activate_menu('webmin_parameter'); ?><?php echo activate_menu('webmin_region'); ?><?php echo activate_menu('webmin_category'); ?><?php echo activate_menu('webmin_bank'); ?><?php echo activate_menu('webmin_slideshow'); ?><?php echo activate_menu('webmin_user'); ?><?php echo activate_menu('webmin_user_group'); ?>">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Master Data <i class="fa fa-caret-down"></i></a>
                                     <ul class="dropdown-menu mega_dropdown container-fluid">
                                         <li class="block-container">
                                             <ul class="block-megamenu-link">
                                                 <li class="link_container"><a href="<?=site_url('webmin/location/config')?>">Profil Web</a></li>
+                                                <li class="link_container"><a href="<?=site_url('webmin/location/usergroup')?>">User Group</a></li>
+                                                <li class="link_container"><a href="<?=site_url('webmin/location/user')?>">Master User</a></li>
                                                 <li class="link_container"><a href="<?=site_url('webmin/location/parameter')?>">Parameter</a></li>
                                                 <li class="link_container"><a href="<?=site_url('webmin/location/region')?>">Wilayah</a></li>
                                                 <li class="link_container"><a href="<?=site_url('webmin/location/category')?>">Kategori</a></li>
@@ -41,6 +43,7 @@
                                 </li>
                                 <li class="<?php echo activate_menu('webmin_bank_account'); ?>"><a href="<?=site_url('webmin/location/bank_account')?>">Rekening Bank</a></li>
                                 <li class="<?php echo activate_menu('webmin_buyer_data'); ?>"><a href="<?=site_url('webmin/location/buyer_data')?>">Data Pembeli</a></li>
+                                <li class="<?php echo activate_menu('webmin_report'); ?>"><a href="<?=site_url('webmin/location/report')?>">Laporan</a></li>
                                 <li><a id="logout" href="#">Logout</a></li>
                             </ul>
                         </div><!--/.nav-collapse -->
@@ -51,4 +54,4 @@
     </div>
     <!-- ./main menu-->
 </header>
-<!-- ./header -->
+<!-- ./header -->

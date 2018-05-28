@@ -139,7 +139,7 @@ function validateForm() {
                 <!-- content -->
                 <div class="panel-content" style="margin-bottom: -20px;">
                     <div class="panel panel-primary">
-                        <div class="panel-heading" style="font-weight: bold;">Gambar Ikan/Barang <?=count(@$main["product_image"])?></div>
+                        <div class="panel-heading" style="font-weight: bold;">Gambar Ikan/Barang</div>
                         <div class="panel-body">
                             <table class="table-no-border">              
                                 <tbody id="box_image">                                      
