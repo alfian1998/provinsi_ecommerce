@@ -166,6 +166,18 @@ class Checkout_Model extends CI_Model {
         return $result;
     }
 
+    function get_tahun() {
+        $sql = "SELECT 
+                    YEAR(a.billing_date) as tahun
+                FROM billing a 
+                GROUP BY YEAR(a.billing_date)";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        return $result;
+    }
+
     function get_checkout($billing_id, $email) {
         // billing_id
         if ($billing_id =='null') {
@@ -244,6 +256,22 @@ class Checkout_Model extends CI_Model {
         $sql = "SELECT a.*
                 FROM checkout a 
                 WHERE 1 AND a.billing_id='$billing_id' AND a.kirim_st='2' $sql_customer_id";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        //
+        return $row;
+    }
+
+    function kirim_st($billing_id=null, $customer_id=null) {
+        if ($customer_id !='') {
+            $sql_customer_id = " AND a.customer_id='$customer_id'";
+        }else{
+            $sql_customer_id = "";
+        }
+        //
+        $sql = "SELECT a.*
+                FROM checkout a 
+                WHERE 1 AND a.billing_id='$billing_id' $sql_customer_id";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         //
@@ -544,6 +572,74 @@ class Checkout_Model extends CI_Model {
         $no=1;
         foreach($result as $key => $val) {
             $result[$key]['no'] = $no+$offset;
+            $no++;
+        }
+        return $result;
+    }
+
+    function list_report_buyer() {
+        $billing_date = @$_SESSION['ses_billing_date'];
+        if ($billing_date !='') {
+            $ses_billing_date = date('Y-m-d',strtotime(@$_SESSION['ses_billing_date']));
+        }else{
+            $ses_billing_date = "";
+        }
+        $ses_status = @$_SESSION['ses_status'];
+        $ses_txt_search = @$_SESSION['ses_txt_search'];
+        $ses_bulan = @$_SESSION['ses_bulan'];
+        $ses_tahun = @$_SESSION['ses_tahun'];
+        //
+        if ($ses_bulan !='') {
+            $sql_bulan = " AND MONTH(a.billing_date) = '$ses_bulan'";
+        }else{
+            $sql_bulan = "";
+        }
+        //
+        if ($ses_tahun !='') {
+            $sql_tahun = " AND YEAR(a.billing_date) = '$ses_tahun'";
+        }else{
+            $sql_tahun = "";
+        }
+        //
+        if ($ses_billing_date !='') {
+            $sql_billing_date = " AND DATE(a.billing_date) = '$ses_billing_date'";
+        }else{
+            $sql_billing_date = "";
+        }
+        //
+        if ($ses_status == '') {
+            $sql_status = " AND a.bayar_st IS NOT NULL";
+        }elseif ($ses_status == 'sudah_bayar') {
+            $sql_status = " AND a.bayar_st = '1'";
+        }elseif ($ses_status == 'belum_bayar') {
+            $sql_status = " AND a.bayar_st = '2'";
+        }elseif ($ses_status == 'konfirmasi') {
+            $sql_status = " AND a.transfer_st = '2'";
+        }elseif ($ses_status == 'sudah_diterima') {
+            $sql_status = " AND a.diterima_st = '1'";
+        }
+        //
+        if ($ses_txt_search !='') {
+            $sql_search = " AND  c.pembeli_nm LIKE '%$ses_txt_search%' OR a.billing_id LIKE '%$ses_txt_search%'";
+        }elseif ($ses_txt_search == '') {
+            $sql_search = "";
+        }
+        //
+        $sql = "SELECT 
+                    a.*, c.*, d.customer_nm  
+                FROM billing a 
+                LEFT JOIN checkout b ON a.billing_id=b.billing_id 
+                LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
+                LEFT JOIN customer d ON c.customer_id=d.customer_id
+                WHERE 1 $sql_status $sql_search $sql_billing_date $sql_bulan $sql_tahun
+                GROUP BY a.billing_id 
+                ORDER BY a.billing_id DESC, a.bayar_date DESC, a.transfer_date DESC, a.diterima_date DESC ";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['no'] = $no;
             $no++;
         }
         return $result;
@@ -1010,6 +1106,753 @@ class Checkout_Model extends CI_Model {
         }
         //
         return $result;
+    }
+
+    function get_nama_bulan($ses_bulan=null) {
+        $list_bulan = list_bulan();
+        $result = '';
+        foreach ($list_bulan as $key => $val) {
+            if($ses_bulan == $key){
+                $result = @$val;
+            }
+        }
+        return $result;
+    }
+
+    function export_excel_harian_1(){
+        // Get session
+        $billing_date         = isset_session('ses_billing_date');
+        $ses_status           = isset_session('ses_status');
+        $ses_txt_search       = isset_session('ses_txt_search');
+        $ses_tampilan_data_1  = isset_session('ses_tampilan_data_1');
+        $ses_tampilan_data_2  = isset_session('ses_tampilan_data_2');
+        //
+        if ($billing_date !='') {
+            $ses_billing_date = date('Y-m-d',strtotime($billing_date));
+        }else {
+            $ses_billing_date = "";
+        }
+        //
+        $ses_billing_date     = ($ses_billing_date != '') ? convert_date_indo(@$ses_billing_date) : 'SEMUA';
+        $ses_status           = ($ses_status != '') ? replace_status(@$ses_status) : 'SEMUA';
+        $ses_txt_search       = ($ses_txt_search != '') ? @$ses_txt_search : 'SEMUA';
+
+        // Data
+        $list_buyer = $this->list_report_buyer();
+
+        $this->load->file(APPPATH.'libraries/PHPExcel.php');
+        $master_cetak = BASEPATH.'master_cetak/report_per_day.xlsx';
+        $PHPExcel = PHPExcel_IOFactory::load($master_cetak);
+        $PHPExcel->setActiveSheetIndex(0);
+        
+        // Header        
+        // $title_rekap = "RESUME JUMLAH DATA MENARA TELEKOMUNIKASI DI WILAYAH KABUPATEN KEBUMEN";
+        $title_file  = "Laporan Data Pembeli Harian";     
+        //
+
+        // $PHPExcel->getActiveSheet()->setCellValue("B3", $title_rekap);
+        $PHPExcel->getActiveSheet()->setCellValue("F7", ": ".$ses_billing_date);
+        $PHPExcel->getActiveSheet()->setCellValue("F8", ": ".$ses_status);
+        $PHPExcel->getActiveSheet()->setCellValue("F9", ": ".$ses_txt_search);
+        $PHPExcel->getActiveSheet()->setCellValue("F11", ": ".count($list_buyer)." Pembeli");
+
+        //align center
+        $align_center = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        //align left
+        $align_left = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        
+        $i=$start_row=14;
+        //Populating Body
+        $no=1;
+        foreach($list_buyer as $row){
+            //
+            $check_kirim_st = $this->check_kirim_st($row['billing_id']);
+            //Status Pembelian
+            $status_pembelian = "";
+            $status_pembelian_1 = "";
+            $status_pembelian_2 = "";
+            if ($row['diterima_st'] == '1'){
+                $status_pembelian = "(Sudah Diterima Pembeli) ";
+            }else{
+                if ($row['transfer_st'] == '2'){
+                    $status_pembelian = "(Menunggu Konfirmasi Admin) ";
+                }else{
+                    if ($row['bayar_st'] == '1'){
+                        $status_pembelian_1 = "(Sudah Bayar) ";
+                    }elseif($row['bayar_st'] == '2'){
+                        $status_pembelian_1 = "(Belum Bayar) ";
+                    }
+                }
+                if ($check_kirim_st == '') {
+                    $status_pembelian_2 = "(Sudah Dikirim Semua) ";
+                }elseif($check_kirim_st !='') {
+                    if ($row['bayar_st'] == '1') {
+                        $status_pembelian_2 = "(Belum Dikirim Semua) ";
+                    }
+                }
+            }
+            //
+            $PHPExcel->getActiveSheet()->setCellValue("B$i", $no);                   
+            $PHPExcel->getActiveSheet()->setCellValue("C$i", ($row['customer_id'] !='') ? $row['customer_nm'] : $row['pembeli_nm'] ); 
+            $PHPExcel->getActiveSheet()->setCellValue("F$i", $row['billing_id']);
+            $PHPExcel->getActiveSheet()->setCellValue("G$i", "Rp ".digit($row['product_total_price']));
+            $PHPExcel->getActiveSheet()->setCellValue("I$i", convert_date_indo($row['billing_date']));
+            $PHPExcel->getActiveSheet()->setCellValue("L$i", ($row['bayar_st'] == '1') ? convert_date_indo($row['bayar_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("O$i", ($row['diterima_st'] == '1') ? convert_date_indo($row['diterima_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("R$i", $status_pembelian.$status_pembelian_1.$status_pembelian_2);
+            //
+            $no++;
+            $i++;
+            $end_row = $i;
+
+            //merge & center Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("C$i:E$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("C$i:E$i");
+            //merge & center Nominal
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("G$i:H$i");
+            //merge & center Tanggal Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("I$i:K$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("I$i:K$i");
+            //merge & center Tanggal Bayar
+            $PHPExcel->getActiveSheet()->getStyle("L$i:N$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("L$i:N$i");
+            //merge & center Tanggal Diterima
+            $PHPExcel->getActiveSheet()->getStyle("O$i:Q$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("O$i:Q$i");
+            //merge & left Status Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("R$i:U$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("R$i:U$i");
+            //align left
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+        }
+
+        // Word Wrap
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setWrapText(true); 
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        
+        //Creating Border -------------------------------------------------------------------
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('rgb' => '111111'),
+                ),
+            ),
+        );
+        $last_cell = "U".($i-1);
+        $PHPExcel->getActiveSheet()->getStyle("B13:$last_cell")->applyFromArray($styleArray);
+        //-----------------------------------------------------------------------------------
+        
+        // Save it as file ------------------------------------------------------------------
+        header('Content-Type: application/vnd.ms-excel2007');
+        header('Content-Disposition: attachment; filename="'.$title_file.'.xlsx"');
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        //-----------------------------------------------------------------------------------
+    
+    }
+
+    function export_excel_harian_2(){
+        // Get session
+        $billing_date         = isset_session('ses_billing_date');
+        $ses_status           = isset_session('ses_status');
+        $ses_txt_search       = isset_session('ses_txt_search');
+        $ses_tampilan_data_1  = isset_session('ses_tampilan_data_1');
+        $ses_tampilan_data_2  = isset_session('ses_tampilan_data_2');
+        //
+        if ($billing_date !='') {
+            $ses_billing_date = date('Y-m-d',strtotime($billing_date));
+        }else {
+            $ses_billing_date = "";
+        }
+        //
+        $ses_billing_date     = ($ses_billing_date != '') ? convert_date_indo(@$ses_billing_date) : 'SEMUA';
+        $ses_status           = ($ses_status != '') ? replace_status(@$ses_status) : 'SEMUA';
+        $ses_txt_search       = ($ses_txt_search != '') ? @$ses_txt_search : 'SEMUA';
+
+        // Data
+        $list_buyer = $this->list_report_buyer();
+
+        $this->load->file(APPPATH.'libraries/PHPExcel.php');
+        $master_cetak = BASEPATH.'master_cetak/report_per_day.xlsx';
+        $PHPExcel = PHPExcel_IOFactory::load($master_cetak);
+        $PHPExcel->setActiveSheetIndex(0);
+        
+        // Header        
+        // $title_rekap = "RESUME JUMLAH DATA MENARA TELEKOMUNIKASI DI WILAYAH KABUPATEN KEBUMEN";
+        $title_file  = "Laporan Data Pembeli Harian";     
+        //
+
+        // $PHPExcel->getActiveSheet()->setCellValue("B3", $title_rekap);
+        $PHPExcel->getActiveSheet()->setCellValue("F7", ": ".$ses_billing_date);
+        $PHPExcel->getActiveSheet()->setCellValue("F8", ": ".$ses_status);
+        $PHPExcel->getActiveSheet()->setCellValue("F9", ": ".$ses_txt_search);
+        $PHPExcel->getActiveSheet()->setCellValue("F11", ": ".count($list_buyer)." Pembeli");
+
+        //align center
+        $align_center = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        //align left
+        $align_left = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        //fill color
+        $fill_color_yellow = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => 'FFFF33')
+            )
+        );
+        $fill_color_green = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => '99FF99')
+            )
+        );
+        $fill_color_header = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => 'ccd9ff')
+            )
+        );
+        
+        $i=$start_row=14;
+        //Populating Body
+        $no=1;
+        foreach($list_buyer as $row){
+        $check_kirim_st = $this->check_kirim_st($row['billing_id']);
+        $list_seller = $this->list_seller_by_billing_id($row['billing_id']);
+            //Status Pembelian
+            $status_pembelian = "";
+            $status_pembelian_1 = "";
+            $status_pembelian_2 = "";
+            if ($row['diterima_st'] == '1'){
+                $status_pembelian = "(Sudah Diterima Pembeli) ";
+            }else{
+                if ($row['transfer_st'] == '2'){
+                    $status_pembelian = "(Menunggu Konfirmasi Admin) ";
+                }else{
+                    if ($row['bayar_st'] == '1'){
+                        $status_pembelian_1 = "(Sudah Bayar) ";
+                    }elseif($row['bayar_st'] == '2'){
+                        $status_pembelian_1 = "(Belum Bayar) ";
+                    }
+                }
+                if ($check_kirim_st == '') {
+                    $status_pembelian_2 = "(Sudah Dikirim Semua) ";
+                }elseif($check_kirim_st !='') {
+                    if ($row['bayar_st'] == '1') {
+                        $status_pembelian_2 = "(Belum Dikirim Semua) ";
+                    }
+                }
+            }
+            //
+            $PHPExcel->getActiveSheet()->setCellValue("B$i", $no);                   
+            $PHPExcel->getActiveSheet()->setCellValue("C$i", ($row['customer_id'] !='') ? $row['customer_nm'] : $row['pembeli_nm'] ); 
+            $PHPExcel->getActiveSheet()->setCellValue("F$i", $row['billing_id']);
+            $PHPExcel->getActiveSheet()->setCellValue("G$i", "Rp ".digit($row['product_total_price']));
+            $PHPExcel->getActiveSheet()->setCellValue("I$i", convert_date_indo($row['billing_date']));
+            $PHPExcel->getActiveSheet()->setCellValue("L$i", ($row['bayar_st'] == '1') ? convert_date_indo($row['bayar_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("O$i", ($row['diterima_st'] == '1') ? convert_date_indo($row['diterima_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("R$i", $status_pembelian.$status_pembelian_1.$status_pembelian_2);
+
+            //Fill Color Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("B$i:U$i")->applyFromArray($fill_color_yellow);
+
+            $is_seller = $i+1;
+            $no_seller=1;
+            foreach($list_seller as $seller) {
+            $kirim_st = $this->checkout_model->kirim_st($row['billing_id'], $seller['customer_id']);
+            $list_product = $this->checkout_model->list_checkout_by_customer_id($seller['billing_id'], $seller['customer_id']);
+
+                $PHPExcel->getActiveSheet()->setCellValue("D$is_seller", $seller["customer_nm"]); 
+                //Fill Color Nama Pembeli
+                $PHPExcel->getActiveSheet()->getStyle("D$is_seller:E$is_seller")->applyFromArray($fill_color_green);
+                //merge & center Nama Pembeli
+                $PHPExcel->getActiveSheet()->getStyle("D$is_seller:E$is_seller")->applyFromArray($align_left);
+                $PHPExcel->getActiveSheet()->mergeCells("D$is_seller:U$is_seller");
+                //
+                $is_header_product = $is_seller+1;
+                $is_product = $is_seller+2;
+                $no_product=1;
+                //
+                $PHPExcel->getActiveSheet()->setCellValue("D$is_header_product", "No"); 
+                $PHPExcel->getActiveSheet()->setCellValue("E$is_header_product", "Nama Produk"); 
+                $PHPExcel->getActiveSheet()->setCellValue("G$is_header_product", "Jumlah"); 
+                $PHPExcel->getActiveSheet()->setCellValue("I$is_header_product", "Nominal Per Produk"); 
+                $PHPExcel->getActiveSheet()->setCellValue("N$is_header_product", "Status Pengiriman"); 
+                //bold text
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product:Q$is_header_product")->getFont()->setBold(true);
+                //align center
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("G$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("I$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("N$is_header_product")->applyFromArray($align_center);
+                //merge
+                $PHPExcel->getActiveSheet()->mergeCells("E$is_header_product:F$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("G$is_header_product:H$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("I$is_header_product:M$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("N$is_header_product:P$is_header_product");
+                $PHPExcel->getActiveSheet()->getRowDimension($is_header_product)->setRowHeight(21);
+                //fill color
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product:P$is_header_product")->applyFromArray($fill_color_header);
+                //
+                foreach ($list_product as $product) {
+                    $PHPExcel->getActiveSheet()->setCellValue("D$is_product", $no_product); 
+                    $PHPExcel->getActiveSheet()->setCellValue("E$is_product", $product["product_nm"]); 
+                    $PHPExcel->getActiveSheet()->setCellValue("G$is_product", $product["product_qty"]." ".$product['product_qty_unit']); 
+                    $PHPExcel->getActiveSheet()->setCellValue("I$is_product", "Rp ".digit($product["product_price"])." x ".$product['product_qty']." ".$product['product_qty_unit']." = Rp ".digit($product['product_sub_price'])); 
+                    $PHPExcel->getActiveSheet()->setCellValue("N$is_product", ($kirim_st['kirim_st'] == '1') ? 'Sudah Dikirim' : 'Belum Dikirim'); 
+                    //align center
+                    $PHPExcel->getActiveSheet()->getStyle("D$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("G$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("I$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("N$is_product")->applyFromArray($align_center);
+                    //merge
+                    $PHPExcel->getActiveSheet()->mergeCells("E$is_product:F$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("G$is_product:H$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("I$is_product:M$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("N$is_product:P$is_product");
+                    //
+                    $no_product++;
+                    $is_product++;
+                }
+                //
+                $no_seller++;
+                // $is_seller++;
+                $is_seller = $is_product;
+            }   
+            //
+            $no++;
+            $i = $is_seller;
+            $end_row = $i;
+
+            //merge & center Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("C$i:E$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("C$i:E$i");
+            //merge & center Nominal
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("G$i:H$i");
+            //merge & center Tanggal Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("I$i:K$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("I$i:K$i");
+            //merge & center Tanggal Bayar
+            $PHPExcel->getActiveSheet()->getStyle("L$i:N$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("L$i:N$i");
+            //merge & center Tanggal Diterima
+            $PHPExcel->getActiveSheet()->getStyle("O$i:Q$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("O$i:Q$i");
+            //merge & left Status Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("R$i:U$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("R$i:U$i");
+            //align left
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+        }
+
+        // Word Wrap
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setWrapText(true); 
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        
+        //Creating Border -------------------------------------------------------------------
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('rgb' => '111111'),
+                ),
+            ),
+        );
+        $last_cell = "U".($i-1);
+        $PHPExcel->getActiveSheet()->getStyle("B13:$last_cell")->applyFromArray($styleArray);
+        //-----------------------------------------------------------------------------------
+        
+        // Save it as file ------------------------------------------------------------------
+        header('Content-Type: application/vnd.ms-excel2007');
+        header('Content-Disposition: attachment; filename="'.$title_file.'.xlsx"');
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        //-----------------------------------------------------------------------------------
+    
+    }
+
+    function export_excel_bulanan_1(){
+        // Get session
+        $ses_bulan            = isset_session('ses_bulan');
+        $ses_tahun            = isset_session('ses_tahun');
+        $ses_status           = isset_session('ses_status');
+        $ses_txt_search       = isset_session('ses_txt_search');
+        $ses_tampilan_data_1  = isset_session('ses_tampilan_data_1');
+        $ses_tampilan_data_2  = isset_session('ses_tampilan_data_2');
+        //
+        $nama_bulan = $this->get_nama_bulan($ses_bulan);
+        //
+        $ses_bulan            = ($ses_bulan != '') ? @$nama_bulan : 'SEMUA';
+        $ses_tahun            = ($ses_tahun != '') ? @$ses_tahun : 'SEMUA';
+        $ses_status           = ($ses_status != '') ? replace_status(@$ses_status) : 'SEMUA';
+        $ses_txt_search       = ($ses_txt_search != '') ? @$ses_txt_search : 'SEMUA';
+
+        // Data
+        $list_buyer = $this->list_report_buyer();
+
+        $this->load->file(APPPATH.'libraries/PHPExcel.php');
+        $master_cetak = BASEPATH.'master_cetak/report_per_month.xlsx';
+        $PHPExcel = PHPExcel_IOFactory::load($master_cetak);
+        $PHPExcel->setActiveSheetIndex(0);
+        
+        // Header        
+        // $title_rekap = "RESUME JUMLAH DATA MENARA TELEKOMUNIKASI DI WILAYAH KABUPATEN KEBUMEN";
+        $title_file  = "Laporan Data Pembeli Bulanan";     
+        //
+
+        // $PHPExcel->getActiveSheet()->setCellValue("B3", $title_rekap);
+        $PHPExcel->getActiveSheet()->setCellValue("F7", ": ".$ses_bulan." - ".$ses_tahun);
+        $PHPExcel->getActiveSheet()->setCellValue("F8", ": ".$ses_status);
+        $PHPExcel->getActiveSheet()->setCellValue("F9", ": ".$ses_txt_search);
+        $PHPExcel->getActiveSheet()->setCellValue("F11", ": ".count($list_buyer)." Pembeli");
+
+        //align center
+        $align_center = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        //align left
+        $align_left = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        
+        $i=$start_row=14;
+        //Populating Body
+        $no=1;
+        foreach($list_buyer as $row){
+            //
+            $check_kirim_st = $this->check_kirim_st($row['billing_id']);
+            //Status Pembelian
+            $status_pembelian = "";
+            $status_pembelian_1 = "";
+            $status_pembelian_2 = "";
+            if ($row['diterima_st'] == '1'){
+                $status_pembelian = "(Sudah Diterima Pembeli) ";
+            }else{
+                if ($row['transfer_st'] == '2'){
+                    $status_pembelian = "(Menunggu Konfirmasi Admin) ";
+                }else{
+                    if ($row['bayar_st'] == '1'){
+                        $status_pembelian_1 = "(Sudah Bayar) ";
+                    }elseif($row['bayar_st'] == '2'){
+                        $status_pembelian_1 = "(Belum Bayar) ";
+                    }
+                }
+                if ($check_kirim_st == '') {
+                    $status_pembelian_2 = "(Sudah Dikirim Semua) ";
+                }elseif($check_kirim_st !='') {
+                    if ($row['bayar_st'] == '1') {
+                        $status_pembelian_2 = "(Belum Dikirim Semua) ";
+                    }
+                }
+            }
+            //
+            $PHPExcel->getActiveSheet()->setCellValue("B$i", $no);                   
+            $PHPExcel->getActiveSheet()->setCellValue("C$i", ($row['customer_id'] !='') ? $row['customer_nm'] : $row['pembeli_nm'] ); 
+            $PHPExcel->getActiveSheet()->setCellValue("F$i", $row['billing_id']);
+            $PHPExcel->getActiveSheet()->setCellValue("G$i", "Rp ".digit($row['product_total_price']));
+            $PHPExcel->getActiveSheet()->setCellValue("I$i", convert_date_indo($row['billing_date']));
+            $PHPExcel->getActiveSheet()->setCellValue("L$i", ($row['bayar_st'] == '1') ? convert_date_indo($row['bayar_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("O$i", ($row['diterima_st'] == '1') ? convert_date_indo($row['diterima_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("R$i", $status_pembelian.$status_pembelian_1.$status_pembelian_2);
+            //
+            $no++;
+            $i++;
+            $end_row = $i;
+
+            //merge & center Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("C$i:E$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("C$i:E$i");
+            //merge & center Nominal
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("G$i:H$i");
+            //merge & center Tanggal Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("I$i:K$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("I$i:K$i");
+            //merge & center Tanggal Bayar
+            $PHPExcel->getActiveSheet()->getStyle("L$i:N$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("L$i:N$i");
+            //merge & center Tanggal Diterima
+            $PHPExcel->getActiveSheet()->getStyle("O$i:Q$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("O$i:Q$i");
+            //merge & left Status Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("R$i:U$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("R$i:U$i");
+            //align left
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+        }
+
+        // Word Wrap
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setWrapText(true); 
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        
+        //Creating Border -------------------------------------------------------------------
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('rgb' => '111111'),
+                ),
+            ),
+        );
+        $last_cell = "U".($i-1);
+        $PHPExcel->getActiveSheet()->getStyle("B13:$last_cell")->applyFromArray($styleArray);
+        //-----------------------------------------------------------------------------------
+        
+        // Save it as file ------------------------------------------------------------------
+        header('Content-Type: application/vnd.ms-excel2007');
+        header('Content-Disposition: attachment; filename="'.$title_file.'.xlsx"');
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        //-----------------------------------------------------------------------------------
+    
+    }
+
+    function export_excel_bulanan_2(){
+        // Get session
+        $ses_bulan            = isset_session('ses_bulan');
+        $ses_tahun            = isset_session('ses_tahun');
+        $ses_status           = isset_session('ses_status');
+        $ses_txt_search       = isset_session('ses_txt_search');
+        $ses_tampilan_data_1  = isset_session('ses_tampilan_data_1');
+        $ses_tampilan_data_2  = isset_session('ses_tampilan_data_2');
+        //
+        $nama_bulan = $this->get_nama_bulan($ses_bulan);
+        //
+        $ses_bulan            = ($ses_bulan != '') ? @$nama_bulan : 'SEMUA';
+        $ses_tahun            = ($ses_tahun != '') ? @$ses_tahun : 'SEMUA';
+        $ses_status           = ($ses_status != '') ? replace_status(@$ses_status) : 'SEMUA';
+        $ses_txt_search       = ($ses_txt_search != '') ? @$ses_txt_search : 'SEMUA';
+
+        // Data
+        $list_buyer = $this->list_report_buyer();
+
+        $this->load->file(APPPATH.'libraries/PHPExcel.php');
+        $master_cetak = BASEPATH.'master_cetak/report_per_month.xlsx';
+        $PHPExcel = PHPExcel_IOFactory::load($master_cetak);
+        $PHPExcel->setActiveSheetIndex(0);
+        
+        // Header        
+        // $title_rekap = "RESUME JUMLAH DATA MENARA TELEKOMUNIKASI DI WILAYAH KABUPATEN KEBUMEN";
+        $title_file  = "Laporan Data Pembeli Bulanan";     
+        //
+
+        // $PHPExcel->getActiveSheet()->setCellValue("B3", $title_rekap);
+        $PHPExcel->getActiveSheet()->setCellValue("F7", ": ".$ses_bulan." - ".$ses_tahun);
+        $PHPExcel->getActiveSheet()->setCellValue("F8", ": ".$ses_status);
+        $PHPExcel->getActiveSheet()->setCellValue("F9", ": ".$ses_txt_search);
+        $PHPExcel->getActiveSheet()->setCellValue("F11", ": ".count($list_buyer)." Pembeli");
+
+        //align center
+        $align_center = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            )
+        );
+        //align left
+        $align_left = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+            )
+        );
+        //fill color
+        $fill_color_yellow = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => 'FFFF33')
+            )
+        );
+        $fill_color_green = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => '99FF99')
+            )
+        );
+        $fill_color_header = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb' => 'ccd9ff')
+            )
+        );
+        
+        $i=$start_row=14;
+        //Populating Body
+        $no=1;
+        foreach($list_buyer as $row){
+        $check_kirim_st = $this->check_kirim_st($row['billing_id']);
+        $list_seller = $this->list_seller_by_billing_id($row['billing_id']);
+            //Status Pembelian
+            $status_pembelian = "";
+            $status_pembelian_1 = "";
+            $status_pembelian_2 = "";
+            if ($row['diterima_st'] == '1'){
+                $status_pembelian = "(Sudah Diterima Pembeli) ";
+            }else{
+                if ($row['transfer_st'] == '2'){
+                    $status_pembelian = "(Menunggu Konfirmasi Admin) ";
+                }else{
+                    if ($row['bayar_st'] == '1'){
+                        $status_pembelian_1 = "(Sudah Bayar) ";
+                    }elseif($row['bayar_st'] == '2'){
+                        $status_pembelian_1 = "(Belum Bayar) ";
+                    }
+                }
+                if ($check_kirim_st == '') {
+                    $status_pembelian_2 = "(Sudah Dikirim Semua) ";
+                }elseif($check_kirim_st !='') {
+                    if ($row['bayar_st'] == '1') {
+                        $status_pembelian_2 = "(Belum Dikirim Semua) ";
+                    }
+                }
+            }
+            //
+            $PHPExcel->getActiveSheet()->setCellValue("B$i", $no);                   
+            $PHPExcel->getActiveSheet()->setCellValue("C$i", ($row['customer_id'] !='') ? $row['customer_nm'] : $row['pembeli_nm'] ); 
+            $PHPExcel->getActiveSheet()->setCellValue("F$i", $row['billing_id']);
+            $PHPExcel->getActiveSheet()->setCellValue("G$i", "Rp ".digit($row['product_total_price']));
+            $PHPExcel->getActiveSheet()->setCellValue("I$i", convert_date_indo($row['billing_date']));
+            $PHPExcel->getActiveSheet()->setCellValue("L$i", ($row['bayar_st'] == '1') ? convert_date_indo($row['bayar_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("O$i", ($row['diterima_st'] == '1') ? convert_date_indo($row['diterima_date']) : '-');
+            $PHPExcel->getActiveSheet()->setCellValue("R$i", $status_pembelian.$status_pembelian_1.$status_pembelian_2);
+
+            //Fill Color Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("B$i:U$i")->applyFromArray($fill_color_yellow);
+
+            $is_seller = $i+1;
+            $no_seller=1;
+            foreach($list_seller as $seller) {
+            $kirim_st = $this->checkout_model->kirim_st($row['billing_id'], $seller['customer_id']);
+            $list_product = $this->checkout_model->list_checkout_by_customer_id($seller['billing_id'], $seller['customer_id']);
+
+                $PHPExcel->getActiveSheet()->setCellValue("D$is_seller", $seller["customer_nm"]); 
+                //Fill Color Nama Pembeli
+                $PHPExcel->getActiveSheet()->getStyle("D$is_seller:E$is_seller")->applyFromArray($fill_color_green);
+                //merge & center Nama Pembeli
+                $PHPExcel->getActiveSheet()->getStyle("D$is_seller:E$is_seller")->applyFromArray($align_left);
+                $PHPExcel->getActiveSheet()->mergeCells("D$is_seller:U$is_seller");
+                //
+                $is_header_product = $is_seller+1;
+                $is_product = $is_seller+2;
+                $no_product=1;
+                //
+                $PHPExcel->getActiveSheet()->setCellValue("D$is_header_product", "No"); 
+                $PHPExcel->getActiveSheet()->setCellValue("E$is_header_product", "Nama Produk"); 
+                $PHPExcel->getActiveSheet()->setCellValue("G$is_header_product", "Jumlah"); 
+                $PHPExcel->getActiveSheet()->setCellValue("I$is_header_product", "Nominal Per Produk"); 
+                $PHPExcel->getActiveSheet()->setCellValue("N$is_header_product", "Status Pengiriman"); 
+                //bold text
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product:Q$is_header_product")->getFont()->setBold(true);
+                //align center
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("G$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("I$is_header_product")->applyFromArray($align_center);
+                $PHPExcel->getActiveSheet()->getStyle("N$is_header_product")->applyFromArray($align_center);
+                //merge
+                $PHPExcel->getActiveSheet()->mergeCells("E$is_header_product:F$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("G$is_header_product:H$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("I$is_header_product:M$is_header_product");
+                $PHPExcel->getActiveSheet()->mergeCells("N$is_header_product:P$is_header_product");
+                $PHPExcel->getActiveSheet()->getRowDimension($is_header_product)->setRowHeight(21);
+                //fill color
+                $PHPExcel->getActiveSheet()->getStyle("D$is_header_product:P$is_header_product")->applyFromArray($fill_color_header);
+                //
+                foreach ($list_product as $product) {
+                    $PHPExcel->getActiveSheet()->setCellValue("D$is_product", $no_product); 
+                    $PHPExcel->getActiveSheet()->setCellValue("E$is_product", $product["product_nm"]); 
+                    $PHPExcel->getActiveSheet()->setCellValue("G$is_product", $product["product_qty"]." ".$product['product_qty_unit']); 
+                    $PHPExcel->getActiveSheet()->setCellValue("I$is_product", "Rp ".digit($product["product_price"])." x ".$product['product_qty']." ".$product['product_qty_unit']." = Rp ".digit($product['product_sub_price'])); 
+                    $PHPExcel->getActiveSheet()->setCellValue("N$is_product", ($kirim_st['kirim_st'] == '1') ? 'Sudah Dikirim' : 'Belum Dikirim'); 
+                    //align center
+                    $PHPExcel->getActiveSheet()->getStyle("D$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("G$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("I$is_product")->applyFromArray($align_center);
+                    $PHPExcel->getActiveSheet()->getStyle("N$is_product")->applyFromArray($align_center);
+                    //merge
+                    $PHPExcel->getActiveSheet()->mergeCells("E$is_product:F$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("G$is_product:H$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("I$is_product:M$is_product");
+                    $PHPExcel->getActiveSheet()->mergeCells("N$is_product:P$is_product");
+                    //
+                    $no_product++;
+                    $is_product++;
+                }
+                //
+                $no_seller++;
+                // $is_seller++;
+                $is_seller = $is_product;
+            }   
+            //
+            $no++;
+            $i = $is_seller;
+            $end_row = $i;
+
+            //merge & center Nama Pembeli
+            $PHPExcel->getActiveSheet()->getStyle("C$i:E$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("C$i:E$i");
+            //merge & center Nominal
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("G$i:H$i");
+            //merge & center Tanggal Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("I$i:K$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("I$i:K$i");
+            //merge & center Tanggal Bayar
+            $PHPExcel->getActiveSheet()->getStyle("L$i:N$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("L$i:N$i");
+            //merge & center Tanggal Diterima
+            $PHPExcel->getActiveSheet()->getStyle("O$i:Q$i")->applyFromArray($align_center);
+            $PHPExcel->getActiveSheet()->mergeCells("O$i:Q$i");
+            //merge & left Status Pembelian
+            $PHPExcel->getActiveSheet()->getStyle("R$i:U$i")->applyFromArray($align_left);
+            $PHPExcel->getActiveSheet()->mergeCells("R$i:U$i");
+            //align left
+            $PHPExcel->getActiveSheet()->getStyle("G$i:H$i")->applyFromArray($align_left);
+        }
+
+        // Word Wrap
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setWrapText(true); 
+        // $PHPExcel->getActiveSheet()->getStyle("D12:AC$i")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_TOP);
+        
+        //Creating Border -------------------------------------------------------------------
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('rgb' => '111111'),
+                ),
+            ),
+        );
+        $last_cell = "U".($i-1);
+        $PHPExcel->getActiveSheet()->getStyle("B13:$last_cell")->applyFromArray($styleArray);
+        //-----------------------------------------------------------------------------------
+        
+        // Save it as file ------------------------------------------------------------------
+        header('Content-Type: application/vnd.ms-excel2007');
+        header('Content-Disposition: attachment; filename="'.$title_file.'.xlsx"');
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        //-----------------------------------------------------------------------------------
+    
     }
 
 }

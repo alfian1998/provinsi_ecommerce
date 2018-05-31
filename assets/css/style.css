@@ -4391,6 +4391,7 @@ span.check-data-empty {
 }
 .alert-purple { border-color: #694D9F;background: #694D9F;color: #fff; }
 .alert-green { border-color: #28a745;background: #28a745;color: #fff; }
+.alert-blue { border-color: #337ab7;background: #337ab7;color: #fff; }
 .alert-info-alt { border-color: #B4E1E4;background: #81c7e1;color: #fff; }
 .alert-danger-alt { border-color: #B63E5A;background: #E26868;color: #fff; }
 .alert-warning-alt { border-color: #F3F3EB;background: #E9CEAC;color: #fff; }

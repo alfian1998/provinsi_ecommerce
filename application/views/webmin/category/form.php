@@ -132,27 +132,6 @@ $(function() {
                                         </td>
                                     </tr>
                                     <?php endif; ?>
-                                    <tr>
-                                        <td width="18%"><div class="span10">Gambar Kategori</div></td>
-                                        <td width="82%">
-                                            <?php if(@$main['category_img'] != ''):?>
-                                            <span class="box_category_img">
-                                                <div class="span12" style="margin-bottom: 10px;">
-                                                    <img class="img-thumbnail img-edit-product" src="<?=base_url()?>assets/images/category/<?=$main['category_img']?>">
-                                                    <a class="btn btn-sm btn-primary btn-edit-product-img" href="<?=base_url()?>assets/images/category/<?=$main['category_img']?>" target="_blank"><i class="fa fa-eye"></i> Lihat Gambar</a><br>
-                                                    <a href="javascript:void(0)" class="remove_image btn btn-sm btn-danger btn-edit-product-img" data-id="<?=$main['category_id']?>"><i class="fa fa-times"></i> Hapus Gambar</a>
-                                                </div>
-                                            </span>
-                                            <?php endif;?>
-                                            <div class="span6">
-                                                <input type="file" name="category_img" class="form-control" value="<?=@$main['category_img']?>">
-                                                <label class="alert-product">* Gambar Kategori akan dijadikan icon dikategori</label>
-                                                <?php if (@$main['category_img'] != ''): ?>
-                                                <label class="alert-product">* Jika Gambar Kategori ingin dirubah, silahkan upload Gambar lagi</label>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                    </tr>
                                 </table>
                                 <a class="btn btn-success" href="<?=site_url('webmin_category')?>">Kembali</a>
                                 <button class="btn btn-primary" type="submit">Simpan</button>

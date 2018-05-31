@@ -296,7 +296,7 @@ class Webmin extends CI_Controller{
 
 	function location($act=null,$id=null) {
 		//
-		unset_session('ses_txt_search,ses_parameter_group,ses_txt_search_provinsi,ses_txt_search_kabupaten,ses_txt_search_kecamatan,ses_txt_search_kelurahan,ses_category_parent,ses_usergroup,ses_status');
+		unset_session('ses_txt_search,ses_parameter_group,ses_txt_search_provinsi,ses_txt_search_kabupaten,ses_txt_search_kecamatan,ses_txt_search_kelurahan,ses_category_parent,ses_usergroup,ses_status,filter_search,ses_billing_date,ses_tampilan_data_1,ses_tampilan_data_2,ses_tahun,ses_bulan');
 		//
 		if ($act !='') {
 			if($id != '') {

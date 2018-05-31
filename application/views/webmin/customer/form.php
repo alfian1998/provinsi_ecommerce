@@ -49,6 +49,7 @@ $(function() {
                             <div class="panel-heading"><b>Tambah Data User Customer</b></div>
                         <?php endif; ?>
                         <div class="panel-body">
+                            <div class="alert alert-red"><i class="fa fa-warning"></i> Anda hanya bisa mengedit Status User</div>
                             <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
                             <table width="100%" class="table-no-border">
                                 <tr>

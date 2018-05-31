@@ -162,19 +162,64 @@ class Customer_model extends CI_Model {
         $file_size          = @$_FILES[$src_file_name]['size'];
         $clean_file_name    = clean_url(get_file_name(@$_FILES[$src_file_name]['name']));
         //
-        $image_no = md5(md5(@$customer['category_id']));
+        $image_no = md5(md5(@$customer['customer_id']));
         //
         if($file_tmp_name != '') {
             if($doc_id == '') {
-                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name']);
+                $file_name = $this->compress_image($src_file_name, $config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name']);
             } else {                
-                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name'], @$customer[$src_file_name]);
+                $file_name = $this->compress_image($src_file_name, $config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name'], @$customer[$src_file_name]);
             }   
             //
             $result = $file_name;
         }
         //
         return $result;
+    }
+
+    function compress_image($src_file_name=null, $subdomain=null, $date=null, $image_no=null, $path_dir=null, $file_tmp_name=null, $file_name=null, $old_file=null) {
+        //
+        $this->load->library('upload');
+        $this->load->library('image_lib');
+        //
+        $name_img = no_upload_images($subdomain, $date, $image_no, $path_dir, $file_tmp_name, $file_name, $old_file);
+        //
+        $config['file_name'] = $name_img;
+        $config['upload_path'] = $path_dir; //path folder
+        $config['allowed_types'] = 'jpg|png|jpeg|gif'; //type yang dapat diakses bisa anda sesuaikan
+ 
+        $this->upload->initialize($config);
+        if(!empty($file_name)){
+            if ($this->upload->do_upload($src_file_name)){
+                $gbr = array('upload_data' => $this->upload->data()); 
+                // cek resolusi gambar
+                $nama_gambar = $path_dir.$gbr['upload_data']['file_name'];
+                $data = getimagesize($nama_gambar);
+                $width = $data[0];
+                $height = $data[1];
+                // pembagian
+                $bagi_width = $width / 5;
+                $bagi_height = $height / 5;
+                //Compress Image
+                $config['image_library']='gd2';
+                $config['source_image'] = $gbr['upload_data']['full_path'];
+                $config['create_thumb']= FALSE;
+                $config['maintain_ratio']= FALSE;
+                $config['quality']= '100%';
+                $config['width']= $bagi_width;
+                $config['height']= $bagi_height;
+                $config['new_image']= $path_dir.$gbr['upload_data']['file_name'];
+                $this->image_lib->initialize($config);
+                // $this->load->library('image_lib', $config);
+                $this->image_lib->resize();
+                $this->image_lib->clear();
+ 
+                $gambar_1=$gbr['upload_data']['file_name'];
+            }
+            //
+            $compress_image = no_upload_images($subdomain, $date, $image_no, $path_dir, $file_tmp_name, @$gambar_1);
+            return $compress_image;          
+        }   
     }
 
 }

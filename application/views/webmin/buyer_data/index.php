@@ -78,7 +78,7 @@
                                     <th width="19%">Nama Pembeli</th>
                                     <th width="10%" class="text-center">No Transaksi</th>
                                     <th width="8%">Nominal</th>
-                                    <th width="25%">Status</th>
+                                    <th width="26%">Status</th>
                                   </tr>
                                 </thead>
                                 <tbody id="box_result">                         

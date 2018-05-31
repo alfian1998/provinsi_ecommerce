@@ -260,13 +260,11 @@ class Web extends CI_Controller{
 
 		$result .='
 				<div class="page-content page-order">
-					<div class="panel panel-primary">
-						<div class="panel-heading text-center">Keranjang belanja Anda masih kosong</div>
-					</div>
+					<div class="alert alert-blue text-center">Keranjang Belanja Anda Masih Kosong</div>
 					<div class="order-detail-content">
 						<center>
 						<img src="'.base_url().'assets/images/icon/empty-cart.png"><br>
-						<a href="'.site_url('web/location/').'" class="btn btn-success">Belanja Sekarang</a>
+						<a href="'.site_url('web/location/').'" class="btn btn-success bold">Belanja Sekarang</a>
 						</center>
 					</div>
 				</div>
@@ -276,9 +274,7 @@ class Web extends CI_Controller{
 
 		$result .='
 				<div class="page-content page-order">
-					<div class="panel panel-primary">
-						<div class="panel-heading">Keranjang belanja Anda berisi : '.count_cart($cart).'</div>
-					</div>
+					<div class="alert alert-blue">Keranjang belanja Anda berisi : '.count_cart($cart).'</div>
 					<div class="order-detail-content">
 						<div class="table-responsive">
 						<table class="table table-hover cart_summary" style="min-width: 1000px;">

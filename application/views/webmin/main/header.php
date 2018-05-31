@@ -27,6 +27,10 @@
     <script src="<?=base_url()?>assets/js/exporting.js"></script>
     <script src="<?=base_url()?>assets/js/export-data.js"></script>
     <!--  -->
+    <link href="<?=base_url()?>assets/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+    <script src="<?=base_url()?>assets/js/bootstrap-datepicker.min.js"></script>
+    <script src="<?=base_url()?>assets/js/bootstrap-datepicker.id.min.js"></script>
+    <!--  -->
     <script type="text/javascript">
     $(document).ready(function(){
         //Chosen
@@ -58,7 +62,7 @@
                             <a href="<?=site_url('webmin')?>">
                                 <div class="logo-website">
                                     <img src="<?=base_url()?>assets/images/logo/logo.png" alt="Logo" class="img-logo">
-                                    <div class="text-logo-top"><font color="red"><?=strtoupper($config['profile']['user_realname'])?></font> - DASHBOARD</div>
+                                    <div class="text-logo-top"><font color="red"><?=strtoupper($config['profile']['usergroup_nm'])?></font> - DASHBOARD</div>
                                     <div class="garis"></div>
                                     <div class="text-logo-bottom"><font color="#ffba35">WEBSITE JUAL BELI IKAN - DINAS KELAUTAN PROVINSI JAWA TENGAH</font></div>
                                 </div>
@@ -76,6 +80,9 @@
                                             <?php endif; ?>
                                         </span>
                                         <span class="line1 line-img-user-header">Selamat Datang<br><strong class="text-short"><?=$config['profile']['user_realname']?></strong></span>
+                                    </li>
+                                    <li class="item">
+                                        <span class="line1 line-img-user-header">Anda Login Sebagai<br><strong class="text-short"><?=$config['profile']['usergroup_nm']?></strong></span>
                                     </li>
                                     <li class="item">
                                         <a href="" data-toggle="modal" data-target="#setting-account">

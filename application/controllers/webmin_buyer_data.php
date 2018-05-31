@@ -21,17 +21,17 @@ class Webmin_buyer_data extends CI_Controller{
 		$html = '';
 			foreach ($list_buyer as $data){
 		$html.= '<tr>
-                    <td align="center" style="background-color: #eee;"><b>'.$data['no'].'</b></td>';
-        $html.='	<td align="center" style="background-color: #eee;">';
+                    <td align="center" class="info"><b>'.$data['no'].'</b></td>';
+        $html.='	<td align="center" class="info">';
         $html.='		<a href="'.site_url('webmin_buyer_data/detail/'.$p.'/'.$o.'/'.$data['billing_id']).'" class="btn btn-xs btn-primary" title="Detail Data"><b>DETAIL DATA</b></a>
         			</td>';
         		if ($data['customer_id'] !='') {
-		$html.='    <td style="background-color: #eee;"><div style="font-weight: bold; color: blue;">'.$data['customer_nm'].'</div></td>';
+		$html.='    <td class="info"><div style="font-weight: bold; color: blue;">'.$data['customer_nm'].'</div></td>';
                 }else{
-        $html.='    <td style="background-color: #eee;"><div style="font-weight: bold; color: blue;">'.$data['pembeli_nm'].'</div></td>';
+        $html.='    <td class="info"><div style="font-weight: bold; color: blue;">'.$data['pembeli_nm'].'</div></td>';
 				}
-        $html.='	<td align="center" style="background-color: #eee;"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
-        $html.='	<td style="background-color: #eee;"><label class="label label-primary" style="font-size: 12px;">Rp '.digit($data['product_total_price']).'</label></td>';
+        $html.='	<td align="center" class="info"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
+        $html.='	<td class="info"><label class="label label-primary" style="font-size: 12px;">Rp '.digit($data['product_total_price']).'</label></td>';
 
         if ($data['diterima_st'] == '1') {
         $html.=' 	<td rowspan="2">
@@ -61,7 +61,7 @@ class Webmin_buyer_data extends CI_Controller{
                         </div>
 					</div>';
 			}else {
-		$html.='<td style="background-color: #eee;">';
+		$html.='<td class="info">';
         		if ($data['bayar_st'] == '1') {
         $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Bayar</label>';
                 }elseif ($data['bayar_st'] == '2') {

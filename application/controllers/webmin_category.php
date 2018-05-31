@@ -111,13 +111,5 @@ class Webmin_Category extends CI_Controller{
 		$this->category_model->delete($category_id);
 		redirect('webmin_category/index');
 	}
-
-	function delete_image($category_id) {
-		$this->category_model->delete_image($category_id);
-		//
-		echo json_encode(array(
-			'result' => 'true'
-		));
-	}
 	
 }

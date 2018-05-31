@@ -49,6 +49,14 @@ function anti_injection($str=null) {
     return $str;
 }
 
+function replace_status($str=null) {
+    $str = str_replace('_', ' ', $str);
+    //
+    $result = ucwords($str);
+    //
+    return $result;
+}
+
 function clear_injection($str=null) {
     $str = str_replace("+", " ", $str);
     return $str;
