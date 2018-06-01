@@ -1,7 +1,7 @@
 <script type="text/javascript">
     $(function() {
         $('#ses_urutan,#ses_kabupaten,#ses_kecamatan,#ses_kelurahan').bind('change',function() {
-            $('#form-search').attr('action','<?=site_url("listview/search/".$p."/".$o."/".$category_id)?>').submit();
+            $('#form-search').attr('action','<?=site_url("gridview/search_all/".$p."/".$o."/".$category_parent)?>').submit();
         });
         //
         <?php if(@$ses_kabupaten != ''):?>
@@ -14,7 +14,7 @@
             ses_kecamatan(i);
         });
         function ses_kecamatan(i,k) {
-            $.get('<?=site_url("listview/ajax/ses_kecamatan/".$p."/".$o."/".$category_id)?>?ses_kabupaten='+i+'&ses_kecamatan='+k,null,function(data) {
+            $.get('<?=site_url("gridview/ajax_all/ses_kecamatan/".$p."/".$o."/".$category_parent)?>?ses_kabupaten='+i+'&ses_kecamatan='+k,null,function(data) {
                 $('#box_kecamatan').html(data.html);
             },'json');
         }
@@ -30,7 +30,7 @@
                     <span></span>
                 </li>
                 <li><a href="<?=site_url('web/location/categories')?>">Kategori View</a><span></span></li>
-                <li>(<?=$get_category_parent['category_nm']?>) <?=$get_category['category_nm']?></li>
+                <li>Semua Produk di Kategori <?=$get_category['category_nm']?></li>
             </ul>
         </div>
 		<div class="row">
@@ -41,14 +41,14 @@
                         <h5 class="vertical-title">Filter Data</h5>
                     </div>
                     <div class="vertical-menu-content">
-                        <form class="form-inline" name="form-search" id="form-search" method="post" action="<?=site_url('listview/search/'.$p.'/'.$o.'/'.$category_id)?>">
+                        <form class="form-inline" name="form-search" id="form-search" method="post" action="<?=site_url('gridview/search_all/'.$p.'/'.$o.'/'.$category_parent)?>">
                         <table class="no-border">
                             <tr>
                                 <td class="no-border">Tampilan</td>
                                 <td class="no-border">:</td>
                                 <td class="no-border">
-                                    <a href="#" title="Tampilan List" class="button-small button-blue button-blue-active"><i class="fa fa-list"></i></a>
-                                    <a href="<?=site_url('gridview/location/1/0/'.$category_id)?>" title="Tampilan Grid" class="button-small button-blue"><i class="fa fa-th"></i></a>
+                                    <a href="<?=site_url('listview/location_all/1/0/'.$category_parent)?>" title="Tampilan List" class="button-small button-blue"><i class="fa fa-list"></i></a>
+                                    <a href="#" title="Tampilan Grid" class="button-small button-blue button-blue-active"><i class="fa fa-th"></i></a>
                                 </td>
                             </tr>
                             <tr>
@@ -107,7 +107,7 @@
                             <tr>
                                 <td class="no-border" colspan="3">
                                     <button class="btn btn-primary" type="submit" style="width: 49%">Search <i class="fa fa-search"></i></button>
-                                    <a href="<?=site_url('listview/location/'.$p.'/'.$o.'/'.$category_id)?>" class="btn btn-danger" style="width: 49%">Batal <i class="fa fa-refresh"></i></a>
+                                    <a href="<?=site_url('gridview/location_all/'.$p.'/'.$o.'/'.$category_parent)?>" class="btn btn-danger" style="width: 49%">Batal <i class="fa fa-refresh"></i></a>
                                 </td>
                             </tr>
                         </table>
@@ -124,7 +124,7 @@
                         <ul class="vertical-menu-list">
                             <?php foreach ($list_category as $data): ?>
                             <li>
-                                <a href="<?=site_url('listview/index/1/0/'.$data['category_id'])?>" class="background-font"><i class="icon-category fa fa-check"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,14)?>.png"><?=$data['category_nm']?></a>
+                                <a href="<?=site_url('gridview/index/1/0/'.$data['category_id'])?>" class="background-font"><i class="icon-category fa fa-check"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,14)?>.png"><?=$data['category_nm']?></a>
                             </li>
                             <?php endforeach; ?>
                         </ul>
@@ -135,53 +135,50 @@
 			<div class="col-xs-12 col-sm-8 col-md-9">
 				<div class="box-panel" style="margin-bottom: -20px;">
 					<div class="panel panel-primary">
-						<div class="panel-heading text-box-panel"><i class="fa fa-list"></i> (<?=$get_category_parent['category_nm']?>) <?=$get_category['category_nm']?></div>
+						<div class="panel-heading text-box-panel" style="padding-bottom: 5px;"><i class="fa fa-th"></i> Semua Produk di Kategori <?=$get_category['category_nm']?></div>
 					</div>
 				</div>
 				<div class="category-products" style="margin-top: -15px;">
-					<ul class="products list">
-                        <!-- product -->
+					<ul class="products row">
                         <?php foreach ($list_product as $data): ?>
-						<li class="product product-width" style="margin-bottom: 10px;">
-							<div class="product-container">
-								<div class="inner row">
-									<div class="product-left col-xs-12 col-sm-5 col-md-4">
-										<div class="product-thumb">
-											<a class="product-img-categories" style="height: 120px;" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" class="img-product" style="height: 120px!important;"></a>
-											<a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view-categories">Quick View</a>
-										</div>
-									</div>
-									<div class="product-right col-xs-12 col-sm-7 col-md-8 product-column">
-										<div class="product-name" style="margin-top: -8px;">
-											<a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name text-product-name"><b><?=$data['product_nm']?></b></span></a>
-										</div>
-										<div class="informasi_detail_produk"></div>
-                                        <div class="price-info">
+                        <li class="product col-xs-12 col-sm-6 col-md-3">
+                            <div class="product-container" style="border: 1px solid blue; background: white;">
+                                <div class="inner" style="margin-bottom: -18px;">
+                                    <div class="product-left">
+                                        <div class="product-thumb product-grid">
+                                            <a class="product-img" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img class="img-thumbnail img-grid-product" src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" alt="Nama Ikan"></a>
+                                            <a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view">Quick View</a>
+                                        </div>
+                                    </div>
+                                    <div class="product-name-price">
+                                        <div class="product-name">
+                                            <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
+                                        </div>
+                                        <div class="price-box">
                                             <span class="product-price-grid">Rp <?=digit($data['price'])?></span>
                                             <?php if ($data['price_before'] > $data['price']): ?>
                                                 <span class="product-price-old-grid">Rp <?=digit($data['price_before'])?></span>
                                             <?php endif; ?>
-                                            <br>
-                                            <span class="product-city">
-                                                <img src="<?=base_url()?>assets/images/icon/man-icon-2.png" class="map-marker maps-marker-icon-new"> <span class="address-new"><?=$data['customer_nm']?></span>
-                                            </span>
                                         </div>
-		                                <div class="product-button">
-                                            <?php if ($ses_customer_id == $data['customer_id']): ?>
-                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
-                                            <?php else: ?>
-    		                                	<button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Masukkan Keranjang</button>
-                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
-                                            <?php endif; ?>
-		                                </div>
-									</div>
-								</div>
-							</div>
-						</li>
+                                        <span class="product-city product-icon text-short">
+                                            <img src="<?=base_url()?>assets/images/icon/man-icon-2.png" class="map-marker maps-marker-icon-new"> <span class="address-new"><?=$data['customer_nm']?></span>
+                                        </span>
+                                            <div class="button-new-product">
+                                                <?php if ($ses_customer_id == $data['customer_id']): ?>
+                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary" style="width: 100%"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                                <?php else: ?>
+                                                    <button class="add_cart btn btn-sm btn-primary span7" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
+                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success span4"><i class="fa fa-shopping-cart"></i> Beli</a>
+                                                <?php endif; ?>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <?php endforeach; ?>
                         <?php if(count($list_product) == ''): ?>
-                        <li class="product product-width" style="margin-bottom: 10px;">
-                            <div class="product-container">
+                        <li class="product product-width" style="margin-bottom: 10px; padding-right: 15px; padding-left: 15px;">
+                            <div class="product-container" style="background: white;">
                                 <div class="inner row">
                                     <center>
                                         <img src="<?=base_url()?>assets/images/icon/not-found-icon.png" style="width: 200px;">
@@ -192,28 +189,27 @@
                             </div>
                         </li>
                         <?php endif; ?>
-                        <!-- /product -->
-					</ul>
+                    </ul>
 				</div>
                 <?php if(count($list_product) > 0):?>
                     <div style="text-align: right;">
                         <ul class="pagination" style="margin-top: 17px; margin-bottom: 0px;">
                             <?php if($paging->start_link): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->c_start_link/$o/$category_id") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
+                                <li><a href="<?=site_url("gridview/all/$paging->c_start_link/$o/$category_parent") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
                             <?php endif; ?>
                             <?php if($paging->prev): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->prev/$o/$category_id") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
+                                <li><a href="<?=site_url("gridview/all/$paging->prev/$o/$category_parent") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
                             <?php endif; ?>
 
                             <?php for($i = $paging->c_start_link; $i <= $paging->c_end_link; $i++): ?>
-                                <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("listview/index/$i/$o/$category_id") ?>"><?=$i ?></a></li>
+                                <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("gridview/all/$i/$o/$category_parent") ?>"><?=$i ?></a></li>
                             <?php endfor; ?>
 
                             <?php if($paging->next): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->next/$o/$category_id") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
+                                <li><a href="<?=site_url("gridview/all/$paging->next/$o/$category_parent") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
                             <?php endif; ?>
                             <?php if($paging->end_link): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->c_end_link/$o/$category_id") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
+                                <li><a href="<?=site_url("gridview/all/$paging->c_end_link/$o/$category_parent") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
                             <?php endif; ?>
                         </ul>
                     </div>

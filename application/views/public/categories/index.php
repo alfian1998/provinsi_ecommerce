@@ -42,7 +42,7 @@
                             <div class="text-categories-title"><?=$data['category_nm']?></div>
                             <div class="text-categories-count"><?=digit($this->category_model->count_product_by_parent($data['category_id']))?> produk</div>
                             <div class="button-category-all">
-                                <a href="" class="btn btn-sm btn-success btn-all-categories">Semua produk di kategori ini <i class="fa fa-angle-double-right"></i></a>
+                                <a href="<?=site_url('gridview/all/1/0/'.$data['category_id'])?>" class="btn btn-sm btn-success btn-all-categories">Semua produk di kategori ini <i class="fa fa-angle-double-right"></i></a>
                             </div>
                             <div class="line"></div>
                             <div class="text-desc">

@@ -161,21 +161,16 @@
                                             <?php endif; ?>
                                         </div>
                                         <span class="product-city product-icon text-short text-white">
-                                            <img src="<?=base_url()?>assets/images/icon/map-marker.png" class="map-marker maps-marker-icon-new"> <span class="address-new label label-success"><?=($data['kel_nm'] && $data['kec_nm'] && $data['kab_nm'] && $data['prov_nm'] !='') ? $data['kel_nm'].', '.$data['kec_nm'].', '.$data['kab_nm'].', '.$data['prov_nm'] : '-' ?></span>
-                                        </span>
-                                        <span class="product-city product-icon text-short text-white">
                                             <img src="<?=base_url()?>assets/images/icon/man-icon-2.png" class="map-marker maps-marker-icon-new"> <span class="address-new label label-primary"><?=$data['customer_nm']?></span>
                                         </span>
-                                        <center>
-                                            <div class="button-new-product">
-                                                <?php if ($ses_customer_id == $data['customer_id']): ?>
-                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary" style="width: 100%"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
-                                                <?php else: ?>
-                                                    <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
-                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli</a>
-                                                <?php endif; ?>
-                                            </div>
-                                        </center>
+                                        <div class="button-new-product">
+                                            <?php if ($ses_customer_id == $data['customer_id']): ?>
+                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary" style="width: 100%"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                            <?php else: ?>
+                                                <button class="add_cart btn btn-sm btn-primary span7" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
+                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success span4"><i class="fa fa-shopping-cart"></i> Beli</a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 <script type="text/javascript">
     $(function() {
         $('#ses_urutan,#ses_kabupaten,#ses_kecamatan,#ses_kelurahan').bind('change',function() {
-            $('#form-search').attr('action','<?=site_url("listview/search/".$p."/".$o."/".$category_id)?>').submit();
+            $('#form-search').attr('action','<?=site_url("listview/search_all/".$p."/".$o."/".$category_parent)?>').submit();
         });
         //
         <?php if(@$ses_kabupaten != ''):?>
@@ -14,7 +14,7 @@
             ses_kecamatan(i);
         });
         function ses_kecamatan(i,k) {
-            $.get('<?=site_url("listview/ajax/ses_kecamatan/".$p."/".$o."/".$category_id)?>?ses_kabupaten='+i+'&ses_kecamatan='+k,null,function(data) {
+            $.get('<?=site_url("listview/ajax_all/ses_kecamatan/".$p."/".$o."/".$category_parent)?>?ses_kabupaten='+i+'&ses_kecamatan='+k,null,function(data) {
                 $('#box_kecamatan').html(data.html);
             },'json');
         }
@@ -30,7 +30,7 @@
                     <span></span>
                 </li>
                 <li><a href="<?=site_url('web/location/categories')?>">Kategori View</a><span></span></li>
-                <li>(<?=$get_category_parent['category_nm']?>) <?=$get_category['category_nm']?></li>
+                <li>Semua Produk di Kategori <?=$get_category['category_nm']?></li>
             </ul>
         </div>
 		<div class="row">
@@ -41,14 +41,14 @@
                         <h5 class="vertical-title">Filter Data</h5>
                     </div>
                     <div class="vertical-menu-content">
-                        <form class="form-inline" name="form-search" id="form-search" method="post" action="<?=site_url('listview/search/'.$p.'/'.$o.'/'.$category_id)?>">
+                        <form class="form-inline" name="form-search" id="form-search" method="post" action="<?=site_url('listview/search_all/'.$p.'/'.$o.'/'.$category_parent)?>">
                         <table class="no-border">
                             <tr>
                                 <td class="no-border">Tampilan</td>
                                 <td class="no-border">:</td>
                                 <td class="no-border">
                                     <a href="#" title="Tampilan List" class="button-small button-blue button-blue-active"><i class="fa fa-list"></i></a>
-                                    <a href="<?=site_url('gridview/location/1/0/'.$category_id)?>" title="Tampilan Grid" class="button-small button-blue"><i class="fa fa-th"></i></a>
+                                    <a href="<?=site_url('gridview/location_all/1/0/'.$category_parent)?>" title="Tampilan Grid" class="button-small button-blue"><i class="fa fa-th"></i></a>
                                 </td>
                             </tr>
                             <tr>
@@ -107,7 +107,7 @@
                             <tr>
                                 <td class="no-border" colspan="3">
                                     <button class="btn btn-primary" type="submit" style="width: 49%">Search <i class="fa fa-search"></i></button>
-                                    <a href="<?=site_url('listview/location/'.$p.'/'.$o.'/'.$category_id)?>" class="btn btn-danger" style="width: 49%">Batal <i class="fa fa-refresh"></i></a>
+                                    <a href="<?=site_url('listview/location_all/'.$p.'/'.$o.'/'.$category_parent)?>" class="btn btn-danger" style="width: 49%">Batal <i class="fa fa-refresh"></i></a>
                                 </td>
                             </tr>
                         </table>
@@ -135,7 +135,7 @@
 			<div class="col-xs-12 col-sm-8 col-md-9">
 				<div class="box-panel" style="margin-bottom: -20px;">
 					<div class="panel panel-primary">
-						<div class="panel-heading text-box-panel"><i class="fa fa-list"></i> (<?=$get_category_parent['category_nm']?>) <?=$get_category['category_nm']?></div>
+						<div class="panel-heading text-box-panel"><i class="fa fa-list"></i> Semua Produk di Kategori <?=$get_category['category_nm']?></div>
 					</div>
 				</div>
 				<div class="category-products" style="margin-top: -15px;">
@@ -199,21 +199,21 @@
                     <div style="text-align: right;">
                         <ul class="pagination" style="margin-top: 17px; margin-bottom: 0px;">
                             <?php if($paging->start_link): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->c_start_link/$o/$category_id") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
+                                <li><a href="<?=site_url("listview/all/$paging->c_start_link/$o/$category_parent") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
                             <?php endif; ?>
                             <?php if($paging->prev): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->prev/$o/$category_id") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
+                                <li><a href="<?=site_url("listview/all/$paging->prev/$o/$category_parent") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
                             <?php endif; ?>
 
                             <?php for($i = $paging->c_start_link; $i <= $paging->c_end_link; $i++): ?>
-                                <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("listview/index/$i/$o/$category_id") ?>"><?=$i ?></a></li>
+                                <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("listview/all/$i/$o/$category_parent") ?>"><?=$i ?></a></li>
                             <?php endfor; ?>
 
                             <?php if($paging->next): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->next/$o/$category_id") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
+                                <li><a href="<?=site_url("listview/all/$paging->next/$o/$category_parent") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
                             <?php endif; ?>
                             <?php if($paging->end_link): ?>
-                                <li><a href="<?=site_url("listview/index/$paging->c_end_link/$o/$category_id") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
+                                <li><a href="<?=site_url("listview/all/$paging->c_end_link/$o/$category_parent") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
                             <?php endif; ?>
                         </ul>
                     </div>

@@ -363,6 +363,111 @@ class Product_model extends CI_Model {
         return $result;
     }
 
+    function paging_product_by_parent_category_gridview($p = 1, $o = 0, $category_parent=null) {
+        $ses_urutan = @$_SESSION['ses_urutan'];
+        if ($ses_urutan == 'terbaru') {
+            $sql_ses_urutan = "ORDER BY a.product_id DESC";
+        }else if($ses_urutan == 'termurah') {
+            $sql_ses_urutan = "ORDER BY a.price ASC";
+        }else if($ses_urutan == 'termahal') {
+            $sql_ses_urutan = "ORDER BY a.price DESC";
+        }else{
+            $sql_ses_urutan = "ORDER BY a.product_id ASC";
+        }
+        //
+        $ses_kata_kunci = @$_SESSION['ses_kata_kunci'];
+        $sql_ses_kata_kunci = "";
+        if($ses_kata_kunci != '')  $sql_ses_kata_kunci .= " AND a.product_nm LIKE '%$ses_kata_kunci%' OR b.customer_nm LIKE '%$ses_kata_kunci%' AND i.category_parent='$category_parent'";
+        // kabupaten
+        $ses_kabupaten = @$_SESSION['ses_kabupaten'];
+        $sql_ses_kabupaten = "";
+        if($ses_kabupaten != '')  $sql_ses_kabupaten .= " AND b.customer_kabupaten = '$ses_kabupaten'";
+        // kecamatan
+        $ses_kecamatan = @$_SESSION['ses_kecamatan'];
+        $sql_ses_kecamatan = "";
+        if($ses_kecamatan != '')  $sql_ses_kecamatan .= " AND b.customer_kecamatan = '$ses_kecamatan'";
+        // kelurahan
+        $ses_kelurahan = @$_SESSION['ses_kelurahan'];
+        $sql_ses_kelurahan = "";
+        if($ses_kelurahan != '')  $sql_ses_kelurahan .= " AND b.customer_kelurahan = '$ses_kelurahan'";
+        //
+        $sql = "SELECT 
+                    COUNT(product_id) AS count_data 
+                FROM product a 
+                LEFT JOIN customer b ON a.customer_id=b.customer_id
+                LEFT JOIN mst_provinsi e ON b.customer_provinsi=e.id_prov 
+                LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
+                LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
+                LEFT JOIN category i ON a.category_id=i.category_id
+                WHERE 1 AND i.category_parent='$category_parent' AND product_st = '1' $sql_ses_kata_kunci $sql_ses_kabupaten $sql_ses_kecamatan $sql_ses_kelurahan
+                $sql_ses_urutan";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $count_data = $row['count_data'];
+        //
+        $this->load->library('paging');
+        $cfg['page'] = $p;
+        $cfg['per_page'] = '8';
+        $cfg['num_rows'] = $count_data;
+        $this->paging->init($cfg);        
+        return $this->paging;
+    }
+
+    function list_product_by_parent_category_gridview($o = 0, $offset = 0, $limit = 100, $category_parent=null) {
+        $ses_urutan = @$_SESSION['ses_urutan'];
+        if ($ses_urutan == 'terbaru') {
+            $sql_ses_urutan = "ORDER BY a.product_id DESC";
+        }else if($ses_urutan == 'termurah') {
+            $sql_ses_urutan = "ORDER BY a.price ASC";
+        }else if($ses_urutan == 'termahal') {
+            $sql_ses_urutan = "ORDER BY a.price DESC";
+        }else{
+            $sql_ses_urutan = "ORDER BY a.product_id ASC";
+        }
+        //
+        $ses_kata_kunci = @$_SESSION['ses_kata_kunci'];
+        $sql_ses_kata_kunci = "";
+        if($ses_kata_kunci != '')  $sql_ses_kata_kunci .= " AND a.product_nm LIKE '%$ses_kata_kunci%' OR b.customer_nm LIKE '%$ses_kata_kunci%' AND i.category_parent='$category_parent'";
+        // kabupaten
+        $ses_kabupaten = @$_SESSION['ses_kabupaten'];
+        $sql_ses_kabupaten = "";
+        if($ses_kabupaten != '')  $sql_ses_kabupaten .= " AND b.customer_kabupaten = '$ses_kabupaten'";
+        // kecamatan
+        $ses_kecamatan = @$_SESSION['ses_kecamatan'];
+        $sql_ses_kecamatan = "";
+        if($ses_kecamatan != '')  $sql_ses_kecamatan .= " AND b.customer_kecamatan = '$ses_kecamatan'";
+        // kelurahan
+        $ses_kelurahan = @$_SESSION['ses_kelurahan'];
+        $sql_ses_kelurahan = "";
+        if($ses_kelurahan != '')  $sql_ses_kelurahan .= " AND b.customer_kelurahan = '$ses_kelurahan'";
+        //
+        $sql_paging = " LIMIT ".$offset.",".$limit;
+        //
+        $sql = "SELECT 
+                    a.*, b.*, e.nama AS prov_nm, f.nama AS kab_nm, g.nama AS kec_nm, h.nama AS kel_nm   
+                FROM product a 
+                LEFT JOIN customer b ON a.customer_id=b.customer_id
+                LEFT JOIN mst_provinsi e ON b.customer_provinsi=e.id_prov 
+                LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
+                LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
+                LEFT JOIN category i ON a.category_id=i.category_id
+                WHERE 1 AND i.category_parent='$category_parent' AND product_st = '1' $sql_ses_kata_kunci $sql_ses_kabupaten $sql_ses_kecamatan $sql_ses_kelurahan 
+                $sql_ses_urutan 
+                $sql_paging";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['no'] = $no+$offset;
+            $result[$key]['first_image'] = $this->get_first_image($val['product_id']);
+            $no++;
+        }
+        return $result;
+    }
+
     function paging_product_by_category_listview($p = 1, $o = 0, $category_id=null) {
         $ses_urutan = @$_SESSION['ses_urutan'];
         if ($ses_urutan == 'terbaru') {
@@ -452,6 +557,111 @@ class Product_model extends CI_Model {
                 LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
                 LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
                 WHERE 1 AND a.category_id='$category_id' AND product_st = '1' $sql_ses_kata_kunci $sql_ses_kabupaten $sql_ses_kecamatan $sql_ses_kelurahan 
+                $sql_ses_urutan 
+                $sql_paging";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['no'] = $no+$offset;
+            $result[$key]['first_image'] = $this->get_first_image($val['product_id']);
+            $no++;
+        }
+        return $result;
+    }
+
+    function paging_product_by_parent_category_listview($p = 1, $o = 0, $category_parent=null) {
+        $ses_urutan = @$_SESSION['ses_urutan'];
+        if ($ses_urutan == 'terbaru') {
+            $sql_ses_urutan = "ORDER BY a.product_id DESC";
+        }else if($ses_urutan == 'termurah') {
+            $sql_ses_urutan = "ORDER BY a.price ASC";
+        }else if($ses_urutan == 'termahal') {
+            $sql_ses_urutan = "ORDER BY a.price DESC";
+        }else{
+            $sql_ses_urutan = "ORDER BY a.product_id ASC";
+        }
+        //
+        $ses_kata_kunci = @$_SESSION['ses_kata_kunci'];
+        $sql_ses_kata_kunci = "";
+        if($ses_kata_kunci != '')  $sql_ses_kata_kunci .= " AND a.product_nm LIKE '%$ses_kata_kunci%' OR b.customer_nm LIKE '%$ses_kata_kunci%' AND i.category_parent='$category_parent'";
+        // kabupaten
+        $ses_kabupaten = @$_SESSION['ses_kabupaten'];
+        $sql_ses_kabupaten = "";
+        if($ses_kabupaten != '')  $sql_ses_kabupaten .= " AND b.customer_kabupaten = '$ses_kabupaten'";
+        // kecamatan
+        $ses_kecamatan = @$_SESSION['ses_kecamatan'];
+        $sql_ses_kecamatan = "";
+        if($ses_kecamatan != '')  $sql_ses_kecamatan .= " AND b.customer_kecamatan = '$ses_kecamatan'";
+        // kelurahan
+        $ses_kelurahan = @$_SESSION['ses_kelurahan'];
+        $sql_ses_kelurahan = "";
+        if($ses_kelurahan != '')  $sql_ses_kelurahan .= " AND b.customer_kelurahan = '$ses_kelurahan'";
+        //
+        $sql = "SELECT 
+                    COUNT(product_id) AS count_data 
+                FROM product a 
+                LEFT JOIN customer b ON a.customer_id=b.customer_id
+                LEFT JOIN mst_provinsi e ON b.customer_provinsi=e.id_prov 
+                LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
+                LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
+                LEFT JOIN category i ON a.category_id=i.category_id
+                WHERE 1 AND i.category_parent='$category_parent' AND product_st = '1' $sql_ses_kata_kunci $sql_ses_kabupaten $sql_ses_kecamatan $sql_ses_kelurahan
+                $sql_ses_urutan";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $count_data = $row['count_data'];
+        //
+        $this->load->library('paging');
+        $cfg['page'] = $p;
+        $cfg['per_page'] = '5';
+        $cfg['num_rows'] = $count_data;
+        $this->paging->init($cfg);        
+        return $this->paging;
+    }
+
+    function list_product_by_parent_category_listview($o = 0, $offset = 0, $limit = 100, $category_parent=null) {
+        $ses_urutan = @$_SESSION['ses_urutan'];
+        if ($ses_urutan == 'terbaru') {
+            $sql_ses_urutan = "ORDER BY a.product_id DESC";
+        }else if($ses_urutan == 'termurah') {
+            $sql_ses_urutan = "ORDER BY a.price ASC";
+        }else if($ses_urutan == 'termahal') {
+            $sql_ses_urutan = "ORDER BY a.price DESC";
+        }else{
+            $sql_ses_urutan = "ORDER BY a.product_id ASC";
+        }
+        //
+        $ses_kata_kunci = @$_SESSION['ses_kata_kunci'];
+        $sql_ses_kata_kunci = "";
+        if($ses_kata_kunci != '')  $sql_ses_kata_kunci .= " AND a.product_nm LIKE '%$ses_kata_kunci%' OR b.customer_nm LIKE '%$ses_kata_kunci%' AND i.category_parent='$category_parent'";
+        // kabupaten
+        $ses_kabupaten = @$_SESSION['ses_kabupaten'];
+        $sql_ses_kabupaten = "";
+        if($ses_kabupaten != '')  $sql_ses_kabupaten .= " AND b.customer_kabupaten = '$ses_kabupaten'";
+        // kecamatan
+        $ses_kecamatan = @$_SESSION['ses_kecamatan'];
+        $sql_ses_kecamatan = "";
+        if($ses_kecamatan != '')  $sql_ses_kecamatan .= " AND b.customer_kecamatan = '$ses_kecamatan'";
+        // kelurahan
+        $ses_kelurahan = @$_SESSION['ses_kelurahan'];
+        $sql_ses_kelurahan = "";
+        if($ses_kelurahan != '')  $sql_ses_kelurahan .= " AND b.customer_kelurahan = '$ses_kelurahan'";
+        //
+        $sql_paging = " LIMIT ".$offset.",".$limit;
+        //
+        $sql = "SELECT 
+                    a.*, b.*, e.nama AS prov_nm, f.nama AS kab_nm, g.nama AS kec_nm, h.nama AS kel_nm, i.*    
+                FROM product a 
+                LEFT JOIN customer b ON a.customer_id=b.customer_id
+                LEFT JOIN mst_provinsi e ON b.customer_provinsi=e.id_prov 
+                LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
+                LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
+                LEFT JOIN category i ON a.category_id=i.category_id
+                WHERE 1 AND i.category_parent='$category_parent' AND product_st = '1' $sql_ses_kata_kunci $sql_ses_kabupaten $sql_ses_kecamatan $sql_ses_kelurahan 
                 $sql_ses_urutan 
                 $sql_paging";
         $query = $this->db->query($sql);
