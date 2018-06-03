@@ -5,6 +5,10 @@
             <div class="col-sm-3 col-md-2">
                 <!-- Block vertical-menu -->
                 <?php if ($ses_login == '1'): ?>
+                <div class="selling-button">
+                    <a href="<?=site_url('selling/form')?>" class="button-selling button-selling-blue">Jual Ikan/Barang</a>
+                </div>
+                
                 <div class="block block-vertical-menu">
                     <div class="vertical-head">
                         <h5 class="vertical-title">Status Deposit <!-- <span class="pull-right"><i class="fa fa-bars"></i></span> --></h5>
@@ -12,10 +16,10 @@
                     <div class="vertical-menu-content">
                         <ul class="vertical-menu-list">
                             <li >
-                                <a href="<?=site_url('web/location/send')?>" class="background-font"><i class="icon-category fa fa-send"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Sudah Dikirim</a>
+                                <a href="<?=site_url('web/location/send')?>" class="background-font"><i class="icon-category fa fa-send"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Sudah Transfer</a>
                             </li>
                             <li >
-                                <a href="<?=site_url('web/location/not_send')?>" class="background-font"><i class="icon-category fa fa-arrow-left"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Belum Dikirim</a>
+                                <a href="<?=site_url('web/location/not_send')?>" class="background-font"><i class="icon-category fa fa-arrow-left"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Belum Transfer</a>
                             </li>
                         </ul>
                     </div>

@@ -7,47 +7,9 @@
 <div class="container">
 	<div class="row">
 		<div class="row">
-            <div class="col-sm-3 col-md-2">
-                <!-- Block vertical-menu -->
-                <div class="block block-vertical-menu">
-                    <div class="vertical-head">
-                        <h5 class="vertical-title">Status Deposit <!-- <span class="pull-right"><i class="fa fa-bars"></i></span> --></h5>
-                    </div>
-                    <div class="vertical-menu-content">
-                        <ul class="vertical-menu-list">
-                            <li >
-                                <a href="<?=site_url('web/location/send')?>" class="background-font"><i class="icon-category fa fa-send"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Sudah Dikirim</a>
-                            </li>
-                            <li >
-                                <a href="<?=site_url('web/location/not_send')?>" class="background-font"><i class="icon-category fa fa-arrow-left"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Belum Dikirim</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div class="block block-vertical-menu">
-                    <div class="vertical-head">
-                        <h5 class="vertical-title">Menu <!-- <span class="pull-right"><i class="fa fa-bars"></i></span> --></h5>
-                    </div>
-                    <div class="vertical-menu-content">
-                        <ul class="vertical-menu-list">
-                            <li >
-                                <a href="<?=site_url('web/location/notification')?>" class="background-font"><i class="icon-category fa fa-dollar" style="margin-left: 22px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-8.png"><b>Data Pembeli</b></a>
-                            </li>
-                            <li>
-                                <a href="<?=site_url('web/location/selling')?>" class="background-font"><i class="icon-category fa fa-folder" style="margin-left: 19px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-7.png">Jualan Saya</a>
-                            </li>
-                            <li>
-                                <a href="<?=site_url('web/location/profile')?>" class="background-font"><i class="icon-category fa fa-user" style="margin-left: 20px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-12.png">Profil</a>
-                            </li>
-                            <li>
-                                <a id="logout2" href="#" class="background-font"><i class="icon-category fa fa-power-off" style="margin-left: 20px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-9.png">Logout</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- ./Block vertical-menu -->
-            </div>
+            <?php $this->load->view('public/main/sidebar-menu');?>
+            
             <div class="col-xs-12 col-sm-12 col-md-10">
                 <!-- content -->
 
@@ -90,7 +52,7 @@
                                                     <tr>
                                                         <th>Tgl Pembelian</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=convert_date_indo($main['checkout_date'])?></td>
+                                                        <td><?=convert_date_indo($main['billing_date'])?></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Status Bayar</th>
@@ -163,13 +125,28 @@
 
                                 <div class="panel-content" style="margin-top: -26px;">
                                     <div class="panel panel-primary">
-                                        <div class="panel-heading bold">Alamat Pembeli</div>
+                                        <div class="panel-heading bold">Data Pembeli</div>
                                         <div class="panel-body">
                                             <?php if ($main['bayar_st'] == '1'): ?>
                                                 <?php if($check_kirim_st !=''): ?>
                                                 <div class="alert alert-red alert-small">Jika Anda sudah mengirimkan barang ke Alamat pembeli, segera Konfirmasi disini <a href="<?=site_url('notification/form/'.$main['billing_id'])?>" class="btn btn-xs btn-default" style="color: black; font-weight: bold;">Konfirmasi</a></div>
                                                 <?php endif; ?>
                                             <?php endif; ?>
+
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <th width="35%">Email Pembeli</th>
+                                                        <td align="center" width="6%"><b>:</b></td>
+                                                        <td><b><?=($main['customer_id_pembeli'] !='') ? $main['customer_email'] : $main['pembeli_email'] ?></b></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th width="35%">No Telp Pembeli</th>
+                                                        <td align="center" width="6%"><b>:</b></td>
+                                                        <td><b><?=($main['customer_id_pembeli'] != '') ? $main['customer_phone'] : $main['pembeli_phone']?></b></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
 
                                             <div class="panel panel-default">
                                                 <div class="panel-heading"><img src="<?=base_url()?>assets/images/<?=($main['customer_id_pembeli'] !='') ? 'customer/'.$main['customer_img'] : 'icon/no-customer-img.jpg' ?>" class="img-circle img-customer-checkout"> <b><?=$main['customer_nm']?> <label class="pull-right label label-primary" style="font-size: 13px; margin-top: 2px; padding-top: 6px; padding-bottom: 6px;"><b><i class="fa fa-home"></i> Informasi Alamat</b></label></b></div>

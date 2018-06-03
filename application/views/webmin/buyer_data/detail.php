@@ -48,7 +48,7 @@
                                                     <tr>
                                                         <th width="35%">Tgl Pembelian</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=convert_date_indo($main['checkout_date'])?></td>
+                                                        <td><?=convert_date_indo($main['billing_date'])?></td>
                                                     </tr>
                                                     <tr>
                                                         <th width="35%">Status Bayar</th>

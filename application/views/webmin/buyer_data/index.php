@@ -1,23 +1,26 @@
 <script type="text/javascript">
     $(function() {
         var status = ($('#ses_bayar_st').val() != '' ? $('#ses_bayar_st').val() : '');
+        var bulan = ($('#ses_bulan').val() != '' ? $('#ses_bulan').val() : '');
         $('#btn_buyer_search').bind('click',function(e) {
             e.preventDefault();
             var search = $('#ses_buyer_search').val();
             var status = $('#ses_bayar_st').val();
-            __show_result(status,search);
+            var bulan = $('#ses_bulan').val();
+            __show_result(status,bulan,search);
         });
-        __show_result('','');
-        function __show_result(status,search) {
-            $.get('<?=site_url('webmin_buyer_data/buyer')?>?status='+status+'&search='+search,null,function(data) {
+        __show_result('','','');
+        function __show_result(status,bulan,search) {
+            $.get('<?=site_url('webmin_buyer_data/buyer')?>?status='+status+'&bulan='+bulan+'&search='+search,null,function(data) {
                 $('#box_result').html(data.html);
                 $('#box_count_buyer').html(data.count);
             },'json');
         }
         var auto_refresh = setInterval(function () {
             var status = ($('#ses_bayar_st').val() != '' ? $('#ses_bayar_st').val() : '');
+            var bulan = ($('#ses_bulan').val() != '' ? $('#ses_bulan').val() : '');
             var search = $('#ses_buyer_search').val();
-            __show_result(status,search);
+            __show_result(status,bulan,search);
         }, 25000);
     });
 </script>
@@ -60,7 +63,13 @@
                                             <option value="konfirmasi">Menunggu Konfirmasi</option>
                                             <option value="sudah_diterima">Sudah Diterima</option>
                                     </select>
-                                    <input type="text" name="ses_buyer_search" id="ses_buyer_search" class="form-control span8" placeholder="Masukkan kata kunci pencarian ...">
+                                    <select class="select-chosen span2" name="ses_bulan" id="ses_bulan">
+                                            <option value="">-- Semua Bulan --</option>
+                                            <?php foreach (list_bulan() as $id_bulan => $bulan): ?>
+                                            <option value="<?=$id_bulan?>"><?=$bulan?></option>
+                                            <?php endforeach; ?>
+                                    </select>
+                                    <input type="text" name="ses_buyer_search" id="ses_buyer_search" class="form-control span6" placeholder="Masukkan kata kunci pencarian ...">
                                     <button type="submit" id="btn_buyer_search" class="btn btn-primary"><i class="fa fa-search"></i> Cari</button>
                                     <a href="<?=site_url('webmin_buyer_data')?>" class="btn btn-danger"><i class="fa fa-times"></i></a>
                                 </div>

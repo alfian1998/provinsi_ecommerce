@@ -25,10 +25,15 @@ class Notification extends CI_Controller{
 	}	
 
 	function buyer($p=1, $o=0) {
+		//get data
+		$status = $this->input->get('status');
+		$bulan = $this->input->get('bulan');
+		$search = $this->input->get('search');
+		//
 		$customer_id = $this->session->userdata('ses_customer_id');
 		//
-		$paging = $this->checkout_model->paging_buyer_by_customer_id($p,$o,$customer_id);
-		$list_buyer = $this->checkout_model->get_buyer_by_customer_id($o, $paging->offset, $paging->per_page,$customer_id);
+		$paging = $this->checkout_model->paging_buyer_by_customer_id($p,$o,$customer_id,$status,$bulan,$search);
+		$list_buyer = $this->checkout_model->get_buyer_by_customer_id($o, $paging->offset, $paging->per_page,$customer_id,$status,$bulan,$search);
 		//
 		$html = '';
 			foreach ($list_buyer as $data){
@@ -157,9 +162,15 @@ class Notification extends CI_Controller{
 					});
 				</script>";
 
+		//Data Jumlah Pembeli
+		$count_buyer = count($list_buyer);
+		//
+		$count = "";
+		$count .= $count_buyer." Orang";
 		//
 		echo json_encode(array(
-			'html' => $html
+			'html' => $html,
+			'count' => $count
 		));
 	}
 

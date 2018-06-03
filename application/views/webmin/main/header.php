@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="main-header">
                     <div class="row">
-                        <div class="col-lg-5 col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-3 col-sm-12 col-xs-12">
                             <a href="<?=site_url('webmin')?>">
                                 <div class="logo-website">
                                     <img src="<?=base_url()?>assets/images/logo/logo.png" alt="Logo" class="img-logo">
@@ -68,7 +68,7 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="col-lg-7 col-md-9 col-sm-12 col-xs-12 main-header-banner">
+                        <div class="col-lg-6 col-md-9 col-sm-12 col-xs-12 main-header-banner">
                             <div class="block block-header-right">
                                 <ul class="list-link">
                                     <li class="item li-img-user-header" data-toggle="tooltip" data-placement="bottom" title="<?=$config['profile']['user_realname']?>">

@@ -70,9 +70,10 @@ class Webmin extends CI_Controller{
 		// get data
 		$status = $this->input->get('status');
 		$search = $this->input->get('search');
+		$bulan = "";
 		//Data Pembeli Terbaru
-		$paging = $this->checkout_model->paging_all_buyer($p,$o,$status,$search);
-		$list_buyer = $this->checkout_model->get_all_buyer($o, $paging->offset, $paging->per_page, $status, $search);
+		$paging = $this->checkout_model->paging_all_buyer($p,$o,$status,$bulan,$search);
+		$list_buyer = $this->checkout_model->get_all_buyer($o, $paging->offset, $paging->per_page, $status,$bulan,$search);
 		//
 		$html = '';
 			foreach ($list_buyer as $data){
@@ -211,7 +212,7 @@ class Webmin extends CI_Controller{
 				</script>";
 
 		//Data Jumlah Pembeli
-		$count_buyer = $this->checkout_model->count_buyer($status,$search);
+		$count_buyer = $this->checkout_model->count_buyer($status,$bulan,$search);
 		//
 		$count = "";
 		$count .= $count_buyer." Orang";

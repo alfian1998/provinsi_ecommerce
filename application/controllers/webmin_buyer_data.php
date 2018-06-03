@@ -13,10 +13,11 @@ class Webmin_buyer_data extends CI_Controller{
 	function buyer($p=1, $o=0) {
 		//get data
 		$status = $this->input->get('status');
+		$bulan = $this->input->get('bulan');
 		$search = $this->input->get('search');
 		//
-		$paging = $this->checkout_model->paging_buyer($p,$o,$status,$search);
-		$list_buyer = $this->checkout_model->get_buyer($o, $paging->offset, $paging->per_page,$status,$search);
+		$paging = $this->checkout_model->paging_buyer($p,$o,$status,$bulan,$search);
+		$list_buyer = $this->checkout_model->get_buyer($o, $paging->offset, $paging->per_page,$status,$bulan,$search);
 		//
 		$html = '';
 			foreach ($list_buyer as $data){
@@ -210,7 +211,7 @@ class Webmin_buyer_data extends CI_Controller{
 				      <form action="'.site_url('webmin_buyer_data/update_bayar_st/'.$data['billing_id']).'" method="post" enctype="multipart/form-data" id="form-validate">  
 				      <div class="modal-header">
 				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="myModalLabel">Konfirmasi Sudah Bayat ('.$data['billing_id'].')</h4>
+				        <h4 class="modal-title" id="myModalLabel">Konfirmasi Sudah Bayar ('.$data['billing_id'].')</h4>
 				      </div>
 				      <div class="modal-body">
 				        <div class="form-group">
@@ -290,7 +291,7 @@ class Webmin_buyer_data extends CI_Controller{
 				</script>";
 
 		//Data Jumlah Pembeli
-		$count_buyer = $this->checkout_model->count_buyer($status,$search);
+		$count_buyer = $this->checkout_model->count_buyer($status,$bulan,$search);
 		//
 		$count = "";
 		$count .= $count_buyer." Orang";
