@@ -295,6 +295,16 @@ class Checkout_Model extends CI_Model {
         return $row;
     }
 
+    function check_bayar_customer_st($billing_id=null) {
+        $sql = "SELECT a.*
+                FROM checkout a 
+                WHERE 1 AND a.billing_id=?";
+        $query = $this->db->query($sql, $billing_id);
+        $row = $query->row_array();
+        //
+        return $row;
+    }
+
     function kirim_st($billing_id=null, $customer_id=null) {
         if ($customer_id !='') {
             $sql_customer_id = " AND a.customer_id='$customer_id'";
@@ -544,7 +554,7 @@ class Checkout_Model extends CI_Model {
                     COUNT(a.billing_id) AS count_data 
                 FROM billing a 
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id 
-                WHERE 1 AND a.diterima_st = '1' AND b.customer_id='$customer_id'";
+                WHERE 1 AND a.diterima_st = '1' AND b.bayar_customer_st = '2' AND b.customer_id='$customer_id'";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $count_data = $row['count_data'];
@@ -566,7 +576,7 @@ class Checkout_Model extends CI_Model {
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id 
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
-                WHERE 1 AND a.diterima_st = '1' AND b.customer_id='$customer_id'
+                WHERE 1 AND a.diterima_st = '1' AND b.bayar_customer_st = '2' AND b.customer_id='$customer_id'
                 GROUP BY a.billing_id 
                 ORDER BY a.billing_date DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC  
                     $sql_paging";

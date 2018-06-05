@@ -115,14 +115,14 @@
                     <div class="block-head">
                         <div class="block-title">
                             <div class="block-icon">
-                                <img src="<?=base_url()?>assets/images/icon/new-icon-1.png" alt="store icon" style="margin-top: -12px;">
+                                <img src="<?=base_url()?>assets/images/icon/most_popular.png" alt="store icon" style="margin-top: -12px; width: 50px; height: 50px;">
                             </div>
-                            <div class="block-title-text text-lg new-text">Terbaru</div>
+                            <div class="block-title-text text-lg new-text">Populer</div>
                         </div>
                     </div>
                     <div class="block-inner">
                         <ul class="products kt-owl-carousel" data-margin="10" data-items="1" data-autoplay="true" data-loop="true" data-nav="true" data-responsive='{"0":{"items":1},"600":{"items":2},"1000":{"items":1}}'>
-                            <?php foreach($list_produk as $data): ?>
+                            <?php foreach($list_product_popular as $data): ?>
                             <!-- <form method="post" action="<?=$form_action?>" method="post" accept-charset="utf-8"> -->
                             <!-- <form id="form" class="" action="" method="post" accept-charset="utf-8"> -->
                             <li class="product">
@@ -166,6 +166,56 @@
                 </div>
             </div>
 		    </div>
+
+            <div class="block block-products-owl">
+                <div class="block-head" style="background: #5a88ca;">
+                    <div class="block-title">
+                        <div class="text-recommended" style="color: white;">Daftar Produk Terbaru</div>
+                    </div>
+                </div>
+                <div class="block-inner">
+                    <ul class="products kt-owl-carousel" data-margin="20" data-autoplay="true" data-loop="true" data-nav="true" data-responsive='{"0":{"items":1},"600":{"items":3},"1000":{"items":5}}'>
+                        <?php foreach($list_produk as $data): ?>
+                        <!-- <form method="post" action="<?=$form_action?>" method="post" accept-charset="utf-8"> -->
+                        <li class="product">
+                            <div class="product-container">
+                                <div class="product-left">
+                                    <div class="product-thumb">
+                                        <a class="product-img" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=$data['first_image']['image_name']?>" alt="" class="img-new"></a>
+                                        <a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view">Quick View</a>
+                                    </div>
+                                </div>
+                                <div class="product-name-price">
+                                    <div class="product-name">
+                                        <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
+                                    </div>
+                                    <div class="price-box">
+                                        <span class="product-price-grid">Rp <?=digit($data['price'])?></span>
+                                        <?php if ($data['price_before'] > $data['price']): ?>
+                                            <span class="product-price-old-grid">Rp <?=digit($data['price_before'])?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <span class="product-city product-icon text-short">
+                                        <img src="<?=base_url()?>assets/images/icon/man-icon-2.png" class="map-marker maps-marker-icon-new"> <span class="address-new"><?=$data['customer_nm']?></span>
+                                    </span>
+                                    <center>
+                                        <div class="button-new-product text-short">
+                                            <?php if ($ses_customer_id == $data['customer_id']): ?>
+                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary btn-block"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                            <?php else: ?>
+                                                <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
+                                                <a href="" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
+                                            <?php endif; ?>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- </form> -->
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
 
             <!-- <div class="row" style="padding-top: 20px;">
               <?php foreach ($list_category as $data): ?>

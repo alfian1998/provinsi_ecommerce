@@ -26,7 +26,7 @@ class Product_model extends CI_Model {
     }
 
     function list_product_new() {
-        $sql_limit = " LIMIT 5";
+        $sql_limit = " LIMIT 10";
         //
         $sql = "SELECT 
                     a.*, b.*, e.nama AS prov_nm, f.nama AS kab_nm, g.nama AS kec_nm, h.nama AS kel_nm  
@@ -38,6 +38,31 @@ class Product_model extends CI_Model {
                 LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
                 WHERE 1 AND product_st = '1' 
                 ORDER BY a.product_id DESC
+                    $sql_limit";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['first_image'] = $this->get_first_image($val['product_id']);
+            $no++;
+        }
+        return $result;
+    }
+
+    function list_product_popular() {
+        $sql_limit = " LIMIT 5";
+        //
+        $sql = "SELECT 
+                    a.*, b.*, e.nama AS prov_nm, f.nama AS kab_nm, g.nama AS kec_nm, h.nama AS kel_nm  
+                FROM product a 
+                LEFT JOIN customer b ON a.customer_id=b.customer_id
+                LEFT JOIN mst_provinsi e ON b.customer_provinsi=e.id_prov 
+                LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
+                LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
+                WHERE 1 AND product_st = '1' 
+                ORDER BY a.hit DESC
                     $sql_limit";
         $query = $this->db->query($sql);
         $result = $query->result_array();

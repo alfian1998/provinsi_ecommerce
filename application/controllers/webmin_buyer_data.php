@@ -21,6 +21,7 @@ class Webmin_buyer_data extends CI_Controller{
 		//
 		$html = '';
 			foreach ($list_buyer as $data){
+			$check_bayar_customer_st = $this->checkout_model->check_bayar_customer_st($data['billing_id']);
 		$html.= '<tr>
                     <td align="center" class="info"><b>'.$data['no'].'</b></td>';
         $html.='	<td align="center" class="info">';
@@ -33,6 +34,12 @@ class Webmin_buyer_data extends CI_Controller{
 				}
         $html.='	<td align="center" class="info"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
         $html.='	<td class="info"><label class="label label-primary" style="font-size: 12px;">Rp '.digit($data['product_total_price']).'</label></td>';
+
+        if ($check_bayar_customer_st['bayar_customer_st'] == '1') {
+        $html.=' 	<td rowspan="2">
+        				<label class="label label-success" style="font-size: 12px;"><i class="fa fa-check"></i> Transaksi Selesai</label>
+        			';
+        }elseif ($check_bayar_customer_st['bayar_customer_st'] == '2'){
 
         if ($data['diterima_st'] == '1') {
         $html.=' 	<td rowspan="2">
@@ -78,6 +85,7 @@ class Webmin_buyer_data extends CI_Controller{
         			}
                 }
         }
+    	}
         $html.='</td></tr>';
 
         $check_kirim_st = $this->checkout_model->check_kirim_st();
@@ -128,7 +136,7 @@ class Webmin_buyer_data extends CI_Controller{
 									}
 		$html.='					</tbody>
 								</table>';
-							if ($data['diterima_st'] == '1') {
+							if ($data['diterima_st'] == '1' && $check_bayar_customer_st['bayar_customer_st'] == '2') {
 		$html.='				<div class="bold" style="padding-bottom: 5px;">Data Rekening Bank ('.$seller['customer_nm'].')</div>
 								<div class="col-md-5 row">
                                     <div class="panel-content">

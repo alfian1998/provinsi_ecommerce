@@ -51,14 +51,18 @@ class Notification extends CI_Controller{
         $html.='    <td><div style="font-weight: bold; color: blue;">'.$data['pembeli_nm'].'</div></td>';
 				}
         $html.='	<td align="center"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
-        $html.='	<td><label class="label label-primary" style="font-size: 12px;">Rp '.digit($jumlah_harga['jumlah_harga']).'</label></td><td>';
+        $html.='	<td><label class="label label-primary" style="font-size: 12px;">Rp '.digit($jumlah_harga['jumlah_harga']).'</label></td>';
 
         if ($data['diterima_st'] == '1') {
-        $html.=' 	<label class="label label-primary" style="font-size: 12px;">Sudah Diterima Pembeli</label>';
+        $html.=' 	<td rowspan="2">
+        				<label class="label label-primary" style="font-size: 12px;">Sudah Diterima Pembeli</label><br><br>
+        				<label class="label label-success" style="font-size: 12px;">Uang Akan Segera Ditransfer</label>
+        			';
         }else{
         	if ($data['transfer_st'] == '2') {
 		$html.=' 	<label class="label label-primary" style="font-size: 12px;">Menunggu Konfirmasi Admin</label>';		
 			}else {
+		$html.='<td>';
         		if ($data['bayar_st'] == '1') {
         $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Bayar</label>';
                 }elseif ($data['bayar_st'] == '2') {

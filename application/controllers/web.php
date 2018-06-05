@@ -20,6 +20,7 @@ class Web extends CI_Controller{
 		//
 		$data['form_action'] = site_url('web/input');
 		$data['list_produk'] = $this->product_model->list_product_new();
+		$data['list_product_popular'] = $this->product_model->list_product_popular();
 		$data['cart'] = $this->cart->contents();
 		$data['list_category'] = $this->category_model->list_category_no_paging();
 		$data['list_category_rand'] = $this->category_model->list_category_rand();
