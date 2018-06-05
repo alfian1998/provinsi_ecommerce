@@ -27,6 +27,17 @@ class Checkout_Model extends CI_Model {
         return $query->result_array();
     }
 
+    function get_kirim_date_limit_1($billing_id=null) {
+        $sql = "SELECT 
+                    a.*
+                FROM checkout a 
+                WHERE a.billing_id=?
+                ORDER BY a.kirim_date DESC LIMIT 1";
+        $query = $this->db->query($sql, $billing_id);
+        $result = $query->row_array();
+        return $result;
+    }
+
     function list_jumlah_pembeli() {
         $arr = $this->get_all_jumlah_pembeli();
         $result = '';

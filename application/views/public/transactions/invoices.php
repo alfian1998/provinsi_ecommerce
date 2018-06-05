@@ -43,7 +43,39 @@ function copyToClipboard(element) {
                     <div class="panel-body">
                     <?php if ($main['billing_id'] !=''): ?>
                         <?php if ($main['bayar_st'] == '1'): ?>
-                        <div class="alert alert-green alert-small"><i class="fa fa-check"></i> Anda sudah Transfer ke Admin DKP Jateng pada tanggal <?=convert_date_indo($main['transfer_date'])?> dan dikonfirmasi tanggal <?=convert_date_indo($main['bayar_date'])?></div>
+                        <div class="alert alert-green alert-small">
+                            <li>Anda sudah Transfer ke Admin DKP Jateng pada tanggal <?=convert_date_indo($main['transfer_date'])?> dan dikonfirmasi tanggal <?=convert_date_indo($main['bayar_date'])?></li>
+                            <?php if ($main['diterima_st'] == '1'): ?>
+                                <!-- Kosong -->
+                            <?php else: ?>
+                            <li>Jika Anda sudah menerima semua produk, silahkan klik tombol Konfirmasi Sudah Diterima Semua</li>
+                            <li>Jika dalam 3 X 24 Jam Anda tidak konfirmasi Sudah Dikirim maka status akan otomatis Sudah Diterima Semua</li>
+                            <?php endif; ?>
+                        </div>
+
+<?php if ($main['diterima_st'] == ''): ?>
+    <div class="hidden">
+                        <div id="clockdiv">
+<div>
+    <span class="days" id="day"></span>
+    <div class="smalltext">Days</div>
+</div>
+<div>
+    <span class="hours" id="hour"></span>
+    <div class="smalltext">Hours</div>
+</div>
+<div>
+    <span class="minutes" id="minute"></span>
+    <div class="smalltext">Minutes</div>
+</div>
+<div>
+    <span class="seconds" id="second"></span>
+    <div class="smalltext">Seconds</div>
+</div>
+</div>
+</div>
+<?php endif; ?>
+
                         <?php if ($main['diterima_st'] == '1'): ?>
                         <div class="alert alert-blue alert-small"><i class="fa fa-check"></i> Produk sudah Anda terima, Terima Kasih</div>
                         <?php endif; ?>
@@ -262,18 +294,48 @@ function copyToClipboard(element) {
         <div class="form-group">
             <label>Konfirmasi</label>
             <select class="chosen-select span3" name="diterima_st">
-                <option value="2">Belum Diterima</option>
                 <option value="1">Sudah Diterima</option>
+                <option value="2">Belum Diterima</option>
             </select>
             <span class="alert-product">* Silahkan pilih <u>Sudah Diterima</u> apabila produk sudah Anda terima semua</span>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Simpan</button>
+        <button type="submit" class="btn btn-primary" id="myButtonId">Simpan</button>
       </div>
       </form>
     </div>
   </div>
 </div>
 
+<?php if ($main['diterima_st'] == ''): ?>
+<?php
+$date = date_create($get_kirim_date['kirim_date']);
+date_add($date, date_interval_create_from_date_string('4 days'));
+$finish_date = date_format($date, 'M d, Y H:i:s');
+?>
+<script>
+    var deadline = new Date("<?=$finish_date?>").getTime();
+    var x = setInterval(function() {
+        var now = new Date().getTime();
+        var t = deadline - now;
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60));
+        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((t % (1000 * 60)) / 1000);
+        document.getElementById("day").innerHTML =days ;
+        document.getElementById("hour").innerHTML =hours;
+        document.getElementById("minute").innerHTML = minutes; 
+        document.getElementById("second").innerHTML =seconds; 
+            if (t < 0) {
+                clearInterval(x);
+                document.getElementById("myButtonId").click();
+                document.getElementById("day").innerHTML ='0';
+                document.getElementById("hour").innerHTML ='0';
+                document.getElementById("minute").innerHTML ='0' ; 
+                document.getElementById("second").innerHTML = '0'; 
+            }
+    }, 1000);
+</script>
+<?php endif; ?>

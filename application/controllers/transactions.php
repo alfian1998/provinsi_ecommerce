@@ -39,6 +39,7 @@ class Transactions extends CI_Controller{
 		$data['main'] = $this->checkout_model->get_checkout($billing_id, $email);
 		$data['list_bank_account'] = $this->bank_account_model->get_all_bank_account();
 		$data['get_checkout_kirim_st'] = $this->checkout_model->get_checkout_kirim_st($billing_id);
+		$data['get_kirim_date'] = $this->checkout_model->get_kirim_date_limit_1($billing_id);
 		//
 		$this->load->view('public/main/header', $data);		
 		$this->load->view('public/main/top-menu');		
