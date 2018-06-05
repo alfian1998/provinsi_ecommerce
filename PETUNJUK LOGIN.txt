@@ -1,0 +1,9 @@
+Petunjuk Login Aplikasi
+
+- Login Administrator 
+	alamat : localhost/...../webmin
+	username : superadmin
+	password : superadmin
+
+- Login Customer/Penjual
+	Klik Login, Lalu Klik Tombol Register

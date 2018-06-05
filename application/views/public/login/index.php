@@ -36,7 +36,7 @@ $(function() {
 					<a href="#"><i class="fa fa-home"></i></a>
 					<span></span>
 				</li>
-				<li>Authentication</li>
+				<li>Login</li>
 			</ul>
 		</div>
 		<div class="main-page">
@@ -45,7 +45,7 @@ $(function() {
 	            	<div class="col-sm-4">
 	            	<div class="block box-border">
 	            		<div class="title-form-login">BELUM TERDAFTAR MENJADI MEMBER ?</div>
-	            		<div class="sub-title-form-login">Silahkan mendaftar pada halaman Register. Anda harus terdaftar menjadi anggota agar dapat melakukan pembelian atau penjualan secara online. Silahkan klik tombol Register</div>
+	            		<div class="sub-title-form-login">Silahkan mendaftar pada halaman Register. Anda harus terdaftar menjadi anggota agar dapat melakukan penjualan produk secara online. Silahkan klik tombol Register</div>
 	            		<a href="<?=site_url('web/location/register')?>" class="btn btn-primary btn-block"><i class="fa fa-unlock"></i> Register</a>
 	            	</div>
 	            	</div>

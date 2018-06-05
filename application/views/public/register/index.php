@@ -94,7 +94,7 @@ $(function() {
 					<a href="#"><i class="fa fa-home"></i></a>
 					<span></span>
 				</li>
-				<li>Authentication</li>
+				<li>Register</li>
 			</ul>
 		</div>
 		<div class="main-page">
