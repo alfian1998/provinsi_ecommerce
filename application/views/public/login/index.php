@@ -62,9 +62,7 @@ $(function() {
 	            				<label>Password</label>
 	            				<input type="password" name="t_password" id="t_password" class="form-control input-login" placeholder="Password">
 	            			</p>
-	            			<p>
-	            				<a href="#">Forgot your password?</a>
-	            			</p>
+	            			<div style="padding-bottom: 20px;"></div>
 	            			<p>
 	            				<button type="submit" class="btn btn-success input-login" id="btn-login"><i class="fa fa-unlock-alt"></i> Login</button>
 	            			</p>

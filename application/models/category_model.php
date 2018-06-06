@@ -15,6 +15,14 @@ class Category_model extends CI_Model {
         return $sql_where;
     }
 
+    function where_category_group() {
+        $ses_txt_search = @$_SESSION['ses_txt_search'];
+        //
+        $sql_where = "";
+        if($ses_txt_search != '')  $sql_where .= " AND a.category_nm LIKE '%$ses_txt_search%'";
+        return $sql_where;
+    }
+
     function paging_category($p = 1, $o = 0) {
         $sql_where = $this->where_category();
         //
@@ -43,6 +51,49 @@ class Category_model extends CI_Model {
                     a.* 
                 FROM category a 
                 WHERE 1 AND a.category_parent!='' 
+                    $sql_where 
+                ORDER BY a.category_id ASC 
+                    $sql_paging";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        // 
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['no'] = $no+$offset;
+            $result[$key]['cek_category'] = $this->cek_category($val['category_id']);
+            $no++;
+        }
+        return $result;
+    }
+
+    function paging_category_group($p = 1, $o = 0) {
+        $sql_where = $this->where_category_group();
+        //
+        $sql = "SELECT 
+                    COUNT(category_id) AS count_data 
+                FROM category a 
+                WHERE 1 AND a.category_parent='' 
+                    $sql_where";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $count_data = $row['count_data'];
+        //
+        $this->load->library('paging');
+        $cfg['page'] = $p;
+        $cfg['per_page'] = '10';
+        $cfg['num_rows'] = $count_data;
+        $this->paging->init($cfg);        
+        return $this->paging;
+    }
+
+    function list_category_group($o = 0, $offset = 0, $limit = 100) {
+        $sql_where = $this->where_category_group();
+        $sql_paging = " LIMIT ".$offset.",".$limit;
+        //
+        $sql = "SELECT 
+                    a.* 
+                FROM category a 
+                WHERE 1 AND a.category_parent='' 
                     $sql_where 
                 ORDER BY a.category_id ASC 
                     $sql_paging";
@@ -112,19 +163,30 @@ class Category_model extends CI_Model {
         $query = $this->db->query($sql, $category_id);
         $result = $query->row_array();
         // 
-        return $result['category_id']+1;
+        if ($result == '') {
+            $return['return_1'] = $category_id.str_pad('0', 2, '1', STR_PAD_RIGHT);
+        }else{
+            $return['return_1'] = $result['category_id']+1;
+        }
+
+        if ($result == '') {
+            $return['return_2'] = '';
+        }else{
+            $return['return_2'] = '0';
+        }
+        return $return;
     }
 
     function get_category_parent_last_category_id() {
         $sql = "SELECT 
-                    a.category_parent 
+                    IF(a.category_parent='', a.category_id, a.category_parent) AS category
                 FROM category a 
                 WHERE 1
                 ORDER BY a.category_id DESC LIMIT 1";
         $query = $this->db->query($sql);
         $result = $query->row_array();
         // 
-        return $result['category_parent']+1;
+        return $result['category']+1;
     }
 
     function count_category() {
@@ -134,6 +196,20 @@ class Category_model extends CI_Model {
                     COUNT(a.category_id) AS count_data
                 FROM category a 
                 WHERE 1 AND a.category_parent!=''
+                    $sql_where ";
+        $query = $this->db->query($sql);
+        $result = $query->row_array();
+        // 
+        return $result['count_data'];
+    }
+
+    function count_category_group() {
+        $sql_where = $this->where_category_group();
+        //
+        $sql = "SELECT 
+                    COUNT(a.category_id) AS count_data
+                FROM category a 
+                WHERE 1 AND a.category_parent=''
                     $sql_where ";
         $query = $this->db->query($sql);
         $result = $query->row_array();

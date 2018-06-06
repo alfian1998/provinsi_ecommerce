@@ -1,10 +1,3 @@
-<script type="text/javascript">
-    $(function() {
-        $('#ses_category_parent').bind('change',function() {
-            $('#form-search').attr('action','<?=site_url("webmin_category/search/index")?>').submit();
-        });
-    });
-</script>
 <div class="background-img background-bottom">
 <div class="container">
 	<div class="row">
@@ -33,26 +26,18 @@
                             <?=outp_notification()?>
                             <div class="navs-product nav-border-bottom">
                                 <ul class="nav nav-tabs">
-                                    <li ><a href="javascript:void(0)" class="active">Data Kategori</a></li>
-                                    <li><a href="<?=site_url('webmin_category/category')?>">Data Group Kategori</a></li>
+                                    <li ><a href="<?=site_url('webmin_category')?>">Data Kategori</a></li>
+                                    <li><a href="javascript:void(0)" class="active">Data Group Kategori</a></li>
                                 </ul>
                             </div>
-                            <form name="form-search" id="form-search" method="post" action="<?=site_url('webmin_category/search/index')?>" class="form-inline">
+                            <form name="form-search" id="form-search" method="post" action="<?=site_url('webmin_category/search/category')?>" class="form-inline">
                                 <div class="filter-data" style="margin-top: 15px;">
-                                    <a href="<?=site_url('webmin_category/form')?>" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</a>
-                                    <div class="form-group" style="margin-top: 4px;">
-                                        <select class="form-control select-chosen" name="ses_category_parent" id="ses_category_parent" style="width: 200px;">
-                                            <option value="">-- Semua Group Kategori --</option>
-                                            <?php foreach ($list_category_parent as $data): ?>
-                                            <option value="<?=$data['category_id']?>" <?php if($data['category_id'] == @$ses_category_parent) echo 'selected'?>><?=$data['category_nm']?></option>
-                                            <?php endforeach;?>
-                                        </select>
-                                    </div>
+                                    <a href="<?=site_url('webmin_category/form_group')?>" class="btn btn-primary"><i class="fa fa-plus"></i> Tambah Data</a>
                                     <div class="input-group input-filter-product pull-right">
                                     <input type="text" class="form-control" name="ses_txt_search" value="<?=@$ses_txt_search?>" placeholder="Pencarian ...">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
-                                            <a href="<?=site_url('webmin/location/category')?>" class="btn btn-danger" title="Hapus Filter"><i class="fa fa-times"></i></a>
+                                            <a href="<?=site_url('webmin/location/category/category')?>" class="btn btn-danger" title="Hapus Filter"><i class="fa fa-times"></i></a>
                                         </span>
                                     </div>
                                 </div>
@@ -64,10 +49,8 @@
                                         <th width="2%" class="text-center">No</th>
                                         <th width="7%" class="text-center">Aksi</th>
                                         <th width="15%" class="text-center">Kategori ID</th>
-                                        <th width="18%" class="text-center">Group Kategori ID</th>
                                         <th>Nama Kategori</th>
-                                        <th class="text-center">Status di Penjualan</th>
-                                        <th class="text-center">Status</th>
+                                        <th width="10%" class="text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -75,15 +58,11 @@
                                     <tr>
                                         <td align="center"><?=$data['no']?></td>
                                         <td align="center">
-                                            <a href="<?=site_url("webmin_category/form/$p/$o/$data[category_id]")?>" class="btn btn-xs btn-success" title="Edit Data"><i class="fa fa-pencil"></i></a>
-                                            <a href="<?=site_url("webmin_category/delete/$p/$o/$data[category_id]")?>" id="delete_parameter" class="btn btn-xs btn-danger" title="Hapus Data" onclick="return confirm('Apakah anda yakin akan menghapus data ini ?')"><i class="fa fa-times"></i></a>
+                                            <a href="<?=site_url("webmin_category/form_group/$p/$o/$data[category_id]")?>" class="btn btn-xs btn-success" title="Edit Data"><i class="fa fa-pencil"></i></a>
+                                            <a href="<?=site_url("webmin_category/delete_group/$p/$o/$data[category_id]")?>" id="delete_parameter" class="btn btn-xs btn-danger" title="Hapus Data" onclick="return confirm('Apakah anda yakin akan menghapus data ini ?')"><i class="fa fa-times"></i></a>
                                         </td>
                                         <td align="center"><?=$data['category_id']?></td>
-                                        <td align="center"><?=$data['category_parent']?></td>
                                         <td><?=$data['category_nm']?></td>
-                                        <td align="center">
-                                            <?=($data['cek_category']['product_id'] !='') ? '<label class="label label-primary">Sudah digunakan penjual</label>' : '<label class="label label-warning">Belum digunakan penjual</label>'?>
-                                        </td>
                                         <td align="center">
                                             <?=($data['category_st'] == '1') ? '<label class="label label-success">Aktif</label>' : '<label class="label label-danger">Tidak Aktif</label>'?>
                                         </td>
@@ -104,21 +83,21 @@
                             <div style="text-align: right;">
                                 <ul class="pagination" style="margin-top: 0px; margin-bottom: 0px;">
                                     <?php if($paging->start_link): ?>
-                                        <li><a href="<?=site_url("webmin_category/index/$paging->c_start_link/$o") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
+                                        <li><a href="<?=site_url("webmin_category/category/$paging->c_start_link/$o") ?>"><span><i class="fa fa-angle-double-left"></i></span></a></li>
                                     <?php endif; ?>
                                     <?php if($paging->prev): ?>
-                                        <li><a href="<?=site_url("webmin_category/index/$paging->prev/$o") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
+                                        <li><a href="<?=site_url("webmin_category/category/$paging->prev/$o") ?>"><span><i class="fa fa-angle-left"></i></span></a></li>
                                     <?php endif; ?>
 
                                     <?php for($i = $paging->c_start_link; $i <= $paging->c_end_link; $i++): ?>
-                                        <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("webmin_category/index/$i/$o") ?>"><?=$i ?></a></li>
+                                        <li <?php jecho($p, $i, "class='active'") ?>><a href="<?=site_url("webmin_category/category/$i/$o") ?>"><?=$i ?></a></li>
                                     <?php endfor; ?>
 
                                     <?php if($paging->next): ?>
-                                        <li><a href="<?=site_url("webmin_category/index/$paging->next/$o") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
+                                        <li><a href="<?=site_url("webmin_category/category/$paging->next/$o") ?>"><span><i class="fa fa-angle-right"></i></span></a></li>
                                     <?php endif; ?>
                                     <?php if($paging->end_link): ?>
-                                        <li><a href="<?=site_url("webmin_category/index/$paging->c_end_link/$o") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
+                                        <li><a href="<?=site_url("webmin_category/category/$paging->c_end_link/$o") ?>"><span><i class="fa fa-angle-double-right"></i></span></a></li>
                                     <?php endif; ?>
                                 </ul>
                             </div>

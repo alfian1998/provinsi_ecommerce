@@ -52,14 +52,16 @@ $(function() {
                     <div class="panel panel-primary">
                         <div class="panel-heading"><b>Tambah Group Kategori</b></div>
                         <div class="panel-body">
+                            <?php if(@$main['category_id'] ==''): ?>
                             <div class="navs-product nav-border-bottom">
                                 <ul class="nav nav-tabs">
                                     <li ><a href="<?=site_url('webmin_category/form')?>">Tambah Data Kategori</a></li>
                                     <li><a href="javascript:void(0)" class="active">Tambah Group Kategori</a></li>
                                 </ul>
                             </div>
+                            <?php endif; ?>
                             
-                            <div style="margin-top: 20px;">
+                            <div <?=(@$main['category_id'] !='') ? '' : 'style="margin-top: 20px;"' ?>>
                                 <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
                                 <table width="100%" class="table-no-border">
                                     <tr>
@@ -67,7 +69,11 @@ $(function() {
                                         <td width="82%">
                                             <div id="box_category">
                                             <div class="span2">
+                                                <?php if (@$main['category_id'] !=''): ?>
+                                                    <input type="text" name="category_id" class="form-control" value="<?=@$main['category_id']?>" readonly>
+                                                <?php else: ?>
                                                     <input type="text" name="category_id" class="form-control" value="0<?=$last_category_id?>" readonly>
+                                                <?php endif; ?>
                                                 </div>
                                             </div>
                                         </td>
@@ -81,7 +87,7 @@ $(function() {
                                         </td>
                                     </tr>
                                 </table>
-                                <a class="btn btn-success" href="<?=site_url('webmin_category')?>">Kembali</a>
+                                <a class="btn btn-success" href="<?=site_url('webmin/location/category/category')?>">Kembali</a>
                                 <button class="btn btn-primary" type="submit">Simpan</button>
                                 </form>
                             </div>
