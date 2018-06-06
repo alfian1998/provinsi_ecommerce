@@ -52,7 +52,13 @@
           $(".productChosen option[value='2']").removeAttr('disabled',true).trigger("chosen:updated");
         }
       })
-    })
+    });
+    $(function() {
+        $('#search-id').click(function() {
+            $('#animated-gif').show();
+            $('.padding-search').show();
+        });
+    });
     </script>
 </head>
 <body class="option2">
@@ -75,8 +81,11 @@
                         </div>
                         <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 search-form">
                             <form method="post" action="<?=site_url('search/search/')?>">
+                                <div class="padding-search">
                                 <input type="text" name="ses_search" value="<?=@$ses_search?>" placeholder="Cari Ikan/Barang..">
-                                <button type="submit" class="hide"></button>
+                                <img src="<?=base_url()?>assets/images/icon/loading-animation.gif" class="animation-loading" style="" id="animated-gif"/>
+                                <button type="submit" id="search-id" class="hide"></button>
+                                </div>
                             </form>
                         </div>
                         <div class="col-lg-4 col-md-9 col-sm-12 col-xs-12 main-header-banner">

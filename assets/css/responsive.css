@@ -73,6 +73,9 @@
 	.text-categories-count {
 	    font-size: 14px;
 	}
+	.padding-search {
+		margin-bottom: 0px;
+	}
 }
 /*--------------------
 [4. Styles for devices(>=481px and <=767px)]
@@ -200,6 +203,9 @@
 
 	.text-categories-count {
 	    font-size: 14px;
+	}
+	.padding-search {
+		margin-bottom: 0px;
 	}
 }
 /*--------------------
@@ -432,4 +438,7 @@
     .button-category-all {
     	text-align: center;
     }
+    .padding-search {
+		margin-bottom: 0px;
+	}
 }

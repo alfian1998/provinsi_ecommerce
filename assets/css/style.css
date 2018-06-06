@@ -4618,3 +4618,13 @@ span.check-data-empty {
 	margin-bottom: -12px; 
 	margin-left: -8px;
 }
+.animation-loading {
+	display: none;
+	width: 35px; 
+    height: 35px; 
+    margin-top: -76px; 
+    margin-left: 88%;
+}
+.padding-search {
+	margin-bottom: -25px;
+}
