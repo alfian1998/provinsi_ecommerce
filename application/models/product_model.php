@@ -130,7 +130,7 @@ class Product_model extends CI_Model {
                 FROM product a 
                 WHERE 1 AND a.customer_id = '$ses_customer_id' AND product_st = '1' 
                     $sql_where 
-                ORDER BY a.product_id ASC 
+                ORDER BY a.product_id DESC 
                     $sql_paging";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -804,7 +804,7 @@ class Product_model extends CI_Model {
         return $result;
     }
 
-    function get_product($product_id=null) {
+    function get_product($product_id=null, $product_url=null) {
         $sql = "SELECT a.*, b.*, c.*, d.category_nm AS parent_nm, e.nama AS prov_nm, f.nama AS kab_nm, g.nama AS kec_nm, h.nama AS kel_nm 
                 FROM product a
                 LEFT JOIN customer b ON a.customer_id=b.customer_id 
@@ -814,14 +814,24 @@ class Product_model extends CI_Model {
                 LEFT JOIN mst_kabupaten f ON b.customer_kabupaten=f.id_kab 
                 LEFT JOIN mst_kecamatan g ON b.customer_kecamatan=g.id_kec
                 LEFT JOIN mst_kelurahan h ON b.customer_kelurahan=h.id_kel 
-                WHERE md5(md5(md5(md5(md5(a.product_id)))))=?";
-        $query = $this->db->query($sql, $product_id);
+                WHERE a.product_id='$product_id' AND a.product_url='$product_url'";
+        $query = $this->db->query($sql);
         $row = $query->row_array();
         //
         $row['first_image'] = $this->get_first_image($row['product_id']);
         $row['product_image'] = $this->image_model->get_image_by_product($row['product_id']);        
         //
         return $row;
+    }
+
+    function validate_product($product_id = null, $product_url = null) {
+        $sql = "SELECT * FROM product a WHERE a.product_id='$product_id' AND a.product_url='$product_url' AND a.product_st='1'";
+        $query = $this->db->query($sql);
+        if($query->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     function get_first_image($product_id=null) {

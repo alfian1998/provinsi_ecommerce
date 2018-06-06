@@ -131,13 +131,13 @@
                                 <div class="inner" style="margin-bottom: -18px;">
                                     <div class="product-left">
                                         <div class="product-thumb product-grid">
-                                            <a class="product-img" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img class="img-thumbnail img-grid-product" src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" alt="Nama Ikan"></a>
-                                            <a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view">Quick View</a>
+                                            <a class="product-img" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><img class="img-thumbnail img-grid-product" src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" alt="Nama Ikan"></a>
+                                            <a title="Quick View" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn-quick-view">Quick View</a>
                                         </div>
                                     </div>
                                     <div class="product-name-price">
                                         <div class="product-name">
-                                            <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
+                                            <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
                                         </div>
                                         <div class="price-box">
                                             <span class="product-price-grid">Rp <?=digit($data['price'])?></span>
@@ -154,10 +154,10 @@
                                         <center>
                                             <div class="button-new-product">
                                                 <?php if ($ses_customer_id == $data['customer_id']): ?>
-                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary" style="width: 100%"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                                    <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-primary" style="width: 100%"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
                                                 <?php else: ?>
                                                     <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
-                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli</a>
+                                                    <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli</a>
                                                 <?php endif; ?>
                                             </div>
                                         </center>

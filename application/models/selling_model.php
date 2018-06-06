@@ -43,6 +43,7 @@ class Selling_model extends CI_Model {
         $data_post['customer_id']       = $customer_id;
         $data_post['category_id']       = $data['category_id'];
         $data_post['product_nm']        = $data['product_nm'];
+        $data_post['product_url']       = $data['product_url'];
         $data_post['product_desc']      = $data['product_desc'];
         $data_post['product_st']        = 1;
         $data_post['price']             = anti_injection($data['price']);
@@ -63,6 +64,7 @@ class Selling_model extends CI_Model {
         //
         $data_post['category_id']       = $data['category_id'];
         $data_post['product_nm']        = $data['product_nm'];
+        $data_post['product_url']       = $data['product_url'];
         $data_post['product_desc']      = $data['product_desc'];
         $data_post['product_st']        = $data['product_st'];
         $data_post['price']             = anti_injection($data['price']);

@@ -43,6 +43,7 @@
             $('.add_cart').click(function(){
                 var product_id      = $(this).data("product_id");
                 var product_nm      = $(this).data("product_nm");
+                var product_url     = $(this).data("product_url");
                 var product_desc    = $(this).data("product_desc");
                 var price           = $(this).data("price");
                 var price_before    = $(this).data("price_before");
@@ -55,7 +56,7 @@
                 $.ajax({
                     url : "<?=site_url('web/input')?>",
                     method : "POST",
-                    data : {product_id: product_id, product_nm: product_nm, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
+                    data : {product_id: product_id, product_nm: product_nm, product_url: product_url, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
                     success: function(data){
                         if (qty_product == 0) {
                             swal({
@@ -79,6 +80,7 @@
             $('.add_cart_details').click(function(){
                 var product_id      = $(this).data("product_id");
                 var product_nm      = $(this).data("product_nm");
+                var product_url     = $(this).data("product_url");
                 var product_desc    = $(this).data("product_desc");
                 var price           = $(this).data("price");
                 var price_before    = $(this).data("price_before");
@@ -96,7 +98,7 @@
                 $.ajax({
                     url : "<?=site_url('web/insert_cart_details')?>",
                     method : "POST",
-                    data : {product_id: product_id, product_nm: product_nm, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
+                    data : {product_id: product_id, product_nm: product_nm, product_url: product_url, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
                     success: function(data){
                         if(quantity_before > qty_product) {
                             swal({
@@ -120,6 +122,7 @@
             $('.buy_now').click(function(){
                 var product_id      = $(this).data("product_id");
                 var product_nm      = $(this).data("product_nm");
+                var product_url     = $(this).data("product_url");
                 var product_desc    = $(this).data("product_desc");
                 var price           = $(this).data("price");
                 var price_before    = $(this).data("price_before");
@@ -137,7 +140,7 @@
                 $.ajax({
                     url : "<?=site_url('web/insert_cart_details')?>",
                     method : "POST",
-                    data : {product_id: product_id, product_nm: product_nm, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
+                    data : {product_id: product_id, product_nm: product_nm, product_url: product_url, product_desc: product_desc, price: price, price_before: price_before, product_img: product_img, customer_nm: customer_nm, customer_id: customer_id, qty_product: qty_product, qty_unit: qty_unit, quantity: quantity},
                     success: function(data){
                         if(quantity_before > qty_product) {
                             swal({

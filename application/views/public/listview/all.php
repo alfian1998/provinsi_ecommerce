@@ -147,13 +147,13 @@
 								<div class="inner row">
 									<div class="product-left col-xs-12 col-sm-5 col-md-4">
 										<div class="product-thumb">
-											<a class="product-img-categories" style="height: 120px;" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" class="img-product" style="height: 120px!important;"></a>
-											<a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view-categories">Quick View</a>
+											<a class="product-img-categories" style="height: 120px;" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><img src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" class="img-product" style="height: 120px!important;"></a>
+											<a title="Quick View" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn-quick-view-categories">Quick View</a>
 										</div>
 									</div>
 									<div class="product-right col-xs-12 col-sm-7 col-md-8 product-column">
 										<div class="product-name" style="margin-top: -8px;">
-											<a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name text-product-name"><b><?=$data['product_nm']?></b></span></a>
+											<a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><span class="product-name text-product-name"><b><?=$data['product_nm']?></b></span></a>
 										</div>
 										<div class="informasi_detail_produk"></div>
                                         <div class="price-info">
@@ -168,10 +168,10 @@
                                         </div>
 		                                <div class="product-button">
                                             <?php if ($ses_customer_id == $data['customer_id']): ?>
-                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                                <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-primary"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
                                             <?php else: ?>
-    		                                	<button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Masukkan Keranjang</button>
-                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
+    		                                	<button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>" data-product_url="<?=$data['product_url']?>"><i class="fa fa-shopping-basket"></i> Masukkan Keranjang</button>
+                                                <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
                                             <?php endif; ?>
 		                                </div>
 									</div>

@@ -424,7 +424,7 @@ function validateForm() {
                             $grand_total = $grand_total + $data['subtotal'];
                             ?>
                             <div class="body-detail-shopping">
-                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=$data['product_img']?>" class="img-thumbnail img-detail-shopping"></a>
+                                <a href="<?=site_url('web/details/'.$data['id'].'/'.$data['product_url'])?>"><img src="<?=base_url()?>assets/images/produk/<?=$data['product_img']?>" class="img-thumbnail img-detail-shopping"></a>
                                 <div>
                                     <span class="title-product-detail"><?=$data['name']?></span>
                                     <label class="pull-right label label-danger" style="font-size: 14px;">Rp <?=digit($data['subtotal'])?></label>

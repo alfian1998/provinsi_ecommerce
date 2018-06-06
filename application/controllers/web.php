@@ -43,18 +43,25 @@ class Web extends CI_Controller{
 		$this->load->view('public/main/validate-modal', $data);
 	}
 
-	function details($product_id=null) {	
+	function details($product_id=null, $product_url=null) {	
 		// session login
 		// $product_id_md5 = $this->product_model->get_product_id($product_id_raw);
 		// print_r($product_id_md5);
 		// exit();
 		$data['config'] = $this->config_model->general();
+		//
+		if($this->product_model->validate_product($product_id,$product_url) == false) {
+			redirect('');
+		}
+		//
 		$data['ses_login'] = $this->session->userdata('ses_login');
 		$data['ses_customer_id'] = $this->session->userdata('ses_customer_id');
 		$data['ses_customer_chat_nm'] = $this->session->userdata('ses_customer_chat_nm');
 		//
+		$data['product_id'] = $product_id;
+		$data['product_url'] = $product_url;
 		$data['cart'] = $this->cart->contents();
-		$data['main'] = $this->product_model->get_product($product_id);
+		$data['main'] = $this->product_model->get_product($product_id,$product_url);
 		$data['list_produk'] = $this->product_model->list_product_new();
 		$data['list_product_recommendat'] = $this->product_model->list_product_recommendat($data['main']['category_id']);
 		//
@@ -72,6 +79,7 @@ class Web extends CI_Controller{
 		$data= array('id' => $this->input->post('product_id'),
 					'name' => $this->input->post('product_nm'),
 					'price' => $this->input->post('price'),
+					'product_url' => $this->input->post('product_url'),
 					'product_desc' => $this->input->post('product_desc'),
 					'price_before' => $this->input->post('price_before'),
 					'product_img' => $this->input->post('product_img'),
@@ -108,6 +116,7 @@ class Web extends CI_Controller{
 		$insert= array('id' => $this->input->post('product_id'),
 					'name' => $this->input->post('product_nm'),
 					'price' => $this->input->post('price'),
+					'product_url' => $this->input->post('product_url'),
 					'product_desc' => $this->input->post('product_desc'),
 					'price_before' => $this->input->post('price_before'),
 					'product_img' => $this->input->post('product_img'),
@@ -201,12 +210,12 @@ class Web extends CI_Controller{
         		<li class="product-info">
                     <div class="p-left">
                         <a href="#" class="remove_link"></a>
-                        <a href="'.site_url('web/details/'.md5(md5(md5(md5(md5($item['id'])))))).'">
+                        <a href="'.site_url('web/details/'.$item['id'].'/'.$item['product_url']).'">
                         <img class="img-thumbnail cart-img" src="'.base_url().'assets/images/produk/'.$item['product_img'].'" alt="Product">
                         </a>
                     </div>
                     <div class="p-right">
-                        <a href="'.site_url('web/details/'.md5(md5(md5(md5(md5($item['id'])))))).'"><p class="cart-name">'.$item['name'].'</p></a>
+                        <a href="'.site_url('web/details/'.$item['id'].'/'.$item['product_url']).'"><p class="cart-name">'.$item['name'].'</p></a>
                         <p class="cart-price">Rp '.digit($item['price']).'</p>';
             if ($item['price_before'] != '') {
         $result .='		<p class="cart-price-old">Rp '.digit($item['price_before']).'</p>';
@@ -301,10 +310,10 @@ class Web extends CI_Controller{
 				<tr>
                 	<td align="center">'.$i++.'</td>
                     <td class="cart_product">
-                        <a href="'.site_url('web/details/'.md5(md5(md5(md5(md5($item['id'])))))).'"><img class="img-responsive img-thumbnail img-product-cart" src="'.base_url().'assets/images/produk/'.$item['product_img'].'"></a>
+                        <a href="'.site_url('web/details/'.$item['id'].'/'.$item['product_url']).'"><img class="img-responsive img-thumbnail img-product-cart" src="'.base_url().'assets/images/produk/'.$item['product_img'].'"></a>
                     </td>
                     <td class="cart_description">
-                        <a href="'.site_url('web/details/'.md5(md5(md5(md5(md5($item['id'])))))).'" class="product-title">'.$item['name'].'</a><br>
+                        <a href="'.site_url('web/details/'.$item['id'].'/'.$item['product_url']).'" class="product-title">'.$item['name'].'</a><br>
                         <small><img style="width: 13px;" src="'.base_url().'assets/images/icon/man-icon-2.png"> '.$item['customer_nm'].'</small><br>
                     </td>
                     <td class="price td-middle">

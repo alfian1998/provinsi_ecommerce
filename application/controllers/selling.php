@@ -105,7 +105,14 @@ class Selling extends CI_Controller{
 				'html' 		=> $html,
 				'image_no' 	=> $image_no,
 			));
-        }
+        }else if($id == 'permalink') {
+			$product_nm = $this->input->get('product_nm');
+			$permalink = clean_url($product_nm);
+			//
+			echo json_encode(array(
+				'permalink'	=> $permalink
+			));
+		}
 	}
 
 	function index($p=1, $o=0) {

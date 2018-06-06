@@ -4,6 +4,15 @@ function themes() {
     return $data;
 }
 
+function limit_text($text, $limit='21') {
+    if (str_word_count($text, 0) > $limit) {
+      $words = str_word_count($text, 2);
+      $pos = array_keys($words);
+      $text = substr($text, 0, $pos[$limit]) . '...';
+    }
+    return $text;
+}
+
 function create_password($str) {
     if($str == "") $str = date('Y-m-d H:i:s');
     $result = md5(md5(md5($str)));

@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/reset.css" /> -->
-    <!-- CSS -->
+    <meta name="Description" content="<?=(@$product_id !='' && @$product_url !='') ? limit_text(@$main['product_nm']) : $config['config']['meta_description']?>">
+    <meta name="google-site-verification" content="+nxGUDJ4QpAZ5l9Bsjdi102tLVC21AIh5d1Nl23908vVuFHs34="/>
+    <title><?=(@$product_id !='' && @$product_url !='') ? @$main['product_nm'] : $config['config']['app_title']?></title>
+    <meta name="robots" content="index, follow" />
+    <meta content="<?=(@$product_id !='' && @$product_url !='') ? limit_text(@$main['product_nm']) : $config['config']['meta_keywords']?>" itemprop="headline" />
+    <meta name="keywords" content="<?=$config['config']['meta_keywords']?>" itemprop="keywords" />
+
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/font-awesome/css/font-awesome-animation.min.css" />
@@ -49,10 +54,8 @@
       })
     })
     </script>
-    <title><?=$config['config']['app_title']?></title>
 </head>
 <body class="option2">
-
     <!-- header -->
     <header id="header">
         <div class="container">

@@ -11,6 +11,13 @@
 </style>
 <script type="text/javascript">
 $(function() {
+    $('input[name="product_nm"]').bind('keyup',function(e) {
+        e.preventDefault();
+        $.get('<?=site_url("selling/ajax/permalink")?>?product_nm='+$(this).val(),null,function(data) {
+            $('input[name="product_url"]').val(data.permalink);
+        },'json');      
+    });
+
     $('#add_image').bind('click',function(e) {
         e.preventDefault();
         var image_no = $('#image_no').val();
@@ -169,6 +176,7 @@ function validateForm() {
                                 <label>Nama Ikan/Barang</label>
                                 <div class="span9">
                                     <input type="text" class="form-control input-form-control" name="product_nm" value="<?=@$main['product_nm']?>">
+                                    <input type="hidden" name="product_url" value="<?=@$main['product_url']?>" readonly="1">
                                 </div>
                                 <div class="alert-product">* Nama Ikan/Barang masih dapat diubah</div>
                             </div>

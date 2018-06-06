@@ -106,8 +106,8 @@
 								</div>
 							<?php else: ?>
 								<div class="btn-detail">
-									<button class="buy_now btn btn-success btn-block btn-buy-now" data-product_id="<?=$main['product_id']?>" data-product_nm="<?=$main['product_nm']?>" data-product_desc="<?=$main['product_desc']?>" data-price="<?=$main['price']?>" data-price_before="<?=$main['price_before']?>" data-product_img="<?=@$main['first_image']['image_name']?>" data-customer_nm="<?=$main['customer_nm']?>" data-customer_id="<?=$main['customer_id']?>" data-qty_product="<?=$main['qty']?>" data-qty_unit="<?=$main['qty_unit']?>"><i class="fa fa-shopping-cart"></i> Beli Sekarang</button>
-									<button class="add_cart_details btn btn-primary" data-product_id="<?=$main['product_id']?>" data-product_nm="<?=$main['product_nm']?>" data-product_desc="<?=$main['product_desc']?>" data-price="<?=$main['price']?>" data-price_before="<?=$main['price_before']?>" data-product_img="<?=@$main['first_image']['image_name']?>" data-customer_nm="<?=$main['customer_nm']?>" data-customer_id="<?=$main['customer_id']?>" data-qty_product="<?=$main['qty']?>" data-qty_unit="<?=$main['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Tambahkan ke Keranjang</button>
+									<button class="buy_now btn btn-success btn-block btn-buy-now" data-product_id="<?=$main['product_id']?>" data-product_nm="<?=$main['product_nm']?>" data-product_desc="<?=$main['product_desc']?>" data-price="<?=$main['price']?>" data-price_before="<?=$main['price_before']?>" data-product_img="<?=@$main['first_image']['image_name']?>" data-customer_nm="<?=$main['customer_nm']?>" data-customer_id="<?=$main['customer_id']?>" data-qty_product="<?=$main['qty']?>" data-qty_unit="<?=$main['qty_unit']?>" data-product_url="<?=$main['product_url']?>"><i class="fa fa-shopping-cart"></i> Beli Sekarang</button>
+									<button class="add_cart_details btn btn-primary" data-product_id="<?=$main['product_id']?>" data-product_nm="<?=$main['product_nm']?>" data-product_desc="<?=$main['product_desc']?>" data-price="<?=$main['price']?>" data-price_before="<?=$main['price_before']?>" data-product_img="<?=@$main['first_image']['image_name']?>" data-customer_nm="<?=$main['customer_nm']?>" data-customer_id="<?=$main['customer_id']?>" data-qty_product="<?=$main['qty']?>" data-qty_unit="<?=$main['qty_unit']?>" data-product_url="<?=$main['product_url']?>"><i class="fa fa-shopping-basket"></i> Tambahkan ke Keranjang</button>
 									<?php if ($ses_customer_id != ''): ?>
 										<a href="javascript:void(0)" class="btn btn-warning btn-chat" onclick="javascript:chatWith('<?=$main["customer_chat_nm"]?>')"><i class="fa fa-comments"></i> Chat Penjual</a>
 									<?php else: ?>
@@ -137,13 +137,13 @@
 		                                <div class="product-container">
 		                                    <div class="product-left">
 		                                        <div class="product-thumb">
-		                                            <a class="product-img" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" alt="" class="img-new"></a>
-		                                            <a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view">Quick View</a>
+		                                            <a class="product-img" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><img src="<?=base_url()?>assets/images/produk/<?=@$data['first_image']['image_name']?>" alt="" class="img-new"></a>
+		                                            <a title="Quick View" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn-quick-view">Quick View</a>
 		                                        </div>
 		                                    </div>
 		                                    <div class="product-name-price">
 		                                        <div class="product-name">
-		                                            <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
+		                                            <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
 		                                        </div>
 		                                        <div class="price-box">
 		                                            <span class="product-price-grid">Rp <?=digit($data['price'])?></span>
@@ -157,10 +157,10 @@
 		                                        <center>
 		                                            <div class="button-new-product">
 		                                                <?php if ($ses_customer_id == $data['customer_id']): ?>
-		                                                    <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary btn-block"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+		                                                    <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-primary btn-block"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
 		                                                <?php else: ?>
-		                                                    <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
-		                                                    <a href="" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
+		                                                    <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>" data-product_url="<?=$data['product_url']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
+		                                                    <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
 		                                                <?php endif; ?>
 		                                            </div>
 		                                        </center>
@@ -210,13 +210,13 @@
                             <div class="product-container">
                                 <div class="product-left">
                                     <div class="product-thumb">
-                                        <a class="product-img" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><img src="<?=base_url()?>assets/images/produk/<?=$data['first_image']['image_name']?>" alt="" class="img-new"></a>
-                                        <a title="Quick View" href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn-quick-view">Quick View</a>
+                                        <a class="product-img" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><img src="<?=base_url()?>assets/images/produk/<?=$data['first_image']['image_name']?>" alt="" class="img-new"></a>
+                                        <a title="Quick View" href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn-quick-view">Quick View</a>
                                     </div>
                                 </div>
                                 <div class="product-name-price">
                                     <div class="product-name">
-                                        <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
+                                        <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>"><span class="product-name-grid text-short"><?=$data['product_nm']?></span></a>
                                     </div>
                                     <div class="price-box">
                                         <span class="product-price-grid">Rp <?=digit($data['price'])?></span>
@@ -230,10 +230,10 @@
                                     <center>
                                         <div class="button-new-product text-short">
                                             <?php if ($ses_customer_id == $data['customer_id']): ?>
-                                                <a href="<?=site_url('web/details/'.md5(md5(md5(md5(md5($data['product_id']))))))?>" class="btn btn-sm btn-primary btn-block"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
+                                                <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-primary btn-block"><i class="fa fa-eye"></i> Lihat Ikan/Barang</a>
                                             <?php else: ?>
-                                                <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
-                                                <a href="" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
+                                                <button class="add_cart btn btn-sm btn-primary" data-product_id="<?=$data['product_id']?>" data-product_nm="<?=$data['product_nm']?>" data-product_desc="<?=$data['product_desc']?>" data-price="<?=$data['price']?>" data-price_before="<?=$data['price_before']?>" data-product_img="<?=@$data['first_image']['image_name']?>" data-customer_nm="<?=$data['customer_nm']?>" data-customer_id="<?=$data['customer_id']?>" data-qty_product="<?=$data['qty']?>" data-qty_unit="<?=$data['qty_unit']?>" data-product_url="<?=$data['product_url']?>"><i class="fa fa-shopping-basket"></i> Keranjang</button>
+                                                <a href="<?=site_url('web/details/'.$data['product_id'].'/'.$data['product_url'])?>" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Beli Sekarang</a>
                                             <?php endif; ?>
                                         </div>
                                     </center>
