@@ -60,7 +60,7 @@ class Notification extends CI_Controller{
         			';
         }else{
         	if ($data['transfer_st'] == '2') {
-		$html.=' 	<label class="label label-primary" style="font-size: 12px;">Menunggu Konfirmasi Admin</label>';		
+		$html.=' 	<td><label class="label label-primary" style="font-size: 12px;">Menunggu Konfirmasi Admin</label>';		
 			}else {
 		$html.='<td>';
         		if ($data['bayar_st'] == '1') {

@@ -48,6 +48,7 @@
     })
     </script>
     <title>Dashboard - <?=$config['config']['app_title']?></title>
+    <link rel="shortcut icon" type="image/png" href="<?=base_url()?>assets/images/logo/logo-jateng.png"/>
 </head>
 <body class="option2">
 

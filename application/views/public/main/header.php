@@ -9,6 +9,7 @@
     <meta name="robots" content="index, follow" />
     <meta content="<?=(@$product_id !='' && @$product_url !='') ? limit_text(@$main['product_nm']) : $config['config']['meta_keywords']?>" itemprop="headline" />
     <meta name="keywords" content="<?=$config['config']['meta_keywords']?>" itemprop="keywords" />
+    <link rel="shortcut icon" type="image/png" href="<?=base_url()?>assets/images/logo/logo-jateng.png"/>
 
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/font-awesome/css/font-awesome.min.css" />
@@ -83,7 +84,7 @@
                             <form method="post" action="<?=site_url('search/search/')?>">
                                 <div class="padding-search">
                                 <input type="text" name="ses_search" value="<?=@$ses_search?>" placeholder="Cari Ikan/Barang..">
-                                <img src="<?=base_url()?>assets/images/icon/loading-animation.gif" class="animation-loading" style="" id="animated-gif"/>
+                                <img src="<?=base_url()?>assets/images/icon/loading-animation.gif" class="animation-loading" id="animated-gif"/>
                                 <button type="submit" id="search-id" class="hide"></button>
                                 </div>
                             </form>
