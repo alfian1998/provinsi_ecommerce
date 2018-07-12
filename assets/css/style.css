@@ -4590,6 +4590,12 @@ span.check-data-empty {
 	padding-top: 2px; 
 	padding-bottom: 2px;
 }
+.alert-notification {
+	margin-bottom: 6px;
+}
+.panel-notification {
+	margin-bottom: 16px;
+}
 .label-heading {
 	font-size: 13px; 
 	margin-top: 2px; 

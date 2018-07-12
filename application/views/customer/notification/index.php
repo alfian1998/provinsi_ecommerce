@@ -21,7 +21,7 @@
             var bulan = ($('#ses_bulan').val() != '' ? $('#ses_bulan').val() : '');
             var search = $('#ses_buyer_search').val();
             __show_result(status,bulan,search);
-        }, 25000);
+        }, 80000);
     });
 </script>
 <div class="background-img background-bottom">
@@ -38,10 +38,8 @@
                         <div class="panel-heading">Data Pembeli Produk Anda</div>
                         <div class="panel-body">
                             <div class="alert alert-red alert-small">
-                                <li>Status pembelian akan dirubah oleh Admin DKP Jateng apabila pembeli sudah transfer ke rekening Admin DKP Jateng</li>
-                                <li>Data akan otomatis berubah jika Admin DKP Jateng sudah merubah status</li>
-                                <li>Klik tombol <u>Konfirmasi Sudah Kirim</u> untuk konfirmasi <u>Sudah Dikirim</u></li>
-                                <li>Uang Anda akan di transfer oleh Admin DKP Jateng lewat No Rekening Bank Anda setelah produk diterima oleh Pembeli</li>
+                                <li>Data akan otomatis berubah jika ada yang membeli produk Anda</li>
+                                <li>Tombol <font class="bold" style="color: blue; background-color: #FFFFFF;">&nbsp;KONFIRMASI&nbsp;</font> digunakan untuk mengkonfirmasi pengiriman produk</li>
                             </div>
                             <div class="table-responsive">
                                 <form name="form_sipatma" method="post" id="form_buyer">
@@ -50,7 +48,6 @@
                                                 <option value="">-- Semua Status --</option>
                                                 <option value="sudah_bayar">Sudah Bayar</option>
                                                 <option value="belum_bayar">Belum Bayar</option>
-                                                <option value="konfirmasi">Menunggu Konfirmasi</option>
                                                 <option value="sudah_diterima">Sudah Diterima</option>
                                         </select>
                                         <select class="select-chosen span2" name="ses_bulan" id="ses_bulan">

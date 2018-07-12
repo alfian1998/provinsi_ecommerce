@@ -232,6 +232,7 @@ class Checkout extends CI_Controller{
 		//
 		$data['list_bank_account'] = $this->bank_account_model->get_all_bank_account();
 		$data['get_billing'] = $this->checkout_model->get_billing($billing_id);
+		$data['list_all_transaksi'] = $this->checkout_model->get_all_data_transaksi($billing_id);
 		$data['list_petunjuk_pembayaran'] = $this->payment_instructions_model->get_all_data();
 		//
 		$this->load->view('public/main/header', $data);		

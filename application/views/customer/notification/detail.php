@@ -19,10 +19,16 @@
                         <div class="panel-body">
                             
                             <div class="col-md-12">
-                                <div class="alert alert-red">
-                                    <li>Anda akan menerima uang sebesar <u>Rp <?=digit($sum_checkout)?></u>, dari Admin DKP Jateng</li>
-                                    <li>Uang Anda akan di transfer oleh Admin DKP Jateng lewat No Rekening Bank Anda setelah produk diterima oleh Pembeli</li>
-                                </div>
+                                <?php if ($get_data_checkout['diterima_st'] == '1'): ?>
+                                    <div class="alert alert-green">
+                                        <i class="fa fa-check"></i> Produk sudah diterima oleh Pembeli
+                                    </div>
+                                <?php else: ?>
+                                    <div class="alert alert-red">
+                                        <li>Anda akan menerima uang sebesar <u>Rp <?=digit($jumlah_harga['jumlah_harga'])?></u>, dari Pembeli</li>
+                                        <li>Jika Uang sudah masuk ke Rekening Bank Anda maka Anda harus segera mengirim produk yang telah di pesan Pembeli</li>
+                                    </div>
+                                <?php endif; ?>
                             </div>
 
                             <div class="col-md-6">
@@ -40,14 +46,12 @@
                                                     <tr>
                                                         <th>Nama Pembeli</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=($main['customer_id'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></td>
+                                                        <td><font class="bold" style="color: blue;"><?=($main['customer_id'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></font></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Nominal yang Diterima</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td>
-                                                            <label class="label label-primary label-font">Rp <?=digit($jumlah_harga['jumlah_harga'])?></label>
-                                                        </td>
+                                                        <td><div class="bold" style="color: red; font-size: 18px;">Rp <?=digit($jumlah_harga['jumlah_harga'])?></div></td>
                                                     </tr>
                                                     <tr>
                                                         <th>Tgl Pembelian</th>
@@ -55,24 +59,36 @@
                                                         <td><?=convert_date_indo($main['billing_date'])?></td>
                                                     </tr>
                                                     <tr>
+                                                        <th>Catatan Pembeli</th>
+                                                        <td align="center" width="6%"><b>:</b></td>
+                                                        <td><?=$main['billing_desc']?></td>
+                                                    </tr>
+                                                    <tr>
                                                         <th>Status Bayar</th>
                                                         <td align="center" width="6%"><b>:</b></td>
                                                         <td>
-                                                            <?php if ($main['transfer_st'] == '2'): ?>
-                                                            <label class="label label-primary label-font">Menunggu Konfirmasi Admin</label>
-                                                            <?php else: ?>
-                                                                <?php if ($main['bayar_st'] == '1'): ?>
-                                                                <label class="label label-success label-font">Sudah Bayar</label>
-                                                                <?php elseif ($main['bayar_st'] == '2'): ?>
-                                                                <label class="label label-warning label-font">Belum Bayar</label>
-                                                                <?php endif; ?>
+                                                            <?php if ($get_data_checkout['bayar_customer_st'] == '1'): ?>
+                                                            <label class="label label-success label-font">Sudah Bayar</label>
+                                                            <?php elseif ($get_data_checkout['bayar_customer_st'] == '2'): ?>
+                                                            <label class="label label-warning label-font">Belum Bayar</label>
                                                             <?php endif; ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <th>Tgl Bayar</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=($main['bayar_date'] !='') ? convert_date_indo($main['transfer_date']) : '-'?></td>
+                                                        <td><?=($get_data_checkout['bayar_customer_date'] !='') ? convert_date_indo($get_data_checkout['bayar_customer_date']) : '-'?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Bukti Transfer Pembeli</th>
+                                                        <td align="center" width="6%"><b>:</b></td>
+                                                        <td>
+                                                            <?php if ($get_data_checkout['bayar_customer_st'] == '1'): ?>
+                                                            <a target="_blank" href="<?=site_url('assets/images/transfer_pembeli/'.$get_data_checkout['bayar_customer_img'])?>"><img src="<?=base_url()?>assets/images/transfer_pembeli/<?=$get_data_checkout['bayar_customer_img']?>" class="img-thumbnail"></a>
+                                                            <?php else: ?>
+                                                            -
+                                                            <?php endif; ?>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <th>Status Kirim</th>
@@ -90,6 +106,13 @@
                                                         <td align="center" width="6%"><b>:</b></td>
                                                         <td><?=($get_kirim_date['kirim_date'] !='') ? convert_date_indo($get_kirim_date['kirim_date']) : '-' ?></td>
                                                     </tr>
+                                                    <?php if ($get_data_checkout['diterima_st'] == '1'): ?>
+                                                    <tr>
+                                                        <th>Status Transaksi</th>
+                                                        <td align="center" width="6%"><b>:</b></td>
+                                                        <td><font class="bold" style="color: green; text-decoration: underline;">Transaksi SELESAI</font></td>
+                                                    </tr>
+                                                    <?php endif; ?>
                                                 </tbody>
                                             </table>
                                         </div>

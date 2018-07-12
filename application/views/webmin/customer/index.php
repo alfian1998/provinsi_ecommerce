@@ -64,9 +64,9 @@
                                         <th width="7%" class="text-center">Aksi</th>
                                         <th>Username</th>
                                         <th>Nama Lengkap</th>
-                                        <th width="14%">No Telpon</th>
                                         <th width="25%">Last Login</th>
                                         <th class="text-center">Status</th>
+                                        <th class="text-center">Verifikasi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,9 +79,17 @@
                                         </td>
                                         <td><?=$data['customer_username']?></td>
                                         <td><?=$data['customer_nm']?></td>
-                                        <td><?=$data['customer_phone']?></td>
                                         <td><?=convert_date_indo($data['last_login'])?></td>
-                                        <td align="left"><?=($data['customer_st'] == '1') ? '<label class="label label-success">Aktif</label>' : '<label class="label label-danger">Tidak Aktif</label>'?></td>
+                                        <td align="center"><?=($data['customer_st'] == '1') ? '<label class="label label-success">Aktif</label>' : '<label class="label label-danger">Tidak Aktif</label>'?></td>
+                                        <td align="center">
+                                            <?php if ($data['verification_st'] == '0'): ?>
+                                                <label class="label label-danger">Tidak Verifikasi</label>
+                                            <?php elseif($data['verification_st'] == '1'): ?>
+                                                <label class="label label-success">Sudah Diverifikasi</label>
+                                            <?php elseif ($data['verification_st'] == '2'): ?>
+                                                <label class="label label-primary">Belum Diverifikasi</label>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                     <?php if($count_customer == 0): ?>

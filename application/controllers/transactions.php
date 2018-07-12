@@ -19,6 +19,7 @@ class Transactions extends CI_Controller{
 		//
 		$data['form_action'] = site_url('transactions/search');
 		$data['list_category_rand'] = $this->category_model->list_category_rand();
+		$data['list_category_parent'] = $this->category_model->list_category_parent();
 		//
 		$this->load->view('public/main/header', $data);		
 		$this->load->view('public/main/top-menu');		
@@ -28,6 +29,8 @@ class Transactions extends CI_Controller{
 
 	function invoices($billing_id=null, $email=null) {	
 		$data['config'] = $this->config_model->general();
+		//
+		$data['email'] = $email;
 		// session login
 		$data['ses_login'] = $this->session->userdata('ses_login');
 		$data['ses_customer_id'] = $this->session->userdata('ses_customer_id');
@@ -54,6 +57,16 @@ class Transactions extends CI_Controller{
 
 	function update_confirm($billing_id = "") {
 		$this->checkout_model->update_confirm($billing_id);
+		redirect('transactions/invoices/'.$billing_id.'/null');
+	}
+
+	function confirm_clear($billing_id="", $customer_id="", $email="") {
+		$this->checkout_model->confirm_clear($billing_id, $customer_id);
+		redirect('transactions/invoices/'.$billing_id.'/'.$email);
+	}
+
+	function upload_photo($billing_id = "", $customer_id = "") {
+		$this->checkout_model->upload_photo($billing_id, $customer_id);
 		redirect('transactions/invoices/'.$billing_id.'/null');
 	}
 

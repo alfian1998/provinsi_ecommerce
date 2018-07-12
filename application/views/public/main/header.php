@@ -25,7 +25,7 @@
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/lib/easyzoom/easyzoom.css" />
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/pace.css" />
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>assets/css/chosen.min.css">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="<?=base_url()?>assets/css/font/fonts-googleapis.css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel='stylesheet' type='text/css'>
     <!-- Javascript -->
     <script src="<?=base_url()?>assets/js/sweetalert.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>assets/lib/jquery/jquery-1.11.2.min.js"></script>
@@ -74,9 +74,10 @@
                             <a href="<?=site_url('web/location/')?>">
                                 <div class="logo-website">
                                     <img src="<?=base_url()?>assets/images/logo/logo.png" alt="Logo" class="img-logo">
-                                    <div class="text-logo-top">WEBSITE JUAL BELI IKAN</div>
+                                    <div class="text-logo-top">FISH MART</div>
                                     <div class="garis"></div>
-                                    <div class="text-logo-bottom">DINAS KELAUTAN PROVINSI JAWA TENGAH</div>
+                                    <div class="text-logo-bottom" style="font-size: 15px;">DINAS KELAUTAN DAN PERIKANAN</div>
+                                    <div class="text-logo-bottom" style="margin-top: -6px; margin-bottom: -15px;">PROVINSI JAWA TENGAH</div>
                                 </div>
                             </a>
                         </div>

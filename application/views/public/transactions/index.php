@@ -44,9 +44,32 @@ function validateForm() {
                     </a>
                     <div class="vertical-menu-content">
                         <ul class="vertical-menu-list">
-                            <?php foreach ($list_category_rand as $data): ?>
+                           <?php foreach ($list_category_parent as $data): ?>
                             <li>
-                                <a href="<?=site_url('gridview/index/1/0/'.$data['category_id'])?>" class="background-font text-short" title="<?=$data['category_nm']?>"><i class="icon-category fa fa-check"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,14)?>.png"><?=$data['category_nm']?></a>
+                                <a href="javascript:void(0)" class="background-font text-short" title="<?=$data['category_nm']?>"><i class="icon-category fa fa-tag" style="margin-left: 20px;"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,14)?>.png"><?=$data['category_nm']?></a>
+                                <div class="vertical-dropdown-menu" style="max-width: 200%!important;">
+                                    <div class="vertical-groups">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="block-content-vertical-menu border-left">
+                                                    <h3 class="head" style="background:#5d8acb;">SUB KATEGORI <?=$data['category_nm']?></h3>
+                                                    <div class="inner">
+                                                    <ul class="vertical-menu-link">
+                                                        <?php foreach ($data['list_category_by_parent'] as $category): ?>
+                                                        <li>
+                                                            <a href="<?=site_url('gridview/index/1/0/'.$category['category_id'])?>">
+                                                                <span class="text bold"><?=$category['category_nm']?></span>
+                                                                <span class="count">(<?=digit($this->category_model->count_product_by_category_id($category['category_id']))?>)</span>
+                                                            </a>
+                                                        </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </li>
                             <?php endforeach; ?>
                         </ul>

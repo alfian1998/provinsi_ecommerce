@@ -33,60 +33,10 @@ class Webmin_buyer_data extends CI_Controller{
         $html.='    <td class="info"><div style="font-weight: bold; color: blue;">'.$data['pembeli_nm'].'</div></td>';
 				}
         $html.='	<td align="center" class="info"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
-        $html.='	<td class="info"><label class="label label-primary" style="font-size: 12px;">Rp '.digit($data['product_total_price']).'</label></td>';
+        $html.='	<td class="info" align="center"><label class="label label-primary" style="font-size: 12px;">Rp '.digit($data['product_total_price']).'</label></td>';
 
-        if ($check_bayar_customer_st['bayar_customer_st'] == '1') {
-        $html.=' 	<td rowspan="2">
-        				<label class="label label-success" style="font-size: 12px;"><i class="fa fa-check"></i> Transaksi Selesai</label>
-        			';
-        }elseif ($check_bayar_customer_st['bayar_customer_st'] == '2'){
-
-        if ($data['diterima_st'] == '1') {
-        $html.=' 	<td rowspan="2">
-        				<label class="label label-primary" style="font-size: 12px;">Sudah Diterima Pembeli</label>
-        				<label class="label label-danger faa-flash animated" style="font-size: 12px;">Anda harus Transfer ke penjual</label><br><br>
-        				<ul style="margin-left: -20px;">
-        					<li style="color: red; font-weight: bold;">Anda harus segera Transfer ke Rekening Penjual, Jika Anda sudah Transfer ke penjual segera Konfirmasi bahwa Anda sudah Transfer.</li>
-        					<li style="color: red; font-weight: bold;">Klik tombol <u>Konfirmasi Sudah Transfer</u> disamping kiri untuk Konfirmasi.</li>
-        				</ul>
-        			';
-        }else{
-        	if ($data['transfer_st'] == '2') {
-        $html.='<td rowspan="2">';
-		$html.=' 	<label class="label label-primary" style="font-size: 12px;">Menunggu Konfirmasi Admin</label><br><br>';
-		$html.='	<div>
-						<a href="'.site_url('assets/images/transfer_pembeli/'.$data['transfer_img']).'" target="_blank">
-                        <img src="'.base_url().'assets/images/transfer_pembeli/'.$data['transfer_img'].'" style="width: 200px; height: 250px; float: left; margin-right: 22px;" class="img-thumbnail">
-                        <ul>
-                        	<li style="color: red; font-weight: bold;">Gambar Bukti Transfer Pembeli</li>
-                        	<li style="color: red; font-weight: bold;">Klik Gambar untuk memperbesar</li>
-                        	<li style="color: red; font-weight: bold;">Silahkan Cek Rekening Anda dahulu apakah transfer sudah masuk</li>
-                        	<li style="color: red; font-weight: bold;">Jika sudah silahkan Klik tombol <u>Konfirmasi</u> dibawah</li>
-                        </ul>
-                        </a>
-                        <div style="padding-top: 10px;">
-                        	<button data-toggle="modal" data-target="#konfirmasi-'.$data['billing_id'].'" class="btn btn-primary btn-sm bold btn-block"><i class="fa fa-send"></i> Konfirmasi</button>
-                        </div>
-					</div>';
-			}else {
-		$html.='<td class="info">';
-        		if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Bayar</label>';
-                }elseif ($data['bayar_st'] == '2') {
-        $html.=' 	<label class="label label-warning" style="font-size: 12px;">Belum Bayar</label>';
-                }
-            }
-        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id']);
-                if ($check_kirim_st == '') {
-        $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah DiKirim Semua</label>';
-                }elseif ($check_kirim_st != '') {
-                	if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-danger" style="font-size: 12px;">Belum Dikirim Semua</label>';
-        			}
-                }
-        }
-    	}
-        $html.='</td></tr>';
+        
+        $html.='</tr>';
 
         $check_kirim_st = $this->checkout_model->check_kirim_st();
         $list_seller = $this->checkout_model->list_seller_by_billing_id($data['billing_id']);
@@ -96,25 +46,15 @@ class Webmin_buyer_data extends CI_Controller{
         			<td></td>
         			<td colspan="4">';
         	foreach ($list_seller as $seller) {
+        $html.='<div class="col-md-8" style="margin-top: 12px;">';
         $html.='		<div class="panel panel-default">
 							<div class="panel-heading">
 								<img src="'.base_url().'/assets/images/customer/'.$seller['customer_img'].'" class="img-circle img-customer-checkout"> <b>'.$seller['customer_nm'].'</b>';
-						if ($data['diterima_st'] == '1') {
-							if ($seller['bayar_customer_st'] == '1') {
-		$html.='				<label class="pull-right label label-success label-heading"><b><i class="fa fa-check"></i> Konfirmasi Berhasil</b></label>';
-							}else{
-		$html.='				<button data-toggle="modal" data-target="#modal-'.$seller['billing_id'].'-'.$seller['customer_id'].'" class="btn btn-success btn-sm bold pull-right"><i class="fa fa-send"></i> Konfirmasi Sudah Transfer</button>'; 
-							}
-						}
+			if ($seller['diterima_st'] == '1'){
+		$html.='				<label class="pull-right label label-success" style="font-size: 13px; margin-top: 2px; padding-top: 6px; padding-bottom: 6px;"><b><i class="fa fa-check"></i> Transaksi Selesai</b></label>';
+			}
 		$html.='			</div>
 							<div class="panel-body">';
-						if ($data['diterima_st'] == '1') {
-							if ($seller['bayar_customer_st'] == '1') {
-		$html.='				<div class="alert alert-green alert-small" style="padding-bottom: 4px; padding-top: 4px;"><i class="fa fa-check"></i> Anda sudah Transfer ke Penjual ('.$seller['customer_nm'].')</div>';
-							}else{
-		$html.='				<div class="alert alert-red alert-small" style="padding-bottom: 4px;"><i class="fa fa-warning"></i> Anda harus Transfer ke Penjual ('.$seller['customer_nm'].') sebesar <u style="font-size: 16px;">Rp '.digit($seller['jumlah_harga']).'</u></div>';
-							}
-						}
 		$html.='				<table class="table table-bordered">
 								    <thead>
 								      <tr>
@@ -126,7 +66,9 @@ class Webmin_buyer_data extends CI_Controller{
 								    </thead>
 								    <tbody>';
 									$list_product = $this->checkout_model->list_checkout_by_customer_id($seller['billing_id'], $seller['customer_id']);
+									$total_payment = 0;
 									foreach ($list_product as $product) {
+									$total_payment += $product['product_sub_price'];
 		$html.='					  <tr>
 								        <td align="center"><b>'.$product['no'].'</b></td>
 								        <td>'.$product['product_nm'].'</td>
@@ -136,111 +78,23 @@ class Webmin_buyer_data extends CI_Controller{
 									}
 		$html.='					</tbody>
 								</table>';
-							if ($data['diterima_st'] == '1' && $check_bayar_customer_st['bayar_customer_st'] == '2') {
-		$html.='				<div class="bold" style="padding-bottom: 5px;">Data Rekening Bank ('.$seller['customer_nm'].')</div>
-								<div class="col-md-5 row">
-                                    <div class="panel-content">
-                                        <div class="panel panel-default header-panel-bank-rek" style="border: 2px solid blue;">
-                                            <div class="panel-body">';
-                                            if ($seller['bank_id'] !='') {
-		$html.='								<div class="bold" style="color: blue;">'.$seller['bank_nm'].' ';
-                                                ($seller['bank_short_nm'] !='') ? $html.='('.$seller['bank_short_nm'].')' : $html.='';
-		$html.='								</div>
-                                                <div>'.$seller['bank_owner'].'</div>
-                                                <div class="bold" id="no-rek-'.$seller['customer_id'].'" style="color: green;">'.$seller['bank_no_rek'].'</div>
-                                                <a class="copy-clipboard" onclick="';$html.="copyToClipboard('#no-rek-".$seller['customer_id']."')";$html.='">Salin No. Rekening</a>';
-                                            }else{
-        $html.='								<div class="bold" style="color: red;">Data Bank belum diatur Penjual</div>';
-                                            }
-		$html.='							</div>
-                                        </div>
-                                    </div>  
-                                </div>';
-                            }
+		
 		$html.='			</div>
 						</div>';
-
-		// Modal
-		$html.='	
-				<div class="modal fade" id="modal-'.$seller['billing_id'].'-'.$seller['customer_id'].'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <form action="'.site_url('webmin_buyer_data/update_buyer_customer_st/'.$seller['billing_id'].'/'.$seller['customer_id']).'" method="post" enctype="multipart/form-data" id="form-validate">  
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="myModalLabel">Konfimasi bila Anda sudah Transfer ke Rekening Penjual</h4>
-				      </div>
-				      <div class="modal-body">
-				        <div class="form-group">
-				            <label>Konfirmasi ke Penjual : '.$seller['customer_nm'].'</label>
-				            <select class="span3" name="bayar_customer_st" required>
-				            	<option value="">-- Pilih Status --</option>
-				                <option value="1">Sudah Transfer</option>
-				            </select>
-				            <span class="alert-product">* Silahkan pilih <u>Sudah Transfer</u> apabila Anda sudah Transfer ke Rekening Penjual</span>
-				        </div>
-				        <div class="form-group">
-				            <label>Bukti Transfer</label>
-				            <input type="file" class="form-control span6" name="bayar_customer_img" required>
-				            <span class="alert-product">* Silahkan upload bukti Transfer</span>
-				        </div>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-				        <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i> Simpan</button>
-				      </div>
-				      </form>
-				    </div>
-				  </div>
-				</div>
-				';
-
-		$html.='<script>
-				function copyToClipboard(element) {
-				  var $temp = $("<input>");
-				  $("body").append($temp);
-				  $temp.val($(element).text()).select();
-				  document.execCommand("copy");
-				  //alert
-				  swal({
-				      text: "Berhasil di Copy : " + $temp.val(),
-				      icon: "success",
-				      timer: 1000
-				  });
-				  $temp.remove();
-				}
-				</script>';
+		$html.='	</div>';
+		$html.=' 	<div class="col-md-4" style="margin-top: 15px;">';
+		$html.='		<div class="panel-content">
+                            <div class="panel panel-default header-panel-bank-rek" style="border: 2px solid blue;">
+                                <div class="panel-body">
+                                    <center>
+                                        <div class="bold" style="color: black;">Nominal yang diterima Penjual ini</div>
+                                        <div class="bold" style="color: red; font-size: 20px;">Rp '.digit($total_payment).'</div>
+                                    </center>
+                                </div>
+                            </div>
+                        </div>';
+		$html.=' 	</div>';
 			}
-
-		$html.='	
-				<div class="modal fade" id="konfirmasi-'.$data['billing_id'].'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <form action="'.site_url('webmin_buyer_data/update_bayar_st/'.$data['billing_id']).'" method="post" enctype="multipart/form-data" id="form-validate">  
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="myModalLabel">Konfirmasi Sudah Bayar ('.$data['billing_id'].')</h4>
-				      </div>
-				      <div class="modal-body">
-				        <div class="form-group">
-				            <label>Konfirmasi Status : </label>
-				            <select class="chosen-select span3" name="bayar_st">
-				                <option value="2">Belum Bayar</option>
-				                <option value="1">Sudah Bayar</option>
-				            </select>
-				            <span class="alert-product">* Silahkan pilih <u>Sudah Bayar</u> apabila Uang sudah masuk ke Rekening Anda</span>
-				        </div>
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-				        <button type="submit" class="btn btn-primary"><i class="fa fa-send"></i> Simpan</button>
-				      </div>
-				      </form>
-				    </div>
-				  </div>
-				</div>
-				';
-
         $html.='	</td>
         		</tr>';
 
@@ -299,7 +153,8 @@ class Webmin_buyer_data extends CI_Controller{
 				</script>";
 
 		//Data Jumlah Pembeli
-		$count_buyer = $this->checkout_model->count_buyer($status,$bulan,$search);
+		// $count_buyer = $this->checkout_model->count_buyer($status,$bulan,$search);
+		$count_buyer = count($list_buyer);
 		//
 		$count = "";
 		$count .= $count_buyer." Orang";

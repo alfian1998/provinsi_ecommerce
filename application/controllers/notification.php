@@ -53,36 +53,145 @@ class Notification extends CI_Controller{
         $html.='	<td align="center"><label class="label label-success" style="font-size: 13px;">'.$data['billing_id'].'</label></td>';
         $html.='	<td><label class="label label-primary" style="font-size: 12px;">Rp '.digit($jumlah_harga['jumlah_harga']).'</label></td>';
 
-        if ($data['diterima_st'] == '1') {
-        $html.=' 	<td rowspan="2">
-        				<label class="label label-primary" style="font-size: 12px;">Sudah Diterima Pembeli</label><br><br>
-        				<label class="label label-success" style="font-size: 12px;">Uang Akan Segera Ditransfer</label>
-        			';
-        }else{
-        	if ($data['transfer_st'] == '2') {
-		$html.=' 	<td><label class="label label-primary" style="font-size: 12px;">Menunggu Konfirmasi Admin</label>';		
-			}else {
-		$html.='<td>';
-        		if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Bayar</label>';
-                }elseif ($data['bayar_st'] == '2') {
-        $html.=' 	<label class="label label-warning" style="font-size: 12px;">Belum Bayar</label>';
-                }
-            }
-        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $customer_id);
-                if ($check_kirim_st == '') {
-        $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Kirim</label>';
-                }elseif ($check_kirim_st != '') {
-                	if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-danger" style="font-size: 12px;">Belum Kirim</label>';
-        			}
-                }
-        }
-        $html.='</td></tr>';
+       	// Notifikasi Belum Bayar dan Sudah Bayar
+       		if ($data['diterima_st'] == '1') {
+       	$html.=' 	<td rowspan="3"><label class="label label-success" style="font-size: 12px;"><i class="fa fa-check"></i> Transaksi Selesai</label>';		
+       	$html.='		<div class="alert-product" style="margin-top: 8px; color: green;">* Produk sudah diterima Pembeli</div>'; 
+       	$html.='		<div class="alert-product" style="margin-top: 3px; color: green;">* Transaksi dari Pembeli : <u>'; 
+       		if ($data['customer_id'] !='') {
+		$html.=	$data['customer_nm'];
+                }else{
+        $html.=	$data['pembeli_nm'];
+				}
+       	$html.='</u>, telah SELESAI</div></td>';
+       		}else{
+	        	if ($data['bayar_customer_st'] == '1') {
+	        $html.=' 	<td rowspan="3"><label class="label label-success" style="font-size: 12px;">Sudah Bayar</label>';
+	        		if ($data['kirim_st'] == '2') {
+	        $html.='		<button type="button" class="btn btn-primary btn-xs bold faa-flash animated" data-toggle="modal" data-target="#ModalConfirm-'.$data['billing_id'].'">KONFIRMASI</button>';
+	        		}
 
-        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $customer_id);
-        $list_product = $this->checkout_model->get_product_by_billing_id($data['billing_id'], $customer_id);
-        $count_list_product = count($list_product)+1;
+	        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $customer_id);
+	                if ($check_kirim_st == '') {
+	        $html.=' 	<label class="label label-success" style="font-size: 12px;">Sudah Kirim</label>';
+	                }elseif ($check_kirim_st != '') {
+	                	if ($data['bayar_st'] == '1') {
+	        $html.=' 	<label class="label label-danger" style="font-size: 12px;">Belum Kirim</label>';
+	        			}
+	                }
+
+	        $html.='		<div class="alert-product" style="margin-top: 8px;">* Silahkan klik Tombol <a href="'.site_url('notification/detail/'.$p.'/'.$o.'/'.$data['billing_id']).'"><font class="bold" style="color: blue">DETAIL</font></a> untuk melihat bukti transfer</div>';
+	        		if ($data['kirim_st'] == '2') {
+	        $html.='		<div class="alert-product" style="margin-top: 3px;">* Anda harus segera mengirim produk, dan klik <font class="bold" style="color: blue;">KONFIRMASI</font></div>';
+	        		}elseif($data['kirim_st'] == '1') {
+	        $html.='		<div class="alert-product" style="margin-top: 3px; color: blue;">* Produk sudah dikirim ke Pembeli</div>';
+	        		}
+	            }elseif ($data['bayar_customer_st'] == '2') {
+	        $html.=' 	<td><label class="label label-warning" style="font-size: 12px;">Belum Bayar</label>';
+	            }
+	        }
+
+	        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $customer_id);
+        	$list_product = $this->checkout_model->get_product_by_billing_id($data['billing_id'], $customer_id);
+        	$count_list_product = count($list_product)+1;
+
+        // Modal
+        $html.='<div class="modal fade" id="ModalConfirm-'.$data['billing_id'].'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				    <form action="'.site_url('notification/update_kirim_st/'.$data['billing_id']).'" method="post" enctype="multipart/form-data">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Konfirmasi Pengiriman Produk</h4>
+				      </div>
+				      <div class="modal-body">
+				      	<div class="alert alert-red alert-notification" style="padding-top: 5px; padding-bottom: 5px; padding-left: 7px; padding-right: 7px;"><i class="fa fa-warning"></i> Jika Anda sudah mengirimkan produk ke Pembeli, silahkan mengisi kolom dibawah ini
+				      	</div>
+				      	<div class="cart-line-top" style="margin-bottom: 10px; margin-top: 15px;"></div>
+				    	<div class="form-group">
+				            <label>Status Kirim</label>
+				            <select name="kirim_st" style="width: 30%;">
+				            	<option value="">-- Pilih Status Kirim --</option>
+				            	<option value="1">Sudah Kirim</option>
+				            </select>
+				            <span class="alert-product">* Jika Anda sudah mengirimkan Produk Anda ke Pembeli sikahkan ubah Status Kirim Menjadi <u>Sudah Kirim</u></span>
+				        </div>
+				        <div class="cart-line-top" style="margin-bottom: 10px;"></div>
+				        <div class="form-group">
+				            <label>Nama Jasa Pengiriman</label>
+				            <input type="text" name="jasa_nm" class="form-control" value="" style="width: 60%;">
+				            <span class="alert-product">* Jika Anda menggunakan Jasa Pengiriman Barang, silahkan isi kolom Nama Jasa Pengiriman</span>
+				        </div>
+				        <div class="cart-line-top" style="margin-bottom: 10px;"></div>
+				        <div class="form-group">
+				            <label>Nomor Resi</label>
+				            <input type="text" name="no_resi" class="form-control" value="" style="width: 60%;">
+				            <span class="alert-product">* Jika Anda menggunakan Jasa Pengiriman Barang, silahkan isi kolom Nomor Resi</span>
+				        </div>
+				        <div class="cart-line-top" style="margin-bottom: 10px;"></div>
+				        <div class="form-group">
+				            <label>Estimasi Sampai</label>
+				            <div class="input-group" style="width: 25%;">
+						      <input type="number" name="estimasi_sampai" class="form-control">
+						      <div class="input-group-addon bold">Hari</div>
+						    </div>
+				            <span class="alert-product">* Silahkan isi Estimasi Sampai barang ke Pembeli berapa hari</span>
+				        </div>
+
+				        <div class="panel panel-primary">
+                            <div class="panel-heading bold">Produk yang Harus Anda Kirim</div>
+                            <div class="panel-body">
+                                <div class="col-md-12 row">';
+                                foreach ($list_product as $product){
+        $html.='					<li><b>'.$product['product_qty'].'&nbsp;'.$product['product_qty_unit'].' : '.$product['product_nm'].'</b></li>';
+        						}
+		$html.='				</div>
+                            </div>
+                        </div>
+
+				        <div class="panel panel-primary">
+                            <div class="panel-heading bold">Informasi Alamat Pembeli</div>
+                            <div class="panel-body">
+                                <div class="col-md-12 row">';
+                                if ($data['customer_id_pembeli'] !='') {
+        $html.='					<p>'.$data['customer_address'].'</p>';
+                                }else{
+        $html.='					<p>'.$data['pembeli_address'].'</p>';
+                                }
+		$html.='					<p>Kelurahan '.$data['kelurahan'].', Kecamatan '.$data['kecamatan'].', '.$data['kabupaten'].', '.$data['provinsi'].', ';
+								if ($data['customer_id_pembeli'] !='') {
+		$html.=						$data['customer_kodepos'];
+								}else{
+		$html.=						$data['pembeli_kodepos'];									
+								}
+		$html.=' </p>';
+		 						if ($data['customer_id_pembeli'] !='') {
+        $html.='					<p>'.$data['customer_phone'].'</p>';
+                                }else{
+        $html.='					<p>'.$data['pembeli_phone'].'</p>';
+                                }
+		$html.='				</div>
+                            </div>
+                        </div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-danger bold" data-dismiss="modal">Close</button>
+				        <button type="submit" class="btn btn-primary bold">Simpan</button>
+				      </div>
+				    </form>
+				    </div>
+				  </div>
+				</div>';
+
+		$html.="<script>
+					$(function() {
+				        var auto_refresh = setInterval(function () {
+				            $('#ModalConfirm-".$data['billing_id']."').modal('hide');
+				        }, 79988);
+				    });
+				</script>";
+
+        $html.='</td></tr>';
 
         $html.='<tr>';
         $html.='	<td colspan="1"></td>';
@@ -152,6 +261,7 @@ class Notification extends CI_Controller{
                 </tr>
         		';
         		}
+
         $html.="<script>
 					$(function() {
 						$('.link_pagination').bind('click',function(e) {
@@ -198,6 +308,7 @@ class Notification extends CI_Controller{
 		$data['get_group_checkout'] = $this->checkout_model->get_checkout_group_by($billing_id);
 		$data['check_kirim_st'] = $this->checkout_model->check_kirim_st($billing_id, $data['ses_customer_id']);
 		$data['get_kirim_date'] = $this->checkout_model->get_kirim_date($billing_id, $data['ses_customer_id']);
+		$data['get_data_checkout'] = $this->checkout_model->get_checkout_by_billing_and_customer_id($billing_id, $data['ses_customer_id']);
 		//
 		$this->load->view('public/main/header', $data);		
 		$this->load->view('public/main/top-menu');			

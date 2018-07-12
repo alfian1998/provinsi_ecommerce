@@ -36,13 +36,13 @@
                                                     <tr>
                                                         <th width="35%">Nama Pembeli</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=($main['customer_id'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></td>
+                                                        <td><div class="bold" style="color: blue;"><?=($main['customer_id'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></div></td>
                                                     </tr>
                                                     <tr>
                                                         <th width="35%">Nominal</th>
                                                         <td align="center" width="6%"><b>:</b></td>
                                                         <td>
-                                                            <label class="label label-primary label-font">Rp <?=digit($main['product_total_price'])?></label>
+                                                            <div class="bold" style="color: red; font-size: 18px;">Rp <?=digit($main['product_total_price'])?></div>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -51,40 +51,9 @@
                                                         <td><?=convert_date_indo($main['billing_date'])?></td>
                                                     </tr>
                                                     <tr>
-                                                        <th width="35%">Status Bayar</th>
+                                                        <th width="35%">Catatan Pembeli</th>
                                                         <td align="center" width="6%"><b>:</b></td>
-                                                        <td>
-                                                            <?php if ($main['transfer_st'] == '2'): ?>
-                                                            <label class="label label-primary label-font">Menunggu Konfirmasi Admin</label>
-                                                            <?php else: ?>
-                                                                <?php if ($main['bayar_st'] == '1'): ?>
-                                                                <label class="label label-success label-font">Sudah Bayar</label>
-                                                                <?php elseif ($main['bayar_st'] == '2'): ?>
-                                                                <label class="label label-warning label-font">Belum Bayar</label>
-                                                                <?php endif; ?>
-                                                            <?php endif; ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th width="35%">Tgl Bayar</th>
-                                                        <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=($main['bayar_date'] !='') ? convert_date_indo($main['transfer_date']) : '-'?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th width="35%">Status Kirim</th>
-                                                        <td align="center" width="6%"><b>:</b></td>
-                                                        <td>
-                                                            <?php if ($check_kirim_st !=''): ?>
-                                                                <label class="label label-danger label-font">Belum Kirim</label>
-                                                            <?php else: ?>
-                                                                <label class="label label-success label-font">Sudah Kirim</label>
-                                                            <?php endif; ?>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th width="35%">Tgl Kirim</th>
-                                                        <td align="center" width="6%"><b>:</b></td>
-                                                        <td><?=($get_kirim_date['kirim_date'] !='') ? convert_date_indo($get_kirim_date['kirim_date']) : '-' ?></td>
+                                                        <td><?=$main['billing_desc']?></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -170,20 +139,42 @@
                                                 foreach ($list_seller as $data): 
                                                 //
                                                 $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $data['customer_id']);
+                                                $get_data_checkout = $this->checkout_model->get_checkout_by_billing_and_customer_id($data['billing_id'], $data['customer_id']);
                                                 ?>
-                                                <div class="panel panel-default">
+                                                <div class="panel panel-success">
                                                     <div class="panel-heading">
-                                                        <img src="<?=base_url()?>/assets/images/customer/<?=$data['customer_img']?>" class="img-circle img-customer-checkout"> <b><?=$data['customer_nm']?></b> 
-                                                        <?php if ($check_kirim_st == ''): ?>
-                                                        <label class="pull-right label label-success label-heading"><b>Sudah Kirim</b></label>
-                                                        <?php elseif ($check_kirim_st != ''): ?>
-                                                        <label class="pull-right label label-danger label-heading"><b>Belum Kirim</b></label>
+                                                        <img src="<?=base_url()?>/assets/images/customer/<?=$data['customer_img']?>" class="img-circle img-customer-checkout"> <b style="color: #333;"><?=$data['customer_nm']?></b> 
+                                                        <?php if ($get_data_checkout['diterima_st'] == '1'): ?>
+                                                            <label class="pull-right label label-success label-heading"><b><i class="fa fa-check"></i> Transaksi Selesai</b></label>
                                                         <?php endif; ?>
                                                     </div>
                                                     <div class="panel-body">
-                                                        <?php if ($check_kirim_st ==''): ?>
-                                                        <div class="alert alert-green alert-small">Tanggal Kirim : <?=convert_date_indo($data['kirim_date'])?></div>
-                                                        <?php endif; ?>
+                                                        <div class="panel-notification">
+                                                            <?php if ($get_data_checkout['bayar_customer_st'] == '2'): ?>
+                                                                <div class="alert alert-red alert-small alert-notification"><i class=" fa fa-credit-card-alt"></i> Pembeli belum membayar</div>
+                                                            <?php endif; ?>
+                                                            <?php if ($get_data_checkout['bayar_customer_st'] == '1'): ?>
+                                                                <div class="alert alert-green alert-small alert-notification"><i class="fa fa-credit-card-alt"></i> Pembeli sudah membayar ke Penjual ini</div>
+                                                                <?php if ($check_kirim_st == ''): ?>
+                                                                    <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check-square-o"></i> Penjual sudah memverifikasi pembayaran</div>
+                                                                <?php else: ?>
+                                                                    <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check-square-o"></i> Penjual sedang memverifikasi pembayaran</div>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
+
+                                                            <?php 
+                                                            if ($check_kirim_st == ''): 
+                                                            //
+                                                            $estimasi_tgl = date('Y-m-d', strtotime('+'.$get_data_checkout['estimasi_sampai'].' days', strtotime($get_data_checkout['kirim_date'])));
+                                                            ?>
+                                                            <div class="alert alert-green alert-small alert-notification"><i class="fa fa-truck"></i> Produk Sudah di Kirim | Pada : <?=convert_date_indo($get_data_checkout['kirim_date'])?></div>
+                                                            <div class="alert alert-green alert-small alert-notification"><i class="fa fa-clock-o"></i> Estimasi Sampai <?=$get_data_checkout['estimasi_sampai']?> Hari | Perkiraan Tiba Pada : <?=convert_date_indo($estimasi_tgl)?></div>
+                                                                <?php if ($get_data_checkout['diterima_st'] == '1'): ?>
+                                                                    <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check"></i> Transaksi Selesai</div>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
+
+                                                        </div>
                                                         <?php
                                                         $list_product = $this->checkout_model->list_checkout_by_customer_id($data['billing_id'], $data['customer_id']);
                                                         //
@@ -208,13 +199,13 @@
                                                                 <td class="no-border" style="width: 50%;">
                                                                     <div class="form-group">
                                                                         <label>Jasa Pengiriman</label>
-                                                                        <div><?=($data['jasa_nm'] !='') ? $data['jasa_nm'] : '-'?></div>
+                                                                        <div style="color: green; font-weight: bold;"><?=($get_data_checkout['jasa_nm'] !='') ? $get_data_checkout['jasa_nm'] : '-'?></div>
                                                                     </div>
                                                                 </td>
                                                                 <td class="no-border" style="width: 50%;">
                                                                     <div class="form-group">
                                                                         <label>No. Resi</label>
-                                                                        <div><?=($data['no_resi'] !='') ? $data['no_resi'] : '-'?></div>
+                                                                        <div style="color: green; font-weight: bold;"><?=($get_data_checkout['no_resi'] !='') ? $get_data_checkout['no_resi'] : '-'?></div>
                                                                     </div>
                                                                 </td>
                                                             </tr>

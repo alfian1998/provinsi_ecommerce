@@ -83,5 +83,13 @@ class Webmin_bank extends CI_Controller{
 		$this->bank_model->delete($bank_id);
 		redirect('webmin/location/bank');
 	}
+
+	function delete_image($customer_id) {
+		$this->bank_model->delete_image($customer_id);
+		//
+		echo json_encode(array(
+			'result' => 'true'
+		));
+	}
 	
 }

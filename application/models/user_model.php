@@ -528,6 +528,8 @@ class User_model extends CI_Model {
     function update_customer($customer_id=null) {
         $data = $_POST;
         //
+        $data['verification_date'] = date('Y-m-d H:i:s');
+        //
         $this->db->where('customer_id', $customer_id);
         $outp = $this->db->update('customer', $data);
         return outp_result($outp);

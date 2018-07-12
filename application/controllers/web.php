@@ -24,6 +24,7 @@ class Web extends CI_Controller{
 		$data['cart'] = $this->cart->contents();
 		$data['list_category'] = $this->category_model->list_category_no_paging();
 		$data['list_category_rand'] = $this->category_model->list_category_rand();
+		$data['list_category_parent'] = $this->category_model->list_category_parent();
 		$data['slideshow'] = $this->slideshow_model->get_slideshow_active();
 		// cek customer_id jika membeli di produk sendiri
 		foreach ($data['cart'] as $key) {
@@ -41,6 +42,16 @@ class Web extends CI_Controller{
 		$this->load->view('public/home/index', $data);
 		$this->load->view('public/main/footer');
 		$this->load->view('public/main/validate-modal', $data);
+	}
+
+	function verification_seller($customer_id="") {
+		$this->customer_model->verification_seller($customer_id);
+		redirect('');
+	}
+
+	function remove_notification($customer_id="") {
+		$this->customer_model->remove_notification($customer_id);
+		redirect('');
 	}
 
 	function details($product_id=null, $product_url=null) {	

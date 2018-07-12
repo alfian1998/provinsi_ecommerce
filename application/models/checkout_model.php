@@ -70,15 +70,13 @@ class Checkout_Model extends CI_Model {
 
     function count_buyer($status, $bulan, $search) {
         if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
+            $sql_status = " AND d.bayar_customer_st IS NOT NULL";
         }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
+            $sql_status = " AND d.bayar_customer_st = '1'";
         }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
+            $sql_status = " AND d.bayar_customer_st = '2'";
         }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
+            $sql_status = " AND d.diterima_st = '1'";
         }
         //
         if ($bulan != '') {
@@ -98,6 +96,7 @@ class Checkout_Model extends CI_Model {
                 FROM billing a 
                 LEFT JOIN pembeli b ON a.pembeli_id=b.pembeli_id
                 LEFT JOIN customer c ON b.customer_id=c.customer_id
+                LEFT JOIN checkout d ON a.billing_id=d.billing_id
                 WHERE 1 $sql_status $sql_bulan $sql_search ";
         $query = $this->db->query($sql);
         $row = $query->row_array();
@@ -180,12 +179,13 @@ class Checkout_Model extends CI_Model {
         }
         //
         $sql = "SELECT 
-                    a.*, b.*, c.*, d.customer_nm, d.customer_img, d.customer_id   
+                    a.*, b.*, c.*, d.customer_nm, d.customer_img, d.customer_id, d.bank_owner, d.bank_no_rek, f.*    
                 FROM billing a 
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON b.customer_id=d.customer_id
                 LEFT JOIN customer e ON c.customer_id=e.customer_id
+                LEFT JOIN mst_bank f ON d.bank_id=f.bank_id
                 WHERE 1 $sql_billing_id $sql_email
                 GROUP BY b.customer_id";
         $query = $this->db->query($sql);
@@ -376,18 +376,6 @@ class Checkout_Model extends CI_Model {
     }
 
     function get_all_buyer($o = 0, $offset = 0, $limit = 100, $status, $search) {
-        if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
-        }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
-        }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
-        }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
-        }
-        //
         if ($search !='') {
             $sql_search = " AND b.pembeli_nm LIKE '%$search%' OR c.customer_nm LIKE '%$search%' OR a.billing_id LIKE '%$search%'";
         }elseif ($search == '') {
@@ -401,7 +389,7 @@ class Checkout_Model extends CI_Model {
                 FROM billing a 
                 LEFT JOIN pembeli b ON a.pembeli_id=b.pembeli_id
                 LEFT JOIN customer c ON b.customer_id=c.customer_id
-                WHERE 1 $sql_status $sql_search
+                WHERE 1 $sql_search
                 ORDER BY a.billing_id DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC, a.diterima_date DESC
                     $sql_paging";
         $query = $this->db->query($sql);
@@ -417,15 +405,13 @@ class Checkout_Model extends CI_Model {
 
     function paging_buyer_by_customer_id($p = 1, $o = 0, $customer_id=null, $status=null, $bulan=null, $search=null) {
         if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
+            $sql_status = " AND b.bayar_customer_st IS NOT NULL";
         }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
+            $sql_status = " AND b.bayar_customer_st = '1'";
         }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
+            $sql_status = " AND b.bayar_customer_st = '2'";
         }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
+            $sql_status = " AND b.diterima_st = '1'";
         }
         //
         if ($bulan != '') {
@@ -446,7 +432,7 @@ class Checkout_Model extends CI_Model {
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id 
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
-                WHERE 1 AND a.bayar_st IS NOT NULL AND b.customer_id='$customer_id' $sql_status $sql_bulan $sql_search";
+                WHERE 1 AND b.bayar_customer_st IS NOT NULL AND b.customer_id='$customer_id' $sql_status $sql_bulan $sql_search";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $count_data = $row['count_data'];
@@ -461,15 +447,13 @@ class Checkout_Model extends CI_Model {
 
     function get_buyer_by_customer_id($o = 0, $offset = 0, $limit = 100, $customer_id=null, $status=null, $bulan=null, $search=null) {
         if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
+            $sql_status = " AND b.bayar_customer_st IS NOT NULL";
         }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
+            $sql_status = " AND b.bayar_customer_st = '1'";
         }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
+            $sql_status = " AND b.bayar_customer_st = '2'";
         }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
+            $sql_status = " AND b.diterima_st = '1'";
         }
         //
         if ($bulan != '') {
@@ -487,12 +471,16 @@ class Checkout_Model extends CI_Model {
         $sql_paging = " LIMIT ".$offset.",".$limit;
         //
         $sql = "SELECT 
-                    a.*, c.*, d.customer_nm  
+                    a.*, c.*, d.customer_nm, b.bayar_customer_st, b.bayar_customer_date, b.bayar_customer_st, b.kirim_st, c.customer_id AS customer_id_pembeli, e.nama AS provinsi, f.nama AS kabupaten, g.nama AS kecamatan, h.nama AS kelurahan, d.customer_address, b.diterima_st, d.customer_kodepos, d.customer_phone 
                 FROM billing a 
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id 
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
-                WHERE 1 AND a.bayar_st IS NOT NULL AND b.customer_id='$customer_id' $sql_status $sql_bulan $sql_search
+                LEFT JOIN mst_provinsi e ON c.pembeli_provinsi=e.id_prov OR d.customer_provinsi=e.id_prov
+                LEFT JOIN mst_kabupaten f ON c.pembeli_kabupaten=f.id_kab OR d.customer_kabupaten=f.id_kab
+                LEFT JOIN mst_kecamatan g ON c.pembeli_kecamatan=g.id_kec OR d.customer_kecamatan=g.id_kec
+                LEFT JOIN mst_kelurahan h ON c.pembeli_kelurahan=h.id_kel OR d.customer_kelurahan=h.id_kel
+                WHERE 1 AND b.bayar_customer_st IS NOT NULL AND b.customer_id='$customer_id' $sql_status $sql_bulan $sql_search
                 GROUP BY a.billing_id 
                 ORDER BY a.billing_id DESC, a.billing_date DESC, a.bayar_date DESC, a.transfer_date DESC  
                     $sql_paging";
@@ -593,15 +581,13 @@ class Checkout_Model extends CI_Model {
 
     function paging_buyer($p = 1, $o = 0, $status=null, $bulan=null, $search=null) {
         if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
+            $sql_status = " AND b.bayar_customer_st IS NOT NULL";
         }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
+            $sql_status = " AND b.bayar_customer_st = '1'";
         }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
+            $sql_status = " AND b.bayar_customer_st = '2'";
         }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
+            $sql_status = " AND b.diterima_st = '1'";
         }
         //
         if ($bulan != '') {
@@ -619,6 +605,7 @@ class Checkout_Model extends CI_Model {
         $sql = "SELECT 
                     COUNT(a.billing_id) AS count_data 
                 FROM billing a 
+                LEFT JOIN checkout b ON a.billing_id=b.billing_id 
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
                 WHERE 1 $sql_status $sql_bulan $sql_search";
@@ -636,15 +623,13 @@ class Checkout_Model extends CI_Model {
 
     function get_buyer($o = 0, $offset = 0, $limit = 100, $status=null, $bulan=null, $search=null) {
         if ($status == '') {
-            $sql_status = " AND a.bayar_st IS NOT NULL";
+            $sql_status = " AND b.bayar_customer_st IS NOT NULL";
         }elseif ($status == 'sudah_bayar') {
-            $sql_status = " AND a.bayar_st = '1'";
+            $sql_status = " AND b.bayar_customer_st = '1'";
         }elseif ($status == 'belum_bayar') {
-            $sql_status = " AND a.bayar_st = '2'";
-        }elseif ($status == 'konfirmasi') {
-            $sql_status = " AND a.transfer_st = '2'";
+            $sql_status = " AND b.bayar_customer_st = '2'";
         }elseif ($status == 'sudah_diterima') {
-            $sql_status = " AND a.diterima_st = '1'";
+            $sql_status = " AND b.diterima_st = '1'";
         }
         //
         if ($bulan != '') {
@@ -662,14 +647,14 @@ class Checkout_Model extends CI_Model {
         $sql_paging = " LIMIT ".$offset.",".$limit;
         //
         $sql = "SELECT 
-                    a.*, c.*, d.customer_nm  
+                    a.*, c.*, d.customer_nm   
                 FROM billing a 
                 LEFT JOIN checkout b ON a.billing_id=b.billing_id 
                 LEFT JOIN pembeli c ON a.pembeli_id=c.pembeli_id
                 LEFT JOIN customer d ON c.customer_id=d.customer_id
                 WHERE 1 $sql_status $sql_bulan $sql_search
                 GROUP BY a.billing_id 
-                ORDER BY a.billing_id DESC, a.bayar_date DESC, a.transfer_date DESC, a.diterima_date DESC 
+                ORDER BY a.billing_id DESC, b.bayar_customer_st DESC, a.transfer_date DESC, b.diterima_date DESC 
                     $sql_paging";
         $query = $this->db->query($sql);
         $result = $query->result_array();
@@ -818,6 +803,37 @@ class Checkout_Model extends CI_Model {
         return $query->row_array();
     }
 
+    function get_all_data_transaksi($billing_id=null) {
+        $sql = "SELECT a.*, b.*, c.*, d.*, f.* 
+                FROM checkout a 
+                LEFT JOIN billing b ON a.billing_id=b.billing_id
+                LEFT JOIN pembeli c ON b.pembeli_id=c.pembeli_id
+                LEFT JOIN customer d ON a.customer_id=d.customer_id
+                LEFT JOIN mst_bank f ON d.bank_id=f.bank_id
+                WHERE a.billing_id=?
+                GROUP BY a.customer_id";
+        $query = $this->db->query($sql, $billing_id);
+        $result = $query->result_array();
+        //
+        return $result;
+    }
+
+    function get_all_product_transaksi($billing_id=null, $customer_id=null) {
+        $sql = "SELECT a.*, b.* 
+                FROM checkout a 
+                LEFT JOIN product b ON a.product_id=b.product_id
+                WHERE a.billing_id='$billing_id' AND b.customer_id='$customer_id'";
+        $query = $this->db->query($sql);
+        $result = $query->result_array();
+        //
+        $no=1;
+        foreach($result as $key => $val) {
+            $result[$key]['first_image'] = $this->product_model->get_first_image($val['product_id']);
+            $no++;
+        }
+        return $result;
+    }
+
     function get_billing_edit($billing_id=null) {
         $sql = "SELECT a.*, b.*, c.customer_nm  
                 FROM billing a 
@@ -833,6 +849,15 @@ class Checkout_Model extends CI_Model {
                 FROM checkout a 
                 WHERE a.billing_id=?";
         $query = $this->db->query($sql, $billing_id);
+        return $query->row_array();
+    }
+
+    function get_checkout_by_billing_and_customer_id($billing_id=null, $customer_id=null) {
+        $sql = "SELECT a.* 
+                FROM checkout a 
+                WHERE a.billing_id='$billing_id' AND a.customer_id='$customer_id'
+                GROUP BY a.billing_id";
+        $query = $this->db->query($sql);
         return $query->row_array();
     }
 
@@ -1111,11 +1136,14 @@ class Checkout_Model extends CI_Model {
     function update_kirim_st($billing_id=null, $customer_id=null) {
         $data = $_POST;
         //
+        $get_data = $this->get_checkout_by_billing_and_customer_id($billing_id, $customer_id);
+        //
         if ($data['kirim_st'] == '2') {
             $data['kirim_date'] = NULL;
             $data['jasa_nm'] = NULL;
             $data['no_resi'] = NULL;
         }else{
+            $data['bayar_customer_date'] = $get_data['bayar_customer_date'];
             $data['kirim_date'] = date('Y-m-d H:i:s');
             $data['kirim_st'] = 1;
         }
@@ -1147,6 +1175,27 @@ class Checkout_Model extends CI_Model {
         return outp_result($outp);
     }
 
+    function upload_photo($billing_id = "", $customer_id = "") {
+        $data = $_POST;
+        // get data checkout
+        $checkout = $this->get_only_checkout($billing_id,$customer_id);
+        //upload image
+        $bayar_customer_img = $_FILES['bayar_customer_img']['name'];
+        if ($bayar_customer_img != '') {
+            $data_change['bayar_customer_img'] = $this->process_upload_photo('bayar_customer_img','transfer_pembeli',@$billing_id);
+        }
+        //
+        $data_change['bayar_customer_st'] = 1;
+        $data_change['bayar_customer_date'] = date('Y-m-d H:i:s');
+        $data_change['checkout_date'] = $checkout['checkout_date'];
+        $data_change['kirim_date'] = $checkout['kirim_date'];
+        //
+        $array = array('billing_id' => $billing_id, 'customer_id' => $customer_id);
+        $this->db->where($array);
+        $outp = $this->db->update('checkout',$data_change);
+        return outp_result($outp);
+    }
+
     function update_confirm($billing_id = "") {
         $data = $_POST;
         // get data billing
@@ -1161,6 +1210,22 @@ class Checkout_Model extends CI_Model {
         $this->db->where('billing_id', $billing_id);
         $outp = $this->db->update('billing',$data_change);
         return outp_result($outp);
+    }
+
+    function confirm_clear($billing_id, $customer_id) {
+        $data = $_POST;
+        // get data checkout
+        $get_data = $this->get_checkout_by_billing_and_customer_id($billing_id, $customer_id);
+        //
+        $data_change['kirim_date'] = $get_data['kirim_date'];
+        $data_change['bayar_customer_date'] = $get_data['bayar_customer_date'];
+        $data_change['diterima_st'] = 1;
+        $data_change['diterima_date'] = date('Y-m-d H:i:s');
+        //
+        $array = array('billing_id' => $billing_id, 'customer_id' => $customer_id);
+        $this->db->where($array);
+        $outp = $this->db->update('checkout', $data_change);
+        return $outp;
     }
 
     function update_buyer_customer_st($billing_id, $customer_id) {
@@ -1199,6 +1264,35 @@ class Checkout_Model extends CI_Model {
         //
         // $image_no = md5(md5(@$billing['customer_id']));
         $image_no = md5(md5(@$doc_id));
+        //
+        if($file_tmp_name != '') {
+            if($doc_id == '') {
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name']);
+            } else {                
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name'], @$billing[$src_file_name]);
+            }   
+            //
+            $result = $file_name;
+        }
+        //
+        return $result;
+    }
+
+    function process_upload_photo($src_file_name = null, $src_file_location = null, $doc_id = null) {
+        $config = $this->config_model->get_config();
+        // data
+        $billing = $this->get_billing($doc_id);
+        // directory file
+        $path_dir = "assets/images/". $src_file_location."/";
+        $date = date('dmyhis');
+        //
+        $result             = @$billing[$src_file_location];
+        $file_tmp_name      = @$_FILES[$src_file_name]['tmp_name'];
+        $file_size          = @$_FILES[$src_file_name]['size'];
+        $clean_file_name    = clean_url(get_file_name(@$_FILES[$src_file_name]['name']));
+        //
+        // $image_no = md5(md5(@$billing['customer_id']));
+        $image_no = md5(md5($date));
         //
         if($file_tmp_name != '') {
             if($doc_id == '') {

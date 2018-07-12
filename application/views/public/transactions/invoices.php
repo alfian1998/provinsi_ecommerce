@@ -42,107 +42,16 @@ function copyToClipboard(element) {
                     <div class="panel-heading bold">Cek Transaksi</div>
                     <div class="panel-body">
                     <?php if ($main['billing_id'] !=''): ?>
-                        <?php if ($main['bayar_st'] == '1'): ?>
-                        <div class="alert alert-green alert-small">
-                            <li>Anda sudah Transfer ke Admin DKP Jateng pada tanggal <?=convert_date_indo($main['transfer_date'])?> dan dikonfirmasi tanggal <?=convert_date_indo($main['bayar_date'])?></li>
-                            <?php if ($main['diterima_st'] == '1'): ?>
-                                <!-- Kosong -->
-                            <?php else: ?>
-                            <li>Jika Anda sudah menerima semua produk, silahkan klik tombol Konfirmasi Sudah Diterima Semua</li>
-                            <li>Jika dalam 3 X 24 Jam Anda tidak konfirmasi Sudah Dikirim maka status akan otomatis Sudah Diterima Semua</li>
-                            <?php endif; ?>
-                        </div>
-
-<?php if ($main['diterima_st'] == ''): ?>
-    <div class="hidden">
-                        <div id="clockdiv">
-<div>
-    <span class="days" id="day"></span>
-    <div class="smalltext">Days</div>
-</div>
-<div>
-    <span class="hours" id="hour"></span>
-    <div class="smalltext">Hours</div>
-</div>
-<div>
-    <span class="minutes" id="minute"></span>
-    <div class="smalltext">Minutes</div>
-</div>
-<div>
-    <span class="seconds" id="second"></span>
-    <div class="smalltext">Seconds</div>
-</div>
-</div>
-</div>
-<?php endif; ?>
-
-                        <?php if ($main['diterima_st'] == '1'): ?>
-                        <div class="alert alert-blue alert-small"><i class="fa fa-check"></i> Produk sudah Anda terima, Terima Kasih</div>
-                        <?php endif; ?>
-                        <?php endif; ?>
                         <div class="row">
-                            <?php if ($main['bayar_st'] == '2'): ?>
-                            <div style="width: 100%; float: left;">
-                                <div class="col-md-6">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading bold">Nomor Rekening Admin DKP Jawa Tengah</div>
-                                        <div class="panel-body row">
-                                            <?php foreach ($list_bank_account as $data): ?>
-                                            <div class="col-md-6 panel-bank-rek">
-                                                <div class="panel-content">
-                                                    <div class="panel panel-default header-panel-bank-rek">
-                                                        <div class="panel-body">
-                                                            <div>
-                                                                <img src="<?=base_url()?>assets/images/logo/bank/<?=$data['bank_id']?>.png" class="img-bank-rek">
-                                                            </div>
-                                                            <div><?=$data['bank_nm']?>, <?=$data['bank_address']?></div>
-                                                            <div class="bold" id="no-rek"><?=$data['no_rek']?></div>
-                                                            <a class="copy-clipboard" onclick="copyToClipboard('#no-rek')">Salin No. Rek</a>
-                                                        </div>
-                                                    </div>
-                                                </div>  
-                                            </div>    
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading bold">Bukti Transfer</div>
-                                        <div class="panel-body">
-                                            <?php if ($main['transfer_st'] == '2'): ?>
-                                            <div class="alert alert-green alert-small">Anda Sudah mengirimkan Bukti Transfer, harap menunggu konfirmasi dari Admin DKP Jateng</div>
-                                            <?php endif; ?>
-                                            <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
-                                            <div class="form-group">
-                                                <label>Upload Bukti Transfer</label>
-                                                <?php if ($main['transfer_st'] == '2'): ?>
-                                                <input type="file" class="form-control" name="transfer_img" value="<?=$main['transfer_img']?>" readonly="">
-                                                <?php else: ?>
-                                                <input type="file" class="form-control" name="transfer_img" required="">
-                                                <?php endif; ?>
-                                                <span class="alert-product">* Jika Anda telah Transfer ke Rekening Admin DKP Jateng, silahkan Foto bukti Transfer lalu upload</span>
-                                            </div>
-                                            <?php if ($main['transfer_st'] == '2'): ?>
-                                            <button class="btn btn-primary" disabled=""><b><i class="fa fa-upload"></i> Upload</b></button>
-                                            <?php else: ?>
-                                            <button type="submit" class="btn btn-primary"><b><i class="fa fa-upload"></i> Upload</b></button>
-                                            <?php endif; ?>
-                                            </form>
-                                        </div>
-                                    </div>    
-                                </div>
-                            </div>
-                            <?php endif; ?>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="panel panel-default">
                                     <div class="panel-heading bold">Daftar Pembelian 
                                         <?php if ($get_checkout_kirim_st == '0'): ?>
                                             <?php if ($main['diterima_st'] == '1'): ?>
                                                 <!-- Kosong -->
                                             <?php else: ?>
-                                                <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-xs btn-primary pull-right bold faa-pulse animated faa-fast">Konfirmasi Sudah Diterima Semua</button>
+                                                <button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-xs 
+                                                btn-primary pull-right bold faa-pulse animated faa-fast">Konfirmasi Sudah Diterima Semua</button>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </div>
@@ -152,23 +61,53 @@ function copyToClipboard(element) {
                                         //
                                         $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id'], $data['customer_id']);
                                         ?>
-                                        <div class="panel panel-default">
+                                        <div class="panel panel-info">
                                             <div class="panel-heading">
-                                                <img src="<?=base_url()?>/assets/images/customer/<?=$data['customer_img']?>" class="img-circle img-customer-checkout"> <b><?=$data['customer_nm']?></b> 
-                                                <?php if ($check_kirim_st == ''): ?>
-                                                <label class="pull-right label label-success label-heading"><b>Sudah Kirim</b></label>
-                                                <?php elseif ($check_kirim_st != ''): ?>
-                                                <label class="pull-right label label-danger label-heading"><b>Belum Kirim</b></label>
+                                                <img src="<?=base_url()?>/assets/images/customer/<?=$data['customer_img']?>" class="img-circle img-customer-checkout"> <b style="color: black;"><?=$data['customer_nm']?></b> 
+                                                <?php if ($data['kirim_st'] == '1'): ?>
+                                                    <?php if ($data['diterima_st'] == '1'): ?>
+                                                        <label class="pull-right label label-success" style="font-size: 13px; margin-top: 2px; padding-top: 6px; padding-bottom: 6px;"><b><i class="fa fa-check"></i> Transaksi Selesai</b></label>
+                                                    <?php else: ?>
+                                                        <a id="clear-<?=$data['customer_id']?>" href="#" class="btn btn-sm btn-danger bold pull-right">Sudah Terima?</a>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
+                                                <?php if ($data['bayar_customer_st'] == '2'): ?>
+                                                    <button type="button" class="btn btn-primary btn-sm pull-right bold" data-toggle="modal" data-target="#Modal-<?=$data['customer_id']?>"><i class="fa fa-upload"></i> Upload Foto</button>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="panel-body">
-                                                <?php if ($check_kirim_st ==''): ?>
-                                                <div class="alert alert-green alert-small">Tanggal Kirim : <?=convert_date_indo($data['kirim_date'])?></div>
-                                                <?php endif; ?>
+                                                <div class="panel-notification">
+                                                    <?php if ($data['bayar_customer_st'] == '2'): ?>
+                                                        <div class="alert alert-red alert-small alert-notification">Silahkan membayar ke Penjual (<?=$data['customer_nm']?>), dengan Total Pembayaran dan No Rekening Penjual ada dibawah</div>
+                                                    <?php endif; ?>
+                                                    <?php if ($data['bayar_customer_st'] == '1'): ?>
+                                                        <div class="alert alert-green alert-small alert-notification"><i class="fa fa-credit-card-alt"></i> Anda sudah membayar ke Penjual ini</div>
+                                                        <?php if ($check_kirim_st == ''): ?>
+                                                            <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check-square-o"></i> Penjual sudah memverifikasi pembayaran Anda</div>
+                                                        <?php else: ?>
+                                                            <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check-square-o"></i> Penjual sedang memverifikasi pembayaran Anda</div>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                    <?php 
+                                                    if ($check_kirim_st == ''): 
+                                                    //
+                                                    $estimasi_tgl = date('Y-m-d', strtotime('+'.$data['estimasi_sampai'].' days', strtotime($data['kirim_date'])));
+                                                    ?>
+                                                    <div class="alert alert-green alert-small alert-notification"><i class="fa fa-truck"></i> Produk Anda Sudah di Kirim | Pada : <?=convert_date_indo($data['kirim_date'])?></div>
+                                                    <div class="alert alert-green alert-small alert-notification"><i class="fa fa-clock-o"></i> Estimasi Sampai <?=$data['estimasi_sampai']?> Hari | Perkiraan Tiba Pada : <?=convert_date_indo($estimasi_tgl)?></div>
+                                                        <?php if ($data['diterima_st'] == '1'): ?>
+                                                            <div class="alert alert-green alert-small alert-notification"><i class="fa fa-check"></i> Transaksi Selesai</div>
+                                                        <?php else: ?>
+                                                            <div class="alert alert-blue alert-small alert-notification"><i class="fa fa-check"></i> Silahkan Konfirmasi jika produk sudah sampai, klik <u>Sudah Terima?</u></div>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </div>
                                                 <?php
                                                 $list_product = $this->checkout_model->list_checkout_by_customer_id($data['billing_id'], $data['customer_id']);
                                                 //
+                                                $total_payment = 0;
                                                 foreach ($list_product as $product):
+                                                $total_payment += $product['product_sub_price'];
                                                 ?>
                                                 <div class="body-detail-shopping">
                                                     <a href="javascript:void(0)"><img src="<?=base_url()?>assets/images/produk/<?=$product['first_image']['image_name']?>" class="img-thumbnail img-detail-shopping"></a>
@@ -182,6 +121,39 @@ function copyToClipboard(element) {
                                                     </div>
                                                 </div>
                                                 <?php endforeach; ?>
+
+                                                <?php if($data['bayar_customer_st'] == '2'): ?>
+                                                <div class="bold" style="padding-bottom: 5px;">Data Rekening Bank (<?=$data['customer_nm']?>)</div>
+                                                <div class="col-md-6 row">
+                                                    <div class="panel-content">
+                                                        <div class="panel panel-default header-panel-bank-rek" style="border: 2px solid blue;">
+                                                            <div class="panel-body">
+                                                                <center>
+                                                                    <img src="<?=base_url()?>assets/images/logo_bank/<?=$data['bank_img']?>" style="height: 30px;">
+                                                                </center>
+                                                                <div class="bold" style="color: blue;"><?=$data['bank_nm']?> (<?=$data['bank_short_nm']?>)</div>
+                                                                <div><?=$data['bank_owner']?></div>
+                                                                <div class="bold" id="no-rek-<?=$data['bank_no_rek']?>" style="color: green;"><?=$data['bank_no_rek']?></div>
+                                                                <a class="copy-clipboard" onclick="copyToClipboard('#no-rek-<?=$data['bank_no_rek']?>')">Salin No. Rekening</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>  
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="panel-content">
+                                                        <div class="panel panel-default header-panel-bank-rek" style="border: 2px solid blue;">
+                                                            <div class="panel-body">
+                                                                <center>
+                                                                    <div class="bold" style="color: black;">Total Pembayaran Anda Ke Penjual ini</div>
+                                                                    <div class="bold" style="color: red; font-size: 20px;">Rp <?=digit($total_payment)?></div>
+                                                                    <div class="hide" id="total-<?=$total_payment?>"><?=$total_payment?></div>
+                                                                    <a class="copy-clipboard" onclick="copyToClipboard('#total-<?=$total_payment?>')">Salin Jumlah</a>
+                                                                </center>
+                                                            </div>
+                                                        </div>
+                                                    </div>  
+                                                </div>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="panel-footer">
                                                 <table class="no-border" style="margin-bottom: -20px; margin-top: -5px;">
@@ -189,13 +161,13 @@ function copyToClipboard(element) {
                                                         <td class="no-border" style="width: 50%;">
                                                             <div class="form-group">
                                                                 <label>Jasa Pengiriman</label>
-                                                                <div><?=($data['jasa_nm'] !='') ? $data['jasa_nm'] : '-'?></div>
+                                                                <div style="color: green; font-weight: bold;"><?=($data['jasa_nm'] !='') ? $data['jasa_nm'] : '-'?></div>
                                                             </div>
                                                         </td>
                                                         <td class="no-border" style="width: 50%;">
                                                             <div class="form-group">
                                                                 <label>No. Resi</label>
-                                                                <div><?=($data['no_resi'] !='') ? $data['no_resi'] : '-'?></div>
+                                                                <div style="color: green; font-weight: bold;"><?=($data['no_resi'] !='') ? $data['no_resi'] : '-'?></div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -206,7 +178,7 @@ function copyToClipboard(element) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <div class="panel panel-default">
                                     <div class="panel-heading bold">Data Transaksi</div>
                                     <div class="panel-body">
@@ -217,7 +189,7 @@ function copyToClipboard(element) {
                                         </div>
                                         <div class="form-group">
                                             <label>Nama Pembeli</label>
-                                            <div class="text-invoice"><?=($main['customer_id_pembeli'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></div>
+                                            <div class="text-invoice bold" style="color: blue;"><?=($main['customer_id_pembeli'] !='') ? $main['customer_nm'] : $main['pembeli_nm']?></div>
                                             <div class="cart-line"></div>
                                         </div>
                                         <div class="form-group">
@@ -226,33 +198,10 @@ function copyToClipboard(element) {
                                             <div class="cart-line"></div>
                                         </div>
                                         <div class="form-group">
-                                            <label>Total Pembayaran</label>
-                                            <div class="text-invoice-price">Rp <?=digit($main['product_total_price'])?></div>
-                                            <div class="cart-line"></div>
-                                        </div>
-                                        <div class="form-group">
                                             <label>Catatan Pembeli</label>
                                             <div class="text-invoice"><?=($main['billing_desc'] !='') ? $main['billing_desc'] : '-'?></div>
                                             <div class="cart-line"></div>
                                         </div>
-                                        <div class="form-group">
-                                            <label>Status Bayar</label>
-                                            <div class="text-invoice">
-                                                <?php if ($main['transfer_st'] == '2'): ?>
-                                                <label class="label label-primary">Menunggu Konfirmasi Admin</label>
-                                                <?php else: ?>
-                                                <?=($main['bayar_st'] =='2') ? '<label class="label label-warning">Belum Bayar</label>' : '<label class="label label-success">Sudah Bayar</label>'?>
-                                                <?php endif; ?>
-                                            </div>
-                                            <div class="cart-line"></div>
-                                        </div>
-                                        <?php if ($main['bayar_st'] == '1'): ?>
-                                        <div class="form-group">
-                                            <label>Tgl Bayar</label>
-                                            <div class="text-invoice"><?=convert_date_indo($main['transfer_date'])?></div>
-                                            <div class="cart-line"></div>
-                                        </div>
-                                        <?php endif; ?>
                                         <div class="form-group">
                                             <label>Alamat Pengiriman</label>
                                             <div style="font-size: 15px;">
@@ -282,60 +231,72 @@ function copyToClipboard(element) {
 
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<?php foreach ($list_seller as $data): ?>
+<div class="modal fade" id="Modal-<?=$data['customer_id']?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="<?=site_url('transactions/update_confirm/'.$main['billing_id'])?>" method="post" enctype="multipart/form-data" id="form-validate">  
+      <form action="<?=site_url('transactions/upload_photo/'.$data['billing_id'].'/'.$data['customer_id'])?>" method="post" enctype="multipart/form-data" id="form-validate">  
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Konfimasi bila produk sudah Anda terima Semua</h4>
+        <h4 class="modal-title" id="myModalLabel">Upload Foto Bukti Transfer</h4>
       </div>
       <div class="modal-body">
         <div class="form-group">
-            <label>Konfirmasi</label>
-            <select class="chosen-select span3" name="diterima_st">
-                <option value="1">Sudah Diterima</option>
-                <option value="2">Belum Diterima</option>
-            </select>
-            <span class="alert-product">* Silahkan pilih <u>Sudah Diterima</u> apabila produk sudah Anda terima semua</span>
+            <label>Upload Foto bukti transfer Anda ke Penjual (<font color="blue"><?=$data['customer_nm']?></font>)</label>
+            <input type="file" name="bayar_customer_img" class="form-control span6">
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" id="myButtonId">Simpan</button>
+        <button type="button" class="btn btn-danger bold" data-dismiss="modal">Close <i class="fa fa-times"></i></button>
+        <button type="submit" class="btn btn-primary bold" id="myButtonId">Kirim <i class="fa fa-send"></i></button>
       </div>
       </form>
     </div>
   </div>
 </div>
+<?php endforeach; ?>
+<style type="text/css">
+    .swal-button--danger {
+        background-color: #5cb85c;
+    }
+    .swal-button--cancel {
+        background-color: #d9534f;
+        color: white;
+    }
+</style>
 
-<?php if ($main['diterima_st'] == ''): ?>
-<?php
-$date = date_create($get_kirim_date['kirim_date']);
-date_add($date, date_interval_create_from_date_string('4 days'));
-$finish_date = date_format($date, 'M d, Y H:i:s');
-?>
-<script>
-    var deadline = new Date("<?=$finish_date?>").getTime();
-    var x = setInterval(function() {
-        var now = new Date().getTime();
-        var t = deadline - now;
-        var days = Math.floor(t / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60));
-        var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((t % (1000 * 60)) / 1000);
-        document.getElementById("day").innerHTML =days ;
-        document.getElementById("hour").innerHTML =hours;
-        document.getElementById("minute").innerHTML = minutes; 
-        document.getElementById("second").innerHTML =seconds; 
-            if (t < 0) {
-                clearInterval(x);
-                document.getElementById("myButtonId").click();
-                document.getElementById("day").innerHTML ='0';
-                document.getElementById("hour").innerHTML ='0';
-                document.getElementById("minute").innerHTML ='0' ; 
-                document.getElementById("second").innerHTML = '0'; 
-            }
-    }, 1000);
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        <?php foreach ($list_seller as $data): ?>
+        $("#clear-<?=$data['customer_id']?>").click(function(e) {
+          e.preventDefault()
+            swal({
+              title: "",
+              text: "Apakah Produk yang Anda beli sudah diterima ?",
+              icon: "warning",
+              buttons: {
+                cancel: "Belum",
+                danger: {
+                  text: "Sudah",
+                },
+              },
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location="<?=site_url('transactions/confirm_clear/'.$data['billing_id'].'/'.$data['customer_id'].'/'.$email)?>";
+                        swal({
+                          title: "",
+                          text: "Terimakasih",
+                          icon: "success",
+                          buttons: "Oke",
+                        })
+                } else {
+                    
+                }
+            });
+        });
+        <?php endforeach; ?>
+
+    });
 </script>
-<?php endif; ?>

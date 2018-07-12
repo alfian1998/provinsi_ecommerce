@@ -48,9 +48,9 @@
                             <?=outp_notification()?>
                             <div class="alert alert-green" style="margin-bottom: 10px;">
                                 <ul style="margin-left: -25px;">
-                                    <li>Data akan otomatis muncul jika ada pembeli</li>
+                                    <li>Data akan otomatis memperbarui jika ada pembeli</li>
                                     <li>Data No 1 adalah yang paling terbaru</li>
-                                    <li>Jika Status <u>Menunggu Konfirmasi</u> maka segera ubah status menjadi Sudah Bayar</li>
+                                    <li>Klik Tombol <font style="background-color: #FFF; color: #333;">&nbsp;DETAIL DATA&nbsp;</font> untuk melihat lebih lengkap</li>
                                 </ul>
                             </div>
                             <div class="table-responsive">
@@ -60,7 +60,6 @@
                                             <option value="">-- Semua Status --</option>
                                             <option value="sudah_bayar">Sudah Bayar</option>
                                             <option value="belum_bayar">Belum Bayar</option>
-                                            <option value="konfirmasi">Menunggu Konfirmasi</option>
                                             <option value="sudah_diterima">Sudah Diterima</option>
                                     </select>
                                     <select class="select-chosen span2" name="ses_bulan" id="ses_bulan">
@@ -86,8 +85,7 @@
                                     <th width="8%" class="text-center">Aksi</th>
                                     <th width="19%">Nama Pembeli</th>
                                     <th width="10%" class="text-center">No Transaksi</th>
-                                    <th width="8%">Nominal</th>
-                                    <th width="26%">Status</th>
+                                    <th width="12%">Nominal Keseluruhan</th>
                                   </tr>
                                 </thead>
                                 <tbody id="box_result">                         

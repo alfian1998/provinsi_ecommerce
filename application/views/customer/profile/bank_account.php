@@ -72,7 +72,7 @@ function validateForm() {
                             <div class="body-profile">
                                 <?=outp_notification()?>
                                 <div class="alert alert-red">
-                                    <i class="fa fa-warning"></i> <span>Rekening Bank digunakan untuk menerima dana dari Admin DKP yang berasal dari Pembeli produk dan telah terverifikasi oleh Admin DKP</span>
+                                    <i class="fa fa-warning"></i> <span>Rekening Bank digunakan untuk menerima dana dari Pembeli</span>
                                 </div>
                                 <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate" name="myForm" onsubmit="return validateForm()">  
                                 <table width="100%" class="table-no-border">

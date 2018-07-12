@@ -17,6 +17,19 @@ $(function() {
             }
         },'json');
     });
+    //
+    $('.remove_image').bind('click',function(e) {
+        e.preventDefault();
+        if(confirm('Apakah anda yakin akan menghapus foto ini ?')) {
+            var i = $(this).attr('data-id');
+            $.get('<?=site_url("webmin_bank/delete_image")?>/'+i,null,function(data) {
+                if(data.result == 'true') {
+                    //location.reload(true);
+                    $('.box_bank_img').hide();
+                }
+            },'json');
+        }
+    });
 });
 </script>
 <div class="background-img background-bottom">
@@ -78,6 +91,28 @@ $(function() {
                                         <div class="span3">
                                             <input type="text" name="bank_short_nm" class="form-control" value="<?=@$main['bank_short_nm']?>" placeholder="Contoh : BRI">
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">Logo Bank</div></td>
+                                    <td width="82%">
+                                        <div class="span5">
+                                            <?php if (@$main['bank_img'] !=''): ?>
+                                            <span class="box_bank_img">
+                                                <div class="span12" style="margin-bottom: 10px;">
+                                                    <img class="img-thumbnail img-edit-product" src="<?=base_url()?>assets/images/logo_bank/<?=$main['bank_img']?>">
+                                                    <a class="btn btn-sm btn-primary btn-edit-product-img" href="<?=base_url()?>assets/images/logo_bank/<?=$main['bank_img']?>" target="_blank"><i class="fa fa-eye"></i> Lihat Gambar</a><br>
+                                                    <a href="javascript:void(0)" class="remove_image btn btn-sm btn-danger btn-edit-product-img" data-id="<?=$main['bank_id']?>"><i class="fa fa-times"></i> Hapus Gambar</a>
+                                                </div>
+                                            </span>
+                                            <?php endif; ?>
+                                            <input type="file" name="bank_img" class="form-control">
+                                        </div>
+                                        <?php if ($main['bank_img'] !=''): ?>
+                                            <span class="alert-product">* Upload Logo lagi untuk mengubah Logo Bank</span>
+                                        <?php else: ?>
+                                            <span class="alert-product">* Upload Logo Bank</span>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             </table>

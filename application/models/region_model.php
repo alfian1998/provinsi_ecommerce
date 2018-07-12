@@ -41,7 +41,7 @@ class Region_model extends CI_Model {
         $sql = "SELECT 
                     a.* 
                 FROM mst_provinsi a 
-                WHERE 1 AND id_prov='33'";
+                WHERE 1";
         $query = $this->db->query($sql);
         $result = $query->result_array();
         // 

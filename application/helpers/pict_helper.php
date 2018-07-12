@@ -51,6 +51,15 @@ function upload_post_image($subdomain, $date, $image_no, $path_dir, $tmp_name, $
     return @$file_name;
 }
 
+function upload_post_image_no_unlink($subdomain, $date, $image_no, $path_dir, $tmp_name, $fupload_name, $old_file=null) {
+    $file_type = get_file_type($fupload_name);
+    $file_name = $subdomain . '.' . $date . '-' . $image_no. '.' . $file_type;
+    $vfile_upload = $path_dir . $file_name;
+    move_uploaded_file($tmp_name, $vfile_upload);
+    //
+    return @$file_name;
+}
+
 function upload_post_file($subdomain, $date, $file_no, $path_dir, $tmp_name, $fupload_name, $old_file=null) {
     if($old_file != "") {
         unlink($path_dir . $old_file);

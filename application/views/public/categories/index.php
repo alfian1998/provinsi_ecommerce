@@ -21,7 +21,7 @@
                         <ul class="vertical-menu-list">
                             <?php foreach ($list_category_parent as $data): ?>
                             <li>
-                                <a href="javascript:void(0)" class="background-font " onclick="openCity(event, '<?=$data["category_id"]?>')" id="defaultOpen"><i class="icon-category fa fa-check"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,13)?>.png"><?=$data['category_nm']?></a>
+                                <a href="javascript:void(0)" class="background-font " onclick="openCity(event, '<?=$data["category_id"]?>')" id="defaultOpen"><i class="icon-category fa fa-tags"></i><img class="icon-menu" src="<?=base_url()?>assets/images/icon/bg-<?=rand(1,13)?>.png"><?=$data['category_nm']?></a>
                             </li>
                             <?php endforeach; ?>
                         </ul>

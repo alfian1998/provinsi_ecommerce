@@ -47,6 +47,7 @@
                                         <th width="7%" class="text-center">Aksi</th>
                                         <th>Nama Bank</th>
                                         <th>Singkatan Nama</th>
+                                        <th width="14%" class="text-center">Logo Bank</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -59,6 +60,7 @@
                                         </td>
                                         <td><?=$data['bank_nm']?></td>
                                         <td><?=$data['bank_short_nm']?></td>
+                                        <td align="center"><?=($data['bank_img'] !='') ? '<i class="fa fa-check bold" style="color: green;"></i>' : '' ?></td>
                                     </tr>
                                     <?php endforeach; ?>
                                     <?php if($count_bank == 0): ?>

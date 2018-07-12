@@ -34,21 +34,14 @@
                         <div class="panel-body">
                             <div class="alert alert-green alert-small">
                                 <ul style="margin-left: -25px;">
-                                    <li>Data akan otomatis muncul jika ada pembeli</li>
+                                    <li>Data akan otomatis memperbarui jika ada pembeli</li>
                                     <li>Data No 1 adalah yang paling terbaru</li>
                                 </ul>
                             </div>
                             <div class="table-responsive">
                                 <form name="form_sipatma" method="post" id="form_buyer">
                                     <div class="form-inline">
-                                        <select class="select-chosen" name="ses_bayar_st" id="ses_bayar_st" style="width: 200px;">
-                                                <option value="">-- Semua Status --</option>
-                                                <option value="sudah_bayar">Sudah Bayar</option>
-                                                <option value="belum_bayar">Belum Bayar</option>
-                                                <option value="konfirmasi">Menunggu Konfirmasi Admin</option>
-                                                <option value="sudah_diterima">Sudah Diterima</option>
-                                        </select>
-                                        <input type="text" name="ses_buyer_search" id="ses_buyer_search" class="form-control" placeholder="Masukkan kata kunci pencarian ..." style="width: 260px;">
+                                        <input type="text" name="ses_buyer_search" id="ses_buyer_search" class="form-control" placeholder="Masukkan kata kunci pencarian ..." style="width: 86%;">
                                         <button type="submit" id="btn_buyer_search" class="btn btn-primary"><i class="fa fa-search"></i> Cari</button>
                                     </div>
                                 </form>
@@ -61,9 +54,9 @@
                                     <thead>
                                       <tr>
                                         <th width="1%" class="text-center">No</th>
+                                        <th width="7%" class="text-center">Detail</th>
                                         <th width="30%">Nama</th>
                                         <th width="20%" class="text-center">Nominal</th>
-                                        <th width="30%">Status</th>
                                       </tr>
                                     </thead>
                                     <tbody id="box_result">                         

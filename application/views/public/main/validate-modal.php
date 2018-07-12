@@ -16,7 +16,9 @@
                 <li style="padding-bottom: 5px;">Data Alamat Anda belum lengkap <a href="<?=site_url('profile/address')?>" class="btn btn-sm btn-primary bold"><i class="fa fa-home"></i> Lengkapi Alamat</a></li>
               <?php endif; ?>
               <?php if($validate_bank_account !=''): ?>
-                <li style="padding-bottom: 5px;">Data Rekening Bank Anda belum lengkap <a href="<?=site_url('profile/bank_account')?>" class="btn btn-sm btn-primary bold"><i class="fa fa-credit-card-alt"></i> Lengkapi Rekening Bank</a></li>
+                <?php if ($config['profile']['verification_st'] == '1'): ?>
+                  <li style="padding-bottom: 5px;">Data Rekening Bank Anda belum lengkap <a href="<?=site_url('profile/bank_account')?>" class="btn btn-sm btn-primary bold"><i class="fa fa-credit-card-alt"></i> Lengkapi Rekening Bank</a></li>
+                <?php endif; ?>
               <?php endif; ?>
             </ul>
           </div>

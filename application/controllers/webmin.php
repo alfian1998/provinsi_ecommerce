@@ -79,35 +79,14 @@ class Webmin extends CI_Controller{
 			foreach ($list_buyer as $data){
 		$html.= '<tr>
                     <td align="center">'.$data['no'].'</td>';
+        $html.='<td align="center"><a href="'.site_url('webmin_buyer_data/detail/1/0/'.$data['billing_id']).'" class="btn btn-xs btn-primary"><i class="fa fa-bars"></i></a></td>';
                 if ($data['customer_id'] !='') {
 		$html.='    <td>'.$data['customer_nm'].'</td>';
                 }else{
         $html.='    <td>'.$data['pembeli_nm'].'</td>';
 				}
-        $html.='	<td align="center"><div class="nominal">Rp '.digit($data['product_total_price']).'</div></td><td>';
-        if ($data['diterima_st'] == '1') {
-        $html.=' 	<label class="label label-primary">Sudah Diterima</label>';
-        }else{
-       		if ($data['transfer_st'] == '2') {
-		$html.=' 	<label class="label label-primary">Menunggu Konfirmasi Admin</label>';		
-			}else {
-                if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-success">Sudah Bayar</label>';
-                }elseif ($data['bayar_st'] == '2') {
-        $html.=' 	<label class="label label-warning">Belum Bayar</label>';
-                }
-            }
-        $check_kirim_st = $this->checkout_model->check_kirim_st($data['billing_id']);        
-
-                if ($check_kirim_st == '') {
-        $html.=' 	<label class="label label-success">Sudah Kirim</label>';
-                }elseif ($check_kirim_st != '') {
-                	if ($data['bayar_st'] == '1') {
-        $html.=' 	<label class="label label-danger">Belum Kirim</label>';
-        			}
-                }
-        }
-        $html.='</td></tr>';
+        $html.='	<td align="center"><div class="nominal">Rp '.digit($data['product_total_price']).'</div></td>';
+        $html.='</tr>';
             }
             if (count($list_buyer) == 0) {
         $html.='<tr>

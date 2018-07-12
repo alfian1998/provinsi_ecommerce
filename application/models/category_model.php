@@ -263,6 +263,17 @@ class Category_model extends CI_Model {
         return $result['count_data'];
     }
 
+    function count_product_by_category_id($category_id=null) {
+        $sql = "SELECT 
+                    COUNT(a.product_id) AS count_data
+                FROM product a 
+                WHERE 1 AND a.category_id=?";
+        $query = $this->db->query($sql, $category_id);
+        $result = $query->row_array();
+        // 
+        return $result['count_data'];
+    }
+
     function get_category($category_id=null) {
         $sql = "SELECT a.*
                 FROM category a

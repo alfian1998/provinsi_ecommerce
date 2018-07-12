@@ -73,9 +73,9 @@
                                     </ul> 
                                 </li>
                                 <?php endif; ?>
-                                <?php if ($config['profile']['is_rekening_bank'] == '1'): ?>
+                                <!-- <?php if ($config['profile']['is_rekening_bank'] == '1'): ?>
                                 <li class="<?php echo activate_menu('webmin_bank_account'); ?>"><a href="<?=site_url('webmin/location/bank_account')?>">Rekening Bank</a></li>
-                                <?php endif; ?>
+                                <?php endif; ?> -->
 
                                 <?php if ($config['profile']['is_data_pembeli'] == '1'): ?>
                                 <li class="<?php echo activate_menu('webmin_buyer_data'); ?>"><a href="<?=site_url('webmin/location/buyer_data')?>">Data Pembeli</a></li>

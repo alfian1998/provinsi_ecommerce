@@ -119,7 +119,9 @@
                                 <ul class="nav nav-tabs">
                                     <li ><a href="#" class="active">Akun<?=($validate_account !='') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
                                     <li><a href="<?=site_url('web/location/profile/address')?>">Alamat<?=($validate_address !='') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
+                                    <?php if ($config['profile']['verification_st'] == '1'): ?>
                                     <li><a href="<?=site_url('web/location/profile/bank_account')?>">Rekening Bank<?=($validate_bank_account !='') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                             <!-- Body -->

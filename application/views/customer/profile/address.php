@@ -38,15 +38,17 @@ $(function() {
                                 <ul class="nav nav-tabs">
                                     <li ><a href="<?=site_url('web/location/profile')?>">Akun<?=($validate_account !='') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
                                     <li><a href="#" class="active">Alamat<?=($validate_address != '') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
+                                    <?php if ($config['profile']['verification_st'] == '1'): ?>
                                     <li><a href="<?=site_url('web/location/profile/bank_account')?>">Rekening Bank<?=($validate_bank_account !='') ? '<span class="check-data-empty"></span>' : '' ?></a></li>
+                                    <?php endif; ?>
                                 </ul>
                             </div>
                             <!-- Body -->
                             <div class="body-profile">
                                 <?=outp_notification()?>
-                                <div class="alert alert-red">
+                                <!-- <div class="alert alert-red">
                                     <i class="fa fa-warning"></i> Penjual hanya boleh menjual di wilayah Provinsi Jawa Tengah
-                                </div>
+                                </div> -->
                                 <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
                                 <table width="100%" class="table-no-border">
                                     <tr>

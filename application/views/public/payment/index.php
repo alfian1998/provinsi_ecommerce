@@ -11,16 +11,11 @@ $(function() {
             <div class="col-xs-12 col-sm-12 col-md-7">
                 <div class="panel-content">
                     <div class="panel panel-primary">
-                        <div class="panel-heading"><b>Data Rekening Admin DKP Jateng</b></div>
+                        <div class="panel-heading"><b>Informasi Pembayaran</b></div>
                         <div class="panel-body">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><b>Transfer</b> 
-                                    <?php foreach ($list_bank_account as $img): ?>
-                                        <img src="<?=base_url()?>assets/images/logo/bank/<?=$img['bank_id']?>.png" class="img-transfer-payment">
-                                    <?php endforeach; ?>
-                                </div>
+                                <div class="panel-heading"><b>Informasi Transfer Ke Penjual</b></div>
                                 <div class="panel-body">
-                                    <b>Ketentuan Pembayaran</b>
                                     <?php foreach ($list_payment_terms as $data): ?>
                                         <li><?=$data['text']?></li>
                                     <?php endforeach; ?>

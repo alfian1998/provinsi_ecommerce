@@ -9,6 +9,7 @@ $(function() {
                 if(data.result == 'true') {
                     //location.reload(true);
                     $('.box_customer_img').hide();
+                    $('.box_ktp_img').hide();
                 }
             },'json');
         }
@@ -49,7 +50,6 @@ $(function() {
                             <div class="panel-heading"><b>Tambah Data User Customer</b></div>
                         <?php endif; ?>
                         <div class="panel-body">
-                            <div class="alert alert-red"><i class="fa fa-warning"></i> Anda hanya bisa mengedit Status User</div>
                             <form action="<?=$form_action?>" method="post" enctype="multipart/form-data" id="form-validate">  
                             <table width="100%" class="table-no-border">
                                 <tr>
@@ -128,6 +128,47 @@ $(function() {
                                                 <option value="2" <?=(@$main['customer_st'] == '2') ? 'selected' : ''?>>Tidak Aktif</option>
                                             </select>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">Foto KTP</div></td>
+                                    <td width="82%">
+                                        <?php if(@$main['ktp_img'] != ''):?>
+                                        <span class="box_ktp_img">
+                                            <div class="span12" style="margin-bottom: 10px;">
+                                                <img class="img-thumbnail img-edit-product" src="<?=base_url()?>assets/images/photo_ktp/<?=$main['ktp_img']?>">
+                                                <a class="btn btn-sm btn-primary btn-edit-product-img" href="<?=base_url()?>assets/images/photo_ktp/<?=$main['ktp_img']?>" target="_blank"><i class="fa fa-eye"></i> Lihat Gambar</a><br>
+                                            </div>
+                                        </span>
+                                        <?php else: ?>
+                                        <span class="box_ktp_img">
+                                            <div class="span12" style="margin-bottom: 10px;">
+                                                <div class="alert-product" style="margin-top: 10px;">Tidak Ada Foto KTP</div>
+                                            </div>
+                                        </span>
+                                        <?php endif;?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">NIK</div></td>
+                                    <td width="82%">
+                                        <div class="span5">
+                                            <input type="text" class="form-control" value="<?=$main['nik']?>" disabled>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="18%"><div class="span10">Status Verifikasi</div></td>
+                                    <td width="82%">
+                                        <div class="span3">
+                                            <select class="select-chosen" name="verification_st">
+                                                <option value="0" <?=(@$main['verification_st'] == '0') ? 'selected' : ''?>>Tidak Verifikasi</option>
+                                                <option value="1" <?=(@$main['verification_st'] == '1') ? 'selected' : ''?>>Verifikasi</option>
+                                                <option value="2" <?=(@$main['verification_st'] == '2') ? 'selected' : ''?>>Belum Verifikasi</option>
+                                            </select>
+                                        </div>
+                                        <br><br>
+                                        <div class="alert-product">* Status Verivikasi digunakan untuk memverfikasi user yang boleh berjualan</div>
                                     </td>
                                 </tr>
                             </table>

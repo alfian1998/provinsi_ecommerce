@@ -137,6 +137,40 @@ class Customer_model extends CI_Model {
         return outp_result($outp);
     }
 
+    function verification_seller($customer_id="") {
+        $data = $_POST;
+        // get data checkout
+        $customer = $this->get_customer($customer_id);
+        //upload image
+        $ktp_img = $_FILES['ktp_img']['name'];
+        if ($ktp_img != '') {
+            $data_change['ktp_img'] = $this->process_upload_photo('ktp_img','photo_ktp',@$customer_id);
+        }
+        //
+        $data_change['nik'] = $data['nik'];
+        $data_change['verification_st'] = 2;
+        $data_change['last_login'] = $customer['last_login'];
+        $data_change['register_date'] = $customer['register_date'];
+        //
+        $this->db->where('customer_id', $customer_id);
+        $outp = $this->db->update('customer',$data_change);
+        return outp_result($outp);
+    }
+
+    function remove_notification($customer_id="") {
+        //
+        $customer = $this->get_customer($customer_id);
+        //
+        $data_change['notification_verification'] = 1;
+        $data_change['last_login'] = $customer['last_login'];
+        $data_change['register_date'] = $customer['register_date'];
+        $data_change['verification_date'] = $customer['verification_date'];
+        //
+        $this->db->where('customer_id', $customer_id);
+        $outp = $this->db->update('customer',$data_change);
+        return outp_result($outp);
+    }
+
     function update_bank_account($customer_id = "") {
         $data = $_POST;
         //
@@ -147,6 +181,35 @@ class Customer_model extends CI_Model {
         $this->db->where('customer_id', $customer_id);
         $outp = $this->db->update('customer',$data_change);
         return outp_result($outp);
+    }
+
+    function process_upload_photo($src_file_name = null, $src_file_location = null, $doc_id = null) {
+        $config = $this->config_model->get_config();
+        // data
+        $customer = $this->get_customer($doc_id);
+        // directory file
+        $path_dir = "assets/images/". $src_file_location."/";
+        $date = date('dmyhis');
+        //
+        $result             = @$customer[$src_file_location];
+        $file_tmp_name      = @$_FILES[$src_file_name]['tmp_name'];
+        $file_size          = @$_FILES[$src_file_name]['size'];
+        $clean_file_name    = clean_url(get_file_name(@$_FILES[$src_file_name]['name']));
+        //
+        // $image_no = md5(md5(@$customer['customer_id']));
+        $image_no = md5(md5($date));
+        //
+        if($file_tmp_name != '') {
+            if($doc_id == '') {
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name']);
+            } else {                
+                $file_name = upload_post_image($config['subdomain'], $date, $image_no, $path_dir, $file_tmp_name, @$_FILES[$src_file_name]['name'], @$customer[$src_file_name]);
+            }   
+            //
+            $result = $file_name;
+        }
+        //
+        return $result;
     }
 
     function process_file($src_file_name = null, $src_file_location = null, $doc_id = null) {
